@@ -4,6 +4,8 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Borsa\Professor as Professor;
 use Borsa\Estudis as Estudis;
+use Borsa\Empresa as Empresa;
+use Borsa\DaoEmpresa as DaoEmpresa;
 
 require 'vendor/autoload.php';
 
@@ -102,29 +104,33 @@ $app->get('/altaEmpresa', function ($request, $response, $args) {
 //   $objEmpresa=new Empresa(1,'Bestard','<h1>Bestard</h1><p>Idòa això</p>','Carrer nou 9','07330','Lloseta','Balears','987456321','info@bestard.com',true,false,'12/03/2017','www.bestar.com');
     return $this->view->render($response, 'empresa/altaEmpresa.html');
 });
+//$app->post('/altaEmpresa', function ($request, $response) {
+//    $data = $request->getParsedBody();
+//   
+//    $empresa = new Empresa(filter_var($data['idEmpresa'], FILTER_SANITIZE_STRING)
+//            , filter_var($data['Nom'], FILTER_SANITIZE_STRING)
+//            , $data['descripcio']
+//            , filter_var($data['Adreca'], FILTER_SANITIZE_STRING)
+//            , filter_var($data['CodiPostal'], FILTER_SANITIZE_STRING)
+//            , filter_var($data['Localitat'], FILTER_SANITIZE_STRING)
+//            , filter_var($data['Provincia'], FILTER_SANITIZE_STRING)
+//            , filter_var($data['Telefon'], FILTER_SANITIZE_STRING)
+//            , filter_var($data['email'], FILTER_SANITIZE_EMAIL)
+//            , filter_var($data['Actiu'], FILTER_SANITIZE_STRING)
+//            , false
+//            , filter_var($data['Nom'], FILTER_SANITIZE_STRING)
+//            , filter_var($data['url'], FILTER_SANITIZE_URL)
+//    );
+//
+//    //$response->getBody()->write("Ok");
+//    $response=$response->withJson($empresa->expose());
+//    return $response;
+//});
+
 $app->post('/altaEmpresa', function ($request, $response) {
-    $data = $request->getParsedBody();
-   
-    $empresa = new Empresa(filter_var($data['idEmpresa'], FILTER_SANITIZE_STRING)
-            , filter_var($data['Nom'], FILTER_SANITIZE_STRING)
-            , $data['descripcio']
-            , filter_var($data['Adreca'], FILTER_SANITIZE_STRING)
-            , filter_var($data['CodiPostal'], FILTER_SANITIZE_STRING)
-            , filter_var($data['Localitat'], FILTER_SANITIZE_STRING)
-            , filter_var($data['Provincia'], FILTER_SANITIZE_STRING)
-            , filter_var($data['Telefon'], FILTER_SANITIZE_STRING)
-            , filter_var($data['email'], FILTER_SANITIZE_EMAIL)
-            , filter_var($data['Actiu'], FILTER_SANITIZE_STRING)
-            , false
-            , filter_var($data['Nom'], FILTER_SANITIZE_STRING)
-            , filter_var($data['url'], FILTER_SANITIZE_URL)
-    );
-
-    //$response->getBody()->write("Ok");
-    $response=$response->withJson($empresa->expose());
-    return $response;
+    return DaoEmpresa::altaEmpresa($request, $response, $this);
+    
 });
-
 
 $app->get('/professor/{id}', function(Request $request, Response $response, $args) {
 //return recuperaInteri($request, $response, $this->db);
@@ -134,17 +140,17 @@ $app->get('/professor/{id}', function(Request $request, Response $response, $arg
 $app->get('/estudis', function(Request $request, Response $response) {
 //return recuperaInteri($request, $response, $this->db);
     $this->dbEloquent;
-    return $response->withJson(Estudis::All());
-//    return $this->view->render($response, 'estudis.html.twig', [
-//                 'estudis' => Estudis::All()
-//    ]);
+    //  return $response->withJson(Estudis::All());
+    return $this->view->render($response, 'estudis.html.twig', [
+                'estudis' => Estudis::All()
+    ]);
 });
 
 $app->get('/estudisProfessor/{id}', function(Request $request, Response $response, $args) {
 //return recuperaInteri($request, $response, $this->db);
     $this->dbEloquent;
-    $prof=Professor::find($args['id']);
-    $estudis=$prof->estudis;
+    $prof = Professor::find($args['id']);
+    $estudis = $prof->estudis;
     return $response->withJSON($estudis);
 });
 //Final
