@@ -1,0 +1,22 @@
+.pull-left{
+    margin-right: 2em;
+}
+.tab-pane{
+    margin-bottom: 2em;
+    border: #ddd solid 1px;
+    border-top: none;
+    padding:1em;
+
+}
+.jumbotron{
+    padding-top: 0.5em;
+    padding-bottom: 1.5em;
+}
+.well.click:hover{
+   /* background-color: #ddd;*/
+    /*ombra*/
+    -webkit-box-shadow: 14px 10px 14px 0px rgba(50, 50, 50, 0.75);
+    -moz-box-shadow:    14px 10px 14px 0px rgba(50, 50, 50, 0.75);
+    box-shadow:         14px 10px 14px 0px rgba(50, 50, 50, 0.75);
+    cursor:pointer;
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Borsa de treball</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/borsa.css">
+        <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+
+        <script src="../js/bootbox.min.js"></script>
+        <link href="../js/summernote/summernote.css" rel="stylesheet">
+        <script src="../js/summernote/summernote.min.js"></script>
+
+
+        <script>
+            $(document).ready(function () {
+
+
+                $('#dFinal').removeAttr("readonly");
+                $('#textOferta').summernote({
+                    height: 150,
+                    placeholder: "Text de l'oferta"
+                });
+
+
+                //$('#textOferta').summernote('disable');
+            });
+        </script>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="jumbotron">                
+                <img src="../imatges/logoPauPetit.png" height="75" width="75" class="pull-left">
+                <h2>Borsa de treball <small>IES Pau Casesnoves</small></h2>                
+            </div>
+
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>                        
+                        </button>
+                        <a class="navbar-brand" href="empresa.html?idEmpresa=12">Empresa</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Actualitzar dades</a></li>
+                            <li><a href="estudisOferta.html">Estudis</a></li>
+                            <li><a href="idiomesOferta.html">Idiomes</a></li>
+
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right ">
+                            <li><a href="#">Nom de l'empresa</a></li>
+                            <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <h2>Ofertes</h2>
+
+            <div class='well' id="cont5">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Nom">idOferta:</label>
+                                <input type="text" class="form-control" id="Nom" name="Nom" readonly="readonly">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Llinatges">&nbsp;</label>
+                                <div>
+
+                                    <button class="btn btn-default" type="submit" id="bEditar">Guardar</button>
+                                    <button class="btn btn-default" type="reset" id="bSuprimir">Cancel·lar</button>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    </div><!--row-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="Titol">Titol:</label>
+                                <input type="text" class="form-control" id="titol" name="titol">
+                            </div>
+                        </div><!--col-->
+
+                    </div><!--row-->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Telefon">Data de publicació:</label>
+                                <input type="date" class="form-control" id="dPublicacio" name="dPublicacio" readonly="readonly" title="S'assignarà automàticament en publicar l'oferta" data-toggle="tooltip">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Data finalització:</label>
+                                <input type="date" class="form-control" id="dFinal" name="dFinal" readonly="readonly">
+                            </div>
+                        </div><!--col-->
+
+                    </div><!--row-->
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label >Estudis als que va dirigida:</label>
+                                <div >
+                                    <p>Tècnic superiror en Desenvolupament d'aplicacions web</p>
+                                    <p>Tècnic superiror en Desenvolupament d'aplicacions multiplataforma</p>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Idiomes requerits:</label>
+                                <div>
+                                    <p>Català Molt bé</p>
+                                    <p>Castellà: Molt bé</p>
+                                    <p>Anglès: Regular</p>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    </div> <!--row-->          
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="textOferta">Descripció de l'oferta:</label>
+                                <div id="textOferta">
+                                    <h1>Programador junior</h1>
+                                    <p>Necessitam incorporar de forma <strong>immediata</strong> tres programadors junior amb coneixements de Java</p>
+                                    <p>Sou a negociar amb els interessats, mínim 12.000€</p>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    </div>           
+                </form>
+            </div><!--well-->
+
+
+        </div>
+    </body>
+</html>

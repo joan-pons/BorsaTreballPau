@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Borsa de treball: Alumnes</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/borsa.css">
+        <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+        <!--<script src="../js/jquery-3.2.0.min.js"></script>-->
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+
+    </head>
+    <body>
+
+        <div class="container">
+
+            <div class="jumbotron">                
+                <img src="../imatges/logoPauPetit.png" height="75" width="75" class="pull-left">
+                <h2>Borsa de treball <small>IES Pau Casesnoves</small></h2>                
+            </div>
+
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>                        
+                        </button>
+                        <a class="navbar-brand" href="alumne.html">Alumne</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Actualitzar dades</a></li>
+                            <li><a href="estudis.html">Estudis</a></li>
+                            <li><a href="idiomes.html">Idiomes</a></li>
+                            <li><a href="formacio.html">Altra formació</a></li>
+                            <li><a href="contrasenya.html">Canviar contrasenya</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right ">
+                            <li><a href="#">Nom de l'alumne</a></li>
+                            <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <form>
+
+
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="idAlumne">idAlumne:</label>
+                            <input type="text" class="form-control" id="idAlumne" name="idAlumne" readonly="readonly" value="18235267Q">
+                        </div>
+                        <div class="form-group">
+                            <label for="Nom">Nom:</label>
+                            <input type="text" class="form-control" id="Nom" name="Nom">
+                        </div>
+                        <div class="form-group">
+                            <label for="Llinatges">Llinatges:</label>
+                            <input type="text" class="form-control" id="Llinatges" name="Llinatges">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="Telefon">Telefon:</label>
+                            <input type="text" class="form-control" id="Telefon" name="Telefon">
+                        </div>
+                        <div class="form-group">
+                            <label for="Email">Email:</label>
+                            <input type="text" class="form-control" id="Email" name="Email">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Adreca">Adreca:</label>
+                            <input type="text" class="form-control" id="Adreca" name="Adreca">
+                        </div>
+                        <div class="form-group">
+                            <label for="CodiPostal">Codi Postal:</label>
+                            <input type="text" class="form-control" id="CodiPostal" name="CodiPostal">
+                        </div>
+                        <div class="form-group">
+                            <label for="Localitat">Localitat:</label>
+                            <input type="text" class="form-control" id="Localitat" name="Localitat">
+                        </div>
+                        <div class="form-group">
+                            <label for="Provincia">Província:</label>
+                            <input type="text" class="form-control" id="Provincia" name="Provincia">
+                        </div>
+                        
+                    </div><!--col-->
+
+                </div> <!--Row -->
+                <div class="row"> 
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="Actiu">Estat:</label>
+                            <div>
+                                <label class="radio-inline"><input type="radio" id="Actiu" name="Actiu" value="true"> Actiu</label>
+                                <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Inactiu</label>
+                            </div>
+                        </div>
+                    </div><!--col -->
+                </div> <!--Row -->
+
+
+                <!--                   <div id="menu1" class="tab-pane fade">
+                                       <h3>Estudis</h3>
+                                       <div class="form-group">
+                                           <label for="sel1">Estudis oficials cursats:</label>
+                                           <select class="form-control" id="graus" name="graus">
+                                               <option>Escull uns estudis</option>
+                                               <option>Desenvolupament d'aplicacions web</option>
+                                               <option>Desenvolupament d'aplicacions multiplataforma</option>
+                                               <option>Administració de sistemes informàtics en xarxa</option>
+                                           </select>
+                                           <button type="button" class="btn btn-default">Afegir</button>
+                                       </div>
+                                       <div class="form-group">
+                                           <ul>
+                                               <li>Administració de sistemes informàtics en xarxa</li>
+                                               <li>Desenvolupament d'aplicacions multiplataforma</li>                                
+                                           </ul>
+                                       </div>
+                                   </div>
+                                   <div id="menu2" class="tab-pane fade">
+                                       <h3>Idiomes</h3>
+                                       <div class="form-group">
+                                           <label for="sel1">Català:</label>
+                                           <div>
+                                               <label class="radio-inline"><input type="radio" id="Actiu" name="Actiu" value="true"> Gens</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Malament</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Bé</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Molt bé</label>
+                                           </div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="sel1">Castellà:</label>
+                                           <div>
+                                               <label class="radio-inline"><input type="radio" id="Actiu" name="Actiu" value="true"> Gens</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Malament</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Bé</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Molt bé</label>
+                                           </div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="sel1">Anglès:</label>
+                                           <div>
+                                               <label class="radio-inline"><input type="radio" id="Actiu" name="Actiu" value="true"> Gens</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Malament</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Bé</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Molt bé</label>
+                                           </div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="sel1">Alemany:</label>
+                                           <div>
+                                               <label class="radio-inline"><input type="radio" id="Actiu" name="Actiu" value="true"> Gens</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Malament</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Bé</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Molt bé</label>
+                                           </div>
+                                       </div>
+                                       <div class="form-group">
+                                           <label for="sel1">Àrab:</label>
+                                           <div>
+                                               <label class="radio-inline"><input type="radio" id="Actiu" name="Actiu" value="true"> Gens</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Malament</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Bé</label>
+                                               <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Molt bé</label>
+                                           </div>
+                                       </div>
+               
+                                   </div>
+                -->
+                <button type="submit" class="btn btn-default">Guardar</button>
+                <button type="reset" class="btn btn-default">Netejar</button>
+            </form>
+        </div>
+    </body>
+</html>

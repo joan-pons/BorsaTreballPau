@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Borsa de treball</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/borsa.css">
+        <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="jumbotron">                
+                <img src="../imatges/logoPauPetit.png" height="75" width="75" class="pull-left">
+                <h2>Borsa de treball <small>IES Pau Casesnoves</small></h2>                
+            </div>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>                        
+                        </button>
+                        <a class="navbar-brand" href="empresa.html">Empresa</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#">Actualitzar dades</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right ">
+                            <li><a href="#">Nom de l'empresa</a></li>
+                            <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <h2>Dades de l'empresa
+            </h2>
+            <div class='well'>
+                <form>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="idEmpresa">idEmpresa:</label>
+                                <input type="text" class="form-control" id="idEmpresa" name="idEmpresa" readonly="readonly">
+                            </div>
+                            <div class="form-group">
+                                <label for="Nom">Nom:</label>
+                                <input type="text" class="form-control" id="Nom" name="Nom">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Telefon">Telefon:</label>
+                                <input type="text" class="form-control" id="Telefon" name="Telefon">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">email:</label>
+                                <input type="email" class="form-control" id="email" name="email">
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Contrasenya:</label>
+                                <input type="password" class="form-control" id="password" name="password">
+                            </div>
+                            <div class="form-group">
+                                <label for="password2">Repetir contrasenya:</label>
+                                <input type="password" class="form-control" id="password" name="password2">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Adreca">Adreca:</label>
+                                <input type="text" class="form-control" id="Adreca" name="Adreca">
+                            </div>
+                            <div class="form-group">
+                                <label for="CodiPostal">CodiPostal:</label>
+                                <input type="text" class="form-control" id="CodiPostal" name="CodiPostal">
+                            </div>
+                            <div class="form-group">
+                                <label for="Localitat">Localitat:</label>
+                                <input type="text" class="form-control" id="Localitat" name="Localitat">
+                            </div>
+                            <div class="form-group">
+                                <label for="Provincia">Provincia:</label>
+                                <input type="text" class="form-control" id="Provincia" name="Provincia">
+                            </div>
+                        </div><!--col-->
+                    </div><!--row-->
+                    <div class="row"> 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Actiu">Estat:</label>
+                                <div>
+                                    <label class="radio-inline"><input type="radio" id="Actiu" name="Actiu" value="true"> Activa</label>
+                                    <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false"> Inactiva</label>
+                                </div>
+                            </div>
+                        </div><!--col -->
+                    </div> <!--Row -->
+                    <button type="submit" class="btn btn-default">Guardar</button>
+                    <button type="reset" class="btn btn-default">Netejar</button>
+                </form>
+            </div><!--well>
+        </div>
+    </body>
+</html>

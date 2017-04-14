@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Borsa de treball</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/borsa.css">
+        <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+
+        <script src="../js/bootbox.min.js"></script>
+        <link href="../js/summernote/summernote.css" rel="stylesheet">
+        <script src="../js/summernote/summernote.min.js"></script>
+
+
+        <script>
+            $(document).ready(function () {
+                $("#bEditar").click(function () {
+
+                    $('#dFinal').removeAttr("readonly");
+                    $('#textOferta').summernote({
+                        height: 150,
+                        placeholder: "Text de l'oferta"
+                    });
+                });
+                $('#bPublicar').click(function () {
+                    bootbox.confirm({
+                        title: "<h4>Publicar oferta</h4>",
+                        message: "<p>Publicar la oferta implica enviar immediatament missatges als alumnes seleccionats.</p><p>No es podrà modificar l'oferta.</p>",
+                        buttons: {
+                            cancel: {
+                                label: '<i class="fa fa-times"></i> Cancel·lar'
+                            },
+                            confirm: {
+                                label: '<i class="fa fa-check"></i> Publicar'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                console.log("Publicam!");
+                            } else {
+                                console.log("No publicam!");
+                            }
+                        }});
+                });
+                //$('#textOferta').summernote('disable');
+            });
+        </script>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="jumbotron">                
+                <img src="../imatges/logoPauPetit.png" height="75" width="75" class="pull-left">
+                <h2>Borsa de treball <small>IES Pau Casesnoves</small></h2>                
+            </div>
+
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>                        
+                        </button>
+                        <a class="navbar-brand" href="empresa.html?idEmpresa=12">Empresa</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav">
+                            <li class="active"><a href="#"><span class="glyphicon glyphicon-list"></span> Llista d'ofertes</a></li>
+                            <li><a href="afegirOferta.html"><span class="glyphicon glyphicon-plus"></span> Afegir oferta
+                                </a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right ">
+                            <li><a href="#">Nom de l'empresa</a></li>
+                            <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <h2>Ofertes</h2>
+
+            <div class='well' id="cont5">
+                <form>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Nom">idOferta:</label>
+                                <input type="text" class="form-control" id="Nom" name="Nom" readonly="readonly">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Llinatges">&nbsp;</label>
+                                <div>
+                                    <button class="btn btn-danger" type="button" id="bPublicar" data-toggle="modal" data-target="#myModal">Publicar</button>
+                                    <a class="btn btn-default" href="ofertaDades.html?idOferta=345" id="bEditar">Editar</a>
+                                    <button class="btn btn-default" type="button" id="bSuprimir">Suprimir</button>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    </div><!--row-->
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="Titol">Titol:</label>
+                                <input type="text" class="form-control" id="titol" name="titol" readonly="readonly">
+                            </div>
+                        </div><!--col-->
+                        
+                    </div><!--row-->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Telefon">Data de publicació:</label>
+                                <input type="date" class="form-control" id="dPublicacio" name="dPublicacio" readonly="readonly">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email">Data finalització:</label>
+                                <input type="date" class="form-control" id="dFinal" name="dFinal" readonly="readonly">
+                            </div>
+                        </div><!--col-->
+                       
+                    </div><!--row-->
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="textOferta">Estudis als que va dirigida:</label>
+                                <div >
+                                    <p>Tècnic superiror en Desenvolupament d'aplicacions web</p>
+                                    <p>Tècnic superiror en Desenvolupament d'aplicacions multiplataforma</p>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="textOferta">Idiomes requerits:</label>
+                                <div id="textOferta">
+                                    <p>Català Molt bé</p>
+                                    <p>Castellà: Molt bé</p>
+                                    <p>Anglès: Regular</p>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    </div> <!--row-->          
+
+          
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="textOferta">Descripció de l'oferta:</label>
+                                <div id="textOferta">
+                                    <h1>Programador junior</h1>
+                                    <p>Necessitam incorporar de forma <strong>immediata</strong> tres programadors junior amb coneixements de Java</p>
+                                    <p>Sou a negociar amb els interessats, mínim 12.000€</p>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    </div>           
+        </form>
+    </div><!--well-->
+
+    <div class='well' id="cont5">
+        <form>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Nom">idOferta:</label>
+                        <input type="text" class="form-control" id="Nom" name="Nom" readonly="readonly">
+                    </div>
+                </div><!--col-->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Llinatges">&nbsp;</label>
+                        <div>
+                            <button class="btn btn-danger" type="button" id="bPublicar" data-toggle="modal" data-target="#myModal">Publicar</button>
+                        </div>
+                    </div>
+                </div><!--col-->
+
+            </div><!--row-->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="Telefon">Data de publicació:</label>
+                        <input type="date" class="form-control" id="dPublicacio" name="dPublicacio" readonly="readonly">
+                    </div>
+                </div><!--col-->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="email">Data finalització:</label>
+                        <input type="date" class="form-control" id="dFinal" name="dFinal" readonly="readonly">
+                    </div>
+                </div><!--col-->
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="email">&nbsp;</label>
+                        <div>
+                            <button class="btn btn-default" type="button" id="bEditar">Editar</button>
+                            <button class="btn btn-default" type="button" id="bSuprimir">Suprimir</button>
+                        </div>
+                    </div>
+                </div><!--col-->
+            </div><!--row-->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label for="textOferta">Descripció de l'oferta:</label>
+                        <div id="textOferta">
+                            <h1>Programador junior</h1>
+                            <p>Necessitam incorporar de forma <strong>immediata</strong> tres programadors junior amb coneixements de Java</p>
+                            <p>Sou a negociar amb els interessats, mínim 12.000€</p>
+                        </div>
+                    </div>
+                </div><!--col-->
+            </div><!--row-->
+        </form>
+    </div><!--well-->
+
+
+
+</div>
+</body>
+</html>

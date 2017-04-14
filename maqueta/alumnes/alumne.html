@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Borsa de treball: Alumnes</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel="stylesheet" href="../css/borsa.css">
+        <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+        <!--<script src="../js/jquery-3.2.0.min.js"></script>-->
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script>
+            $(function () {
+                $("#dAlumne").click(function () {
+                    $("#mActualitza")[0].click();
+                })
+            });
+        </script>
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="jumbotron">                
+                <img src="../imatges/logoPauPetit.png" height="75" width="75" class="pull-left">
+                <h2>Borsa de treball <small>IES Pau Casesnoves</small></h2>                
+            </div>
+
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>                        
+                        </button>
+                        <a class="navbar-brand" href="alumne.html">Alumne</a>
+                    </div>
+                    <div class="collapse navbar-collapse" id="myNavbar">
+                        <ul class="nav navbar-nav">
+                            <li><a href="alumneDades.html?idAlumne=12" id="mActualitza">Actualitzar dades</a></li>
+                            <li><a href="#">Ofertes</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right ">
+                            <li><a href="#">Nom de l'alumne</a></li>
+                            <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>Dades de l'alumne</h3>
+                    <div class="well click" id="dAlumne">
+                        <p><label>Nom:</label></p>
+                        <p><label>Llinatges:</label></p>
+                        <p><label>Telefon:</label></p>
+                        <p><label>email:</label></p>
+                        <p><label>Estat:</label></p>
+                        <p>&nbsp;</p>
+                        <p><label>Adreça:</label></p>
+                        <p><label>Codi postal:</label> </p>
+                        <p><label>Localitat:</label> </p>
+                        <p><label>Província:</label> </p>
+                    </div>
+                </div><!--col-->
+
+                <div class="col-md-4">
+                    <h3>Estudis acabats</h3>
+                    <div class="well click">
+                        <div>
+                            <p>Desenvolupament d'aplicacions web</p>
+                            <p>Any: 2014</p>
+                        </div>
+                        <div>
+                            <p>Desenvolupament d'aplicacions multiplataforma</p>
+                            <p>Any: 2014</p>
+                        </div>
+                    </div>
+                    <h3>Idiomes</h3>
+                    <div class="well click">
+                        <div>
+                            <p>Català: Molt bé</p>
+                            <p>Castellà: Molt bé</p>
+                            <p>Anglès: Malament</p>
+                        </div>
+                    </div><!--col-->
+                </div><!--col-->
+                <div class="col-md-4">
+                    <h3>Ofertes</h3>
+                    <div class="well click">
+                        <p>Títol:</p>
+                        <p>Data de publicació:</p>
+                        <p>Data de finalització:</p>                      
+                    </div>
+                    <div class="well click">
+                        <p>Títol:</p>
+                        <p>Data de publicació:</p>
+                        <p>Data de finalització:</p>
+                    </div>
+                </div><!--col-->
+            </div><!--row-->
+        </div>
+    </body>
+</html>
