@@ -1,0 +1,84 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Alta Empresa</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <link href="../js/summernote/summernote.css" rel="stylesheet">
+    <script src="../js/summernote/summernote.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#textDescripcio').summernote({
+                height: 150,
+                placeholder: "Descripció de l'empresa"
+            });
+
+            $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#bDacord').on('click', function () {
+                $('#mdResultat').modal('hide');
+            });
+            $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#mEsperaTitol').html('Realitzant les modificacions');
+            $('#mdEspera').on('shown.bs.modal', function (e) {
+                var empresa = {};
+                $.each($('#formEmpresa [name]'), function (i, obj) {
+                    empresa[obj.name] = obj.value;
+                });
+                empresa.descripcio = $('#textDescripcio').summernote('code');
+                $.ajax({
+                    method:'PUT',
+                    url:"/empresa/modificarDades",
+                    data:empresa
+                }).done(function () {
+                    $('#mrTitol').html('Actualització correcte')
+                    $('#mrText').html("<p>Les dades s'han modificat correctament.</p>");
+                    $('#bDacord').on('click', function () {
+                        window.location.href = "dashBoard";
+                    });
+                }).fail(function () {
+                    $('#mrTitol').html("Problemes amb l'actualització")
+                    $('#mrText').html("<p>Les modificacions no s'han pogut realitzar.</p>");
+                    $('#bDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+            });
+
+
+            $('#formEmpresa').submit(function (event) {
+                event.preventDefault();
+
+                $('#mdEspera').modal('show');
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">Empresa</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Actualitzar dades</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="dashBoard">{{objEmpresa.Nom}}</a></li>
+        <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+
+{% endblock %}                     
+
+{% block contingut %}
+
+    {{include('auxiliars/formEmpresa.html.twig')}}
+
+{% endblock %}  

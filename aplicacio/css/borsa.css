@@ -13,7 +13,7 @@
     padding-bottom: 1.5em;
 }
 .well.click:hover{
-   /* background-color: #ddd;*/
+    /* background-color: #ddd;*/
     /*ombra*/
     -webkit-box-shadow: 14px 10px 14px 0px rgba(50, 50, 50, 0.75);
     -moz-box-shadow:    14px 10px 14px 0px rgba(50, 50, 50, 0.75);
@@ -24,5 +24,9 @@ p{
     text-align: justify;
 }
 .img-dreta{
- margin-left:1em;   
+    margin-left:1em;   
+}
+.form-group.required .control-label:after { 
+    content:"  *";
+    color:red;
 }

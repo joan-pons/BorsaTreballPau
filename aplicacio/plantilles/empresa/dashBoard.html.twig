@@ -1,0 +1,82 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Empresa</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#dEmpresa").click(function () {
+                $("#mActualitza")[0].click();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="#">Empresa</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
+        <li><a href="contactes.html?idEmpresa=12" id="mContactes">Contactes</a></li>
+        <li><a href="ofertes.html?idEmpresa=12" >Ofertes</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="#">{{ empresa.Nom }}</a></li>
+        <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}          
+{% block contingut %}
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Dades de l'empresa</h3>
+            <div class="well click" id="dEmpresa">
+                <p><label>Nom: &nbsp;</label>{{ empresa.Nom }}</p>
+                <p><label>Telefon: &nbsp;</label>{{ empresa.Telefon }}</p>
+                <p><label>Correu electrònic: &nbsp;</label>{{ empresa.email }}</p>
+                <p><label>Activa: &nbsp;</label>{% if empresa.Activa %} Si {%else%} No {%endif%}</p>
+                <p>&nbsp;</p>
+                <p><label>Adreça: &nbsp;</label>{{ empresa.Adreca }}</p>
+                <p><label>Codi postal: &nbsp;</label>{{ empresa.CodiPostal }}</p>
+                <p><label>Localitat: &nbsp;</label>{{ empresa.Localitat }}</p>
+                <p><label>Província: &nbsp;</label>{{ empresa.Provincia }}</p>
+            </div>
+        </div><!--col-->
+        <div class="col-md-4" id="contactes">
+            <h3>Contactes</h3>
+            {% if contactes is empty %}
+                <div class='well'>
+                    <p> L'empresa encara no té definida cap persona de contacte.</p>                 
+                </div>
+            {% else %}
+                {% for contacte in contactes %}
+                    <div class="well click" id="cont4">
+                        <p><label>Nom: &nbsp;</label>{{contacte.Nom }} {{contacte.Llinatges}}</p>
+                        <p><label>Càrrec: &nbsp;{{contacte.Carrec }}</label></p>
+                        <p><label>Correu electrònic: &nbsp;</label>{{contacte.email }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div><!--col-->
+        <div class="col-md-4">
+            <h3>Ofertes</h3>
+            <div class="well click">
+                <p>Títol:</p>
+                <p>Data de publicació:</p>
+                <p>Data de finalització:</p>
+                <p>Alumnes avisats: </p>
+            </div>
+            <div class="well click">
+                <p>Títol:</p>
+                <p>Data de publicació:</p>
+                <p>Data de finalització:</p>
+                <p>Alumnes avisats: </p>
+            </div>
+        </div><!--col-->
+    </div><!--row-->
+{% endblock %}  
+

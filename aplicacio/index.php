@@ -39,14 +39,6 @@ $container = $app->getContainer();
 //    return $logger;
 //};
 //
-//
-//$container['db'] = function ($c) {
-//    $db = $c['settings']['db'];
-//    $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'], $db['user'], $db['pass']);
-//    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-//    return $pdo;
-//};
 
 
 $container['db'] = function ($c) {
@@ -81,14 +73,54 @@ $container['view'] = function ($container) {
 
 // Index
 $app->get('/', function ($request, $response, $args) {
-    return $this->view->render($response, 'index.html');
+    return $this->view->render($response, 'index.html.twig');
 });
 
 // Entrada Empresa
-$app->get('/empresa', function ($request, $response, $args) {
-    return $this->view->render($response, 'empresa/indexEmpresa.html', ['tipus' => 20]);
+$app->get('/empresaLogin', function ($request, $response, $args) {
+    return $this->view->render($response, 'empresa/indexEmpresa.html.twig', ['tipus' => 20]);
 });
 
+//Alta empresa
+$app->get('/altaEmpresa', function ($request, $response, $args) {
+//   $objEmpresa=new Empresa(1,'Bestard','<h1>Bestard</h1><p>Idòa això</p>','Carrer nou 9','07330','Lloseta','Balears','987456321','info@bestard.com',true,false,'12/03/2017','www.bestar.com');
+    return $this->view->render($response, 'empresa/altaEmpresa.html.twig');
+});
+
+$app->post('/altaEmpresa', function ($request, $response) {
+    return DaoEmpresa::altaEmpresa($request, $response, $this);
+});
+
+// Entrada Empresa
+$app->get('/empresa/dashBoard', function ($request, $response, $args) {
+    $this->dbEloquent;
+    $empresa = Empresa::find(2);
+    $contactes=DaoEmpresa::contactesEmpresa($empresa->idEmpresa);
+    return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa,'contactes'=>$contactes]);
+});
+$app->get('/empresa/modificarDades', function ($request, $response, $args) {
+    $this->dbEloquent;
+    $empresa = Empresa::find(2);
+    return $this->view->render($response, 'empresa/empresaDades.html.twig', ['objEmpresa' => $empresa]);
+});
+$app->put('/empresa/modificarDades', function ($request, $response, $args) {
+    return DaoEmpresa::modificarEmpresa($request, $response, $this);
+});
+
+$app->get('/empresa/afegirContacte', function ($request, $response, $args) {
+    $this->dbEloquent;
+    $empresa = Empresa::find(2);    
+    return $this->view->render($response, 'empresa/afegirContacte.html.twig', ['objEmpresa' => $empresa]);
+});
+$app->post('/empresa/afegirContacte', function ($request, $response, $args) {
+    return DaoEmpresa::altaContacte($request, $response, $this);
+});
+$app->get('/empresa/contactesEmpresa', function ($request, $response, $args) {
+    $this->dbEloquent;
+    $empresa = Empresa::find(2);
+    $contactes=DaoEmpresa::contactesEmpresa($empresa->idEmpresa);
+    return $response->withJson($contactes);
+});
 //Entrada Alumnes
 $app->get('/alumne', function ($request, $response, $args) {
     return $this->view->render($response, 'alumne/indexAlumne.html', ['tipus' => 30]);
@@ -99,38 +131,7 @@ $app->get('/professor', function ($request, $response, $args) {
     return $this->view->render($response, 'professor/indexProfessor.html', ['tipus' => 10]);
 });
 
-//Alta empresa
-$app->get('/altaEmpresa', function ($request, $response, $args) {
-//   $objEmpresa=new Empresa(1,'Bestard','<h1>Bestard</h1><p>Idòa això</p>','Carrer nou 9','07330','Lloseta','Balears','987456321','info@bestard.com',true,false,'12/03/2017','www.bestar.com');
-    return $this->view->render($response, 'empresa/altaEmpresa.html');
-});
-//$app->post('/altaEmpresa', function ($request, $response) {
-//    $data = $request->getParsedBody();
-//   
-//    $empresa = new Empresa(filter_var($data['idEmpresa'], FILTER_SANITIZE_STRING)
-//            , filter_var($data['Nom'], FILTER_SANITIZE_STRING)
-//            , $data['descripcio']
-//            , filter_var($data['Adreca'], FILTER_SANITIZE_STRING)
-//            , filter_var($data['CodiPostal'], FILTER_SANITIZE_STRING)
-//            , filter_var($data['Localitat'], FILTER_SANITIZE_STRING)
-//            , filter_var($data['Provincia'], FILTER_SANITIZE_STRING)
-//            , filter_var($data['Telefon'], FILTER_SANITIZE_STRING)
-//            , filter_var($data['email'], FILTER_SANITIZE_EMAIL)
-//            , filter_var($data['Actiu'], FILTER_SANITIZE_STRING)
-//            , false
-//            , filter_var($data['Nom'], FILTER_SANITIZE_STRING)
-//            , filter_var($data['url'], FILTER_SANITIZE_URL)
-//    );
-//
-//    //$response->getBody()->write("Ok");
-//    $response=$response->withJson($empresa->expose());
-//    return $response;
-//});
 
-$app->post('/altaEmpresa', function ($request, $response) {
-    return DaoEmpresa::altaEmpresa($request, $response, $this);
-    
-});
 
 $app->get('/professor/{id}', function(Request $request, Response $response, $args) {
 //return recuperaInteri($request, $response, $this->db);
