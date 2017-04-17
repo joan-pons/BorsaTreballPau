@@ -23,11 +23,11 @@ class Empresa extends Model {
     protected $primaryKey = "idEmpresa";
     public $timestamps = false;
 
-    public function contactes() {
-        return $this->hasMany('Borsa\Contacte', 'idContacte', 'idEmpresa');
-        //return Contacte::all()->where('idEmpresa', $this->$primaryKey)->all();
+    public function contactes($emp) {
+        //return $this->hasMany('Borsa\Contacte', 'idContacte', 'idEmpresa');
         //return $this->hasMany('Borsa\Contacte', 'idEmpresa', 'idContacte');
-        //return DaoEmpresa::contactesEmpresa($this->$idEmpresa);
+        //return Contacte::all()->where('idEmpresa', $this->$idEmpresa)->get();
+        return DaoEmpresa::contactesEmpresa($emp->idEmpresa);
     }
 
 }

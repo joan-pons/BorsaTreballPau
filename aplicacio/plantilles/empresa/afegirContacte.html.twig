@@ -11,7 +11,7 @@
     <script>
         $(document).ready(function () {
             $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
-            $('#bDacord').on('click', function () {
+            $('#bmDacord').on('click', function () {
                 $('#mdResultat').modal('hide');
             });
             $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
@@ -29,13 +29,13 @@
                 }).done(function () {
                     $('#mrTitol').html('Alta correcta')
                     $('#mrText').html("<p>El contacte s'ha afegit correctament a la llista de contactes de l'empresa.</p>");
-                    $('#bDacord').on('click', function () {
+                    $('#bmDacord').on('click', function () {
                         window.location.href = "dashBoard";
                     });
                 }).fail(function () {
                     $('#mrTitol').html("Problemes amb l'alta")
                     $('#mrText').html("<p>El contacte no s'ha pogut afegir correctament a la llista de contactes de l'empresa.</p>");
-                    $('#bDacord').on('click', function () {
+                    $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
                 }).always(function () {
@@ -58,7 +58,7 @@
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
-        <li><a href="#"><span class="glyphicon glyphicon-list"></span> Llista</a></li>
+        <li><a href="contactes"><span class="glyphicon glyphicon-list"></span> Llista</a></li>
         <li class="active"><a href="#"><span class="glyphicon glyphicon-plus"></span> Afegir</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">

@@ -95,8 +95,8 @@ $app->post('/altaEmpresa', function ($request, $response) {
 $app->get('/empresa/dashBoard', function ($request, $response, $args) {
     $this->dbEloquent;
     $empresa = Empresa::find(2);
-    $contactes=DaoEmpresa::contactesEmpresa($empresa->idEmpresa);
-    return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa,'contactes'=>$contactes]);
+    //$contactes=DaoEmpresa::contactesEmpresa($empresa->idEmpresa);
+    return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa]);//,'contactes'=>$contactes]);
 });
 $app->get('/empresa/modificarDades', function ($request, $response, $args) {
     $this->dbEloquent;
@@ -115,12 +115,23 @@ $app->get('/empresa/afegirContacte', function ($request, $response, $args) {
 $app->post('/empresa/afegirContacte', function ($request, $response, $args) {
     return DaoEmpresa::altaContacte($request, $response, $this);
 });
-$app->get('/empresa/contactesEmpresa', function ($request, $response, $args) {
+$app->put('/empresa/modificarContacte', function ($request, $response) {
+    return DaoEmpresa::modificarContacte($request, $response, $this);
+});
+$app->delete('/empresa/esborrarContacte/{idContacte}', function ($request, $response, $args) {
+    return DaoEmpresa::esborrarContacte($request, $response, $args, $this);
+});
+$app->get('/empresa/contactes', function ($request, $response, $args) {
     $this->dbEloquent;
     $empresa = Empresa::find(2);
-    $contactes=DaoEmpresa::contactesEmpresa($empresa->idEmpresa);
-    return $response->withJson($contactes);
+    return $this->view->render($response, 'empresa/contactes.html.twig', ['empresa' => $empresa]);
 });
+$app->get('/empresa/contactesProves', function ($request, $response, $args) {
+    $this->dbEloquent;
+    $empresa = Empresa::find(2);
+    return $response->withJson($empresa->contactes);
+});
+
 //Entrada Alumnes
 $app->get('/alumne', function ($request, $response, $args) {
     return $this->view->render($response, 'alumne/indexAlumne.html', ['tipus' => 30]);

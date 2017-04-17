@@ -12,7 +12,12 @@
             $("#dEmpresa").click(function () {
                 $("#mActualitza")[0].click();
             });
+            $('#contactes > .click').on('click', function (event) {
+                var id=event.currentTarget.id;
+                window.location.href = "contactes#"+id;
+            });
         });
+
     </script>
 {% endblock %}
 
@@ -22,8 +27,8 @@
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
         <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
-        <li><a href="contactes.html?idEmpresa=12" id="mContactes">Contactes</a></li>
-        <li><a href="ofertes.html?idEmpresa=12" >Ofertes</a></li>
+        <li><a href="contactes" id="mContactes">Contactes</a></li>
+        <li><a href="ofertes" >Ofertes</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="#">{{ empresa.Nom }}</a></li>
@@ -48,13 +53,13 @@
         </div><!--col-->
         <div class="col-md-4" id="contactes">
             <h3>Contactes</h3>
-            {% if contactes is empty %}
+            {% if empresa.contactes(empresa) is empty %}
                 <div class='well'>
                     <p> L'empresa encara no té definida cap persona de contacte.</p>                 
                 </div>
             {% else %}
-                {% for contacte in contactes %}
-                    <div class="well click" id="cont4">
+                {% for contacte in empresa.contactes(empresa) %}
+                    <div class="well click" id="cont{{contacte.idContacte}}">
                         <p><label>Nom: &nbsp;</label>{{contacte.Nom }} {{contacte.Llinatges}}</p>
                         <p><label>Càrrec: &nbsp;{{contacte.Carrec }}</label></p>
                         <p><label>Correu electrònic: &nbsp;</label>{{contacte.email }}</p>

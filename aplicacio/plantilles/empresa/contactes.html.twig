@@ -1,0 +1,226 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Empresa</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var contacte = {};
+            $('#mdConfirm').modal({backdrop: 'static', keyboard: false, show: false});
+
+            $('form [name="bGuardar"]').hide();
+            $('form [name="bCancel"]').hide();
+            $('form [name="bEditar"]').on('click', function (event) {
+                var ident = event.currentTarget.id.replace('bEd', '');
+
+                var form = 'f' + ident;
+                $("#" + form + " input").removeAttr('readonly');
+                $("form .btn-primary").hide('fast');
+                $("form .btn-danger").hide('fast');
+
+                $("#bGuar" + ident).show('fast');
+                $("#bCan" + ident).show('fast');
+
+            });
+
+            $('#bcCancelar').on('click', function () {
+                $('#mdConfirm').modal('hide');
+            });
+
+            $('#bcDacord').on('click', function () {
+                $('#mdConfirm').modal('hide');
+            });
+
+            $('form [name="bSuprimir"]').on('click', function (event) {
+                var ident = event.currentTarget.id.replace('bSup', '');
+                var form = 'f' + ident;
+                contacte.idContacte = $('#' + form + ' [name="idContacte"]').val();
+                $('#mcTitol').html("Confirmi l'eliminació.");
+                $('#mcText').html("<p>La persona de contacte s'esborrarà de la base de dades.</p><p>No obstant això, si aquesta persona de contacte està relacionada amb alguna oferta no es podrà esborrar.</p>");
+
+                $('#mdConfirm').modal('show');
+
+            });
+
+
+            $('form [name="bCancel"]').on('click', function (event) {
+                var ident = event.currentTarget.id.replace('bCan', '');
+
+                var form = 'f' + ident;
+                $("#" + form)[0].reset();
+                $("#" + form + " input").attr('readonly', 'readonly');
+                $("#bGuar" + ident).hide('fast');
+                $("#bCan" + ident).hide('fast');
+                $("form .btn-primary").show('fast');
+                $("form .btn-danger").show('fast');
+            });
+
+
+            $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#bcDacord').on('click', function () {
+                $.each($('#' + event.target.id + ' [name]'), function (i, obj) {
+                    contacte[obj.name] = obj.value;
+                });
+
+                $('#mdResultat').modal('hide');
+                $('#mdEspera').modal('show');
+                $('#mEsperaTitol').html("Realitzant l'eliminació.");
+                $('#mdEspera').on('shown.bs.modal', function (e) {
+                    $.ajax({
+                        method: 'DELETE',
+                        url: "/empresa/esborrarContacte/"+contacte.idContacte,
+                        data: contacte
+                    }).done(function () {
+                        $('#mrTitol').html('Eliminació correcta')
+                        $('#mrText').html("<p>La persona de contacte s'ha esborrat correctament.</p>");
+                        $('#bmDacord').on('click', function () {
+                           /* $("#bGuar" + contacte.idContacte).hide('fast');
+                            $("#bCan" + contacte.idContacte).hide('fast');
+                            $(".btn-primary").show('fast');
+                            $(".btn-danger").show('fast');
+                            */
+                           $('#mdResultat').modal('hide');
+                           location.reload();
+                        });
+                    }).fail(function () {
+                        $('#mrTitol').html("Problemes amb l'eliminació")
+                        $('#mrText').html("<p>La persona de contacte no s'ha pogut esborrar, possiblement perque està associada a alguna oferta.</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
+                    });
+                });
+
+                $('#mdEspera').modal('show');
+            });
+            $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+
+
+            $('form').submit(function (event) {
+                event.preventDefault();
+                $.each($('#' + event.target.id + ' [name]'), function (i, obj) {
+                    contacte[obj.name] = obj.value;
+                });
+
+                $('#mEsperaTitol').html("Realitzant la modificació.");
+                $('#mdEspera').on('shown.bs.modal', function (e) {
+                    $.ajax({
+                        method: 'PUT',
+                        url: "/empresa/modificarContacte",
+                        data: contacte
+                    }).done(function () {
+                        $('#mrTitol').html('Modificació correcta')
+                        $('#mrText').html("<p>Les dades del contacte s'han modificat correctament.</p>");
+                        $('#bmDacord').on('click', function () {
+                            $("#bGuar" + contacte.idContacte).hide('fast');
+                            $("#bCan" + contacte.idContacte).hide('fast');
+                            $(".btn-primary").show('fast');
+                            $(".btn-danger").show('fast');
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).fail(function () {
+                        $('#mrTitol').html("Problemes amb la modificació")
+                        $('#mrText').html("<p>Les dades del contacte no s'han pogut modificar correctament.</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
+                    });
+                });
+
+                $('#mdEspera').modal('show');
+            });
+
+
+        });
+    </script>
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">Empresa</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#"><span class="glyphicon glyphicon-list"></span> Llista</a></li>
+        <li><a href="afegirContacte"><span class="glyphicon glyphicon-plus"></span> Afegir</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="#">{{ empresa.Nom }}</a></li>
+        <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}          
+{% block contingut %}
+
+    <h2>Contactes </h2>
+    {% if empresa.contactes(empresa) is empty %}
+        <div class='well'>
+            <p> L'empresa encara no té definida cap persona de contacte.</p>                 
+        </div>
+    {% else %}
+        {% for contacte in empresa.contactes(empresa) %}
+            <div class='well' id="cont{{contacte.idContacte}}">
+                <form id="f{{contacte.idContacte}}">
+                    <input type="hidden" name="idContacte" value="{{contacte.idContacte}}">
+                    <input type="hidden" name="idEmpresa" value="{{contacte.idEmpresa}}">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Nom">Nom:</label>
+                                <input type="text" class="form-control" id="Nom" name="Nom"  readonly="readonly" value="{{contacte.Nom}}">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Llinatges">Llinatges:</label>
+                                <input type="text" class="form-control" id="Llinatges" name="Llinatges"  readonly="readonly"  value="{{contacte.Llinatges}}">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="email">Càrrec: </label>
+                                <input type="text" class="form-control" id="carrec" name="Carrec" readonly="readonly"  value="{{contacte.Carrec}}">
+                            </div>
+                        </div><!--col-->
+                    </div><!--row-->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="email">email:</label>
+                                <input type="email" class="form-control" id="email" name="email" readonly="readonly" value="{{contacte.email}}">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="Telefon">Telefon:</label>
+                                <input type="text" class="form-control" id="Telefon" name="Telefon" readonly="readonly" value="{{contacte.Telefon}}">
+                            </div>
+                        </div><!--col-->
+                        <div class="col-md-4">
+
+                            <div >
+                                <label for="email">&nbsp;</label>
+                                <div>
+                                    <button class="btn btn-primary" type="button" name="bEditar" id="bEd{{contacte.idContacte}}">Editar</button>
+                                    <button class="btn btn-danger" type="button" name="bSuprimir" id="bSup{{contacte.idContacte}}">Suprimir</button>
+                                    <button class="btn btn-success" type="submit" name="bGuardar" id="bGuar{{contacte.idContacte}}">Guardar</button>
+                                    <button class="btn btn-default" type="reset"  name="bCancel" id="bCan{{contacte.idContacte}}">Cancel·lar</button>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    </div><!--row-->
+                </form>
+            </div><!--well-->
+        {% endfor %}
+    {% endif %}
+
+    {{include('auxiliars/modals.html.twig')}}
+{% endblock %} 

@@ -19,7 +19,7 @@
             });
 
             $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
-            $('#bDacord').on('click', function () {
+            $('#bmDacord').on('click', function () {
                 $('#mdResultat').modal('hide');
             });
             $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
@@ -37,13 +37,13 @@
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')
                     $('#mrText').html("<p>Les dades s'han modificat correctament.</p>");
-                    $('#bDacord').on('click', function () {
+                    $('#bmDacord').on('click', function () {
                         window.location.href = "dashBoard";
                     });
                 }).fail(function () {
                     $('#mrTitol').html("Problemes amb l'actualització")
                     $('#mrText').html("<p>Les modificacions no s'han pogut realitzar.</p>");
-                    $('#bDacord').on('click', function () {
+                    $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
                 }).always(function () {

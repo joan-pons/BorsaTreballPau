@@ -64,13 +64,40 @@ class DaoEmpresa {
         $contacte->Llinatges = filter_var($data['Llinatges'], FILTER_SANITIZE_STRING);
         $contacte->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
         $contacte->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
+        $contacte->Carrec = filter_var($data['Carrec'], FILTER_SANITIZE_STRING);
         $contacte->idEmpresa = filter_var($data['idEmpresa'], FILTER_SANITIZE_NUMBER_INT);
         $contacte->save();
         return $response->withJSON($contacte);
     }
 
-    public function contactesEmpresa($idEmpresa){
-        $contactes = Contacte::all()->where('idEmpresa',$idEmpresa);
+    public function contactesEmpresa($idEmpresa) {
+        $contactes = Contacte::all()->where('idEmpresa', $idEmpresa);
         return $contactes;
     }
+
+    public function modificarContacte(Request $request, Response $response, \Slim\Container $container) {
+
+        $container->dbEloquent;
+        $data = $request->getParsedBody();
+        $contacte = Contacte::find($data['idContacte']);
+        $contacte->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
+        $contacte->Llinatges = filter_var($data['Llinatges'], FILTER_SANITIZE_STRING);
+        $contacte->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
+        $contacte->Carrec = filter_var($data['Carrec'], FILTER_SANITIZE_STRING);
+        $contacte->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
+        $contacte->idEmpresa = filter_var($data['idEmpresa'], FILTER_SANITIZE_NUMBER_INT);
+        $contacte->save();
+        return $response->withJSON($contacte);
+    }
+
+    public function esborrarContacte(Request $request, Response $response, $args, \Slim\Container $container) {
+
+        $container->dbEloquent;
+        
+        $contacte = Contacte::find($args['idContacte']);
+        
+        $contacte->delete();
+        return $response->withJSON($contacte);
+    }
+
 }
