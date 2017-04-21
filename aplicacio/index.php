@@ -135,12 +135,10 @@ $app->get('/empresa/contactesProves', function ($request, $response, $args) {
 $app->get('/empresa/canviarContrasenya', function ($request, $response, $args) {
     $this->dbEloquent;
     $empresa = Empresa::find(2);
-    return $this->view->render($response, 'empresa/contrasenya.html.twig', ['idUsuari' => $empresa->idEmpresa, "tipusUsuari" => 20]);
+    return $this->view->render($response, 'empresa/contrasenya.html.twig', ['empresa' => $empresa, "tipusUsuari" => 20, "nomUsuari" => $empresa->email]);
 });
 $app->put('/empresa/canviarContrasenya', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $empresa = Empresa::find(2);
-    return $this->view->render($response, 'empresa/contrasenya.html.twig', ['idUsuari' => $empresa->idEmpresa, "tipusUsuari" => 20]);
+    return DaoEmpresa::canviarContrasenya($request, $response, $this);
 });
 //Entrada Alumnes
 $app->get('/alumne', function ($request, $response, $args) {

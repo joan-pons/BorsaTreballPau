@@ -28,14 +28,14 @@
                     url: "/empresa/canviarContrasenya",
                     data: contrasenya
                 }).done(function () {
-                    $('#mrTitol').html('Actualització correcte')
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-check"></span>&nbsp; Actualització correcte');
                     $('#mrText').html("<p>La contrasenya s'ha modificat correctament.</p>");
                     $('#bmDacord').on('click', function () {
                         window.location.href = "dashBoard";
                     });
-                }).fail(function () {
-                    $('#mrTitol').html("Problemes amb l'actualització")
-                    $('#mrText').html("<p>La contrasenya no s'ha pogut canviar.</p>");
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                    $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
