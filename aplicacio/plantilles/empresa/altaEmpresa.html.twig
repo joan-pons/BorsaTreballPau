@@ -35,9 +35,9 @@
                     $('#bmDacord').on('click', function () {
                         window.location.href = "empresa";
                     });
-                }).fail(function () {
-                    $('#mrTitol').html("Problemes amb l'alta")
-                    $('#mrText').html("<p>L'alta no s'ha pogut realitzar correctament.</p>");
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'alta');
+                    $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });

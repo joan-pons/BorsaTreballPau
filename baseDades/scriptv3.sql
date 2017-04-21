@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `borsa`.`Alumnes` (
   `Email` VARCHAR(75) NOT NULL,
   `Actiu` TINYINT(1) NOT NULL DEFAULT 0,
   `EstatLaboral_idEstatLaboral` INT NOT NULL,
-  PRIMARY KEY (`idAlumne`, `EstatLaboral_idEstatLaboral`),
+  PRIMARY KEY (`idAlumne`),
   CONSTRAINT `fk_Alumnes_EstatLaboral1`
     FOREIGN KEY (`EstatLaboral_idEstatLaboral`)
     REFERENCES `borsa`.`EstatLaboral` (`idEstatLaboral`)
@@ -92,18 +92,18 @@ CREATE TABLE IF NOT EXISTS `borsa`.`Contactes` (
   `Telefon` CHAR(9) NULL,
   `email` VARCHAR(75) NOT NULL,
   `Carrec` VARCHAR(75) NULL,
-  `idEmpresa` INT NOT NULL,
+  `Empreses_idEmpresa` INT NOT NULL,
   PRIMARY KEY (`idContacte`),
-  CONSTRAINT `fk_Contacte_Empresa`
-    FOREIGN KEY (`idEmpresa`)
+  CONSTRAINT `fk_Contactes_Empreses1`
+    FOREIGN KEY (`Empreses_idEmpresa`)
     REFERENCES `borsa`.`Empreses` (`idEmpresa`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Contacte_Empresa_idx` ON `borsa`.`Contactes` (`idEmpresa` ASC);
-
 CREATE UNIQUE INDEX `email_UNIQUE` ON `borsa`.`Contactes` (`email` ASC);
+
+CREATE INDEX `fk_Contactes_Empreses1_idx` ON `borsa`.`Contactes` (`Empreses_idEmpresa` ASC);
 
 
 -- -----------------------------------------------------
@@ -348,16 +348,16 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `borsa`.`usuaris`
+-- Table `borsa`.`Usuaris`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `borsa`.`usuaris` ;
+DROP TABLE IF EXISTS `borsa`.`Usuaris` ;
 
-CREATE TABLE IF NOT EXISTS `borsa`.`usuaris` (
-  `idusuari` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `borsa`.`Usuaris` (
+  `idusuari` INT NOT NULL AUTO_INCREMENT,
   `tipusUsuari` INT NOT NULL,
   `nomUsuari` VARCHAR(75) NOT NULL,
   `contrasenya` VARCHAR(75) NOT NULL,
-  PRIMARY KEY (`idusuari`, `tipusUsuari`),
+  PRIMARY KEY (`idusuari`),
   CONSTRAINT `fk_usuaris_TipusUsuaris1`
     FOREIGN KEY (`tipusUsuari`)
     REFERENCES `borsa`.`TipusUsuaris` (`idTipusUsuaris`)
@@ -365,18 +365,18 @@ CREATE TABLE IF NOT EXISTS `borsa`.`usuaris` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE UNIQUE INDEX `nomUsuari_UNIQUE` ON `borsa`.`usuaris` (`nomUsuari` ASC);
+CREATE UNIQUE INDEX `nomUsuari_UNIQUE` ON `borsa`.`Usuaris` (`nomUsuari` ASC);
 
-CREATE INDEX `fk_usuaris_TipusUsuaris1_idx` ON `borsa`.`usuaris` (`tipusUsuari` ASC);
+CREATE INDEX `fk_usuaris_TipusUsuaris1_idx` ON `borsa`.`Usuaris` (`tipusUsuari` ASC);
 
 
 -- -----------------------------------------------------
--- Table `borsa`.`rols`
+-- Table `borsa`.`Rols`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `borsa`.`rols` ;
+DROP TABLE IF EXISTS `borsa`.`Rols` ;
 
-CREATE TABLE IF NOT EXISTS `borsa`.`rols` (
-  `idrol` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `borsa`.`Rols` (
+  `idrol` INT NOT NULL,
   `nomRol` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idrol`))
 ENGINE = InnoDB;
@@ -476,31 +476,154 @@ CREATE INDEX `fk_Localitats_Illes1_idx` ON `borsa`.`Localitats` (`idIlla` ASC);
 
 
 -- -----------------------------------------------------
--- Table `borsa`.`usuaris_has_rols`
+-- Table `borsa`.`Usuaris_has_Rols`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `borsa`.`usuaris_has_rols` ;
+DROP TABLE IF EXISTS `borsa`.`Usuaris_has_Rols` ;
 
-CREATE TABLE IF NOT EXISTS `borsa`.`usuaris_has_rols` (
-  `usuaris_idusuari` INT NOT NULL,
-  `usuaris_tipusUsuari` INT NOT NULL,
-  `rols_idrol` INT NOT NULL,
-  PRIMARY KEY (`usuaris_idusuari`, `usuaris_tipusUsuari`, `rols_idrol`),
-  CONSTRAINT `fk_usuaris_has_rols_usuaris1`
-    FOREIGN KEY (`usuaris_idusuari` , `usuaris_tipusUsuari`)
-    REFERENCES `borsa`.`usuaris` (`idusuari` , `tipusUsuari`)
+CREATE TABLE IF NOT EXISTS `borsa`.`Usuaris_has_Rols` (
+  `Usuaris_idusuari` INT NOT NULL,
+  `Rols_idrol` INT NOT NULL,
+  PRIMARY KEY (`Usuaris_idusuari`, `Rols_idrol`),
+  CONSTRAINT `fk_Usuaris_has_Rols_Usuaris1`
+    FOREIGN KEY (`Usuaris_idusuari`)
+    REFERENCES `borsa`.`Usuaris` (`idusuari`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_usuaris_has_rols_rols1`
-    FOREIGN KEY (`rols_idrol`)
-    REFERENCES `borsa`.`rols` (`idrol`)
+  CONSTRAINT `fk_Usuaris_has_Rols_Rols1`
+    FOREIGN KEY (`Rols_idrol`)
+    REFERENCES `borsa`.`Rols` (`idrol`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_usuaris_has_rols_rols1_idx` ON `borsa`.`usuaris_has_rols` (`rols_idrol` ASC);
+CREATE INDEX `fk_Usuaris_has_Rols_Rols1_idx` ON `borsa`.`Usuaris_has_Rols` (`Rols_idrol` ASC);
 
-CREATE INDEX `fk_usuaris_has_rols_usuaris1_idx` ON `borsa`.`usuaris_has_rols` (`usuaris_idusuari` ASC, `usuaris_tipusUsuari` ASC);
+CREATE INDEX `fk_Usuaris_has_Rols_Usuaris1_idx` ON `borsa`.`Usuaris_has_Rols` (`Usuaris_idusuari` ASC);
 
+USE `borsa`;
+
+DELIMITER $$
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Alumnes_AFTER_INSERT` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Alumnes_AFTER_INSERT` AFTER INSERT ON `Alumnes` FOR EACH ROW
+BEGIN
+   INSERT INTO Usuaris
+   (tipusUsuari,nomUsuari,contrasenya)
+   VALUES
+   (30,NEW.email,substring(md5(rand()),-8));
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Alumnes_AFTER_UPDATE` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Alumnes_AFTER_UPDATE` AFTER UPDATE ON `Alumnes` FOR EACH ROW
+BEGIN
+if NEW.email <=> OLD.email THEN
+update Usuaris set nomUsuari=NEW.email where nomUsuari=OLD.email;
+end if;
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Alumnes_AFTER_DELETE` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Alumnes_AFTER_DELETE` AFTER DELETE ON `Alumnes` FOR EACH ROW
+BEGIN
+DECLARE id INT;
+ set id=(select idUsuari from usuaris where nomUsuari=OLD.email);
+ delete from Usuaris_has_Rols where usuaris_idUsuari=id;
+ delete from Usuaris where idUsuari=id;
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Empreses_AFTER_INSERT` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Empreses_AFTER_INSERT` AFTER INSERT ON `Empreses` FOR EACH ROW
+BEGIN
+   INSERT INTO Usuaris
+   (tipusUsuari,nomUsuari,contrasenya)
+   VALUES
+   (20,NEW.email,substring(md5(rand()),-8));
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Empreses_AFTER_UPDATE` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Empreses_AFTER_UPDATE` AFTER UPDATE ON `Empreses` FOR EACH ROW
+BEGIN
+if NEW.email <=> OLD.email THEN
+update Usuaris set nomUsuari=NEW.email where nomUsuari=OLD.email;
+end if;
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Empreses_AFTER_DELETE` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Empreses_AFTER_DELETE` AFTER DELETE ON `Empreses` FOR EACH ROW
+BEGIN
+DECLARE id INT;
+ set id=(select idUsuari from usuaris where nomUsuari=OLD.email);
+ delete from Usuaris_has_Rols where usuaris_idUsuari=id;
+ delete from Usuaris where idUsuari=id;
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Professors_AFTER_INSERT` $$
+USE `borsa`$$
+CREATE DEFINER=`usuariWeb`@`%` TRIGGER `borsa`.`Professors_AFTER_INSERT` AFTER INSERT ON `Professors` FOR EACH ROW
+BEGIN
+   INSERT INTO Usuaris
+   (tipusUsuari,nomUsuari,contrasenya)
+   VALUES
+   (10,NEW.email,substring(md5(rand()),-8));
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Professors_AFTER_UPDATE` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Professors_AFTER_UPDATE` AFTER UPDATE ON `Professors` FOR EACH ROW
+BEGIN
+if NEW.email <=> OLD.email THEN
+update Usuaris set nomUsuari=NEW.email where nomUsuari=OLD.email;
+end if;
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Professors_AFTER_DELETE` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Professors_AFTER_DELETE` AFTER DELETE ON `Professors` FOR EACH ROW
+BEGIN
+DECLARE id INT;
+DECLARE tipus INT;
+ set id=(select idUsuari from usuaris where nomUsuari=OLD.email);
+ set tipus=(select tipusUsuari from usuaris where nomUsuari=OLD.email);
+ delete from Usuaris_has_Rols where usuaris_idUsuari=id and usuaris_tipus_usuari=tipus;
+ delete from Usuaris where idUsuari=id;
+END$$
+
+
+USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`usuaris_AFTER_INSERT` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`usuaris_AFTER_INSERT` AFTER INSERT ON `Usuaris` FOR EACH ROW
+BEGIN
+INSERT INTO Usuaris_has_Rols
+   (usuaris_idusuari, rols_idrol)
+   VALUES
+   (New.idusuari,New.tipusUsuari);
+END$$
+
+
+DELIMITER ;
 SET SQL_MODE = '';
 GRANT USAGE ON *.* TO usuariWeb;
  DROP USER usuariWeb;
@@ -515,121 +638,6 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
-
-USE `borsa`;
-
-DELIMITER $$
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Alumnes_AFTER_INSERT` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Alumnes_AFTER_INSERT` AFTER INSERT ON `Alumnes` FOR EACH ROW
-BEGIN
-   INSERT INTO usuaris
-   (idUsuari, tipusUsuari,nomUsuari,contrasenya)
-   VALUES
-   (New.idAlumne,30,NEW.email,substring(md5(rand()),-8));
-END$$
-
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Alumnes_AFTER_UPDATE` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Alumnes_AFTER_UPDATE` AFTER UPDATE ON `Alumnes` FOR EACH ROW
-BEGIN
-if NEW.email <=> OLD.email THEN
-update usuaris set nomUsuari=NEW.email where nomUsuari=OLD.email;
-end if;
-END$$
-
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Alumnes_AFTER_DELETE` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Alumnes_AFTER_DELETE` AFTER DELETE ON `Alumnes` FOR EACH ROW
-BEGIN
-DECLARE id INT;
- set id=(select idUsuari from usuaris where nomUsuari=OLD.email);
- delete from usuaris_has_rols where usuaris_idUsuari=id;
- delete from usuaris where idUsuari=id;
-END$$
-
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Empreses_AFTER_INSERT` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Empreses_AFTER_INSERT` AFTER INSERT ON `Empreses` FOR EACH ROW
-BEGIN
-   INSERT INTO usuaris
-   (idUsuari, tipusUsuari,nomUsuari,contrasenya)
-   VALUES
-   (New.idEmpresa,20,NEW.email,substring(md5(rand()),-8));
-END$$
-
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Empreses_AFTER_UPDATE` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Empreses_AFTER_UPDATE` AFTER UPDATE ON `Empreses` FOR EACH ROW
-BEGIN
-if NEW.email <=> OLD.email THEN
-update usuaris set nomUsuari=NEW.email where nomUsuari=OLD.email;
-end if;
-END$$
-
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Empreses_AFTER_DELETE` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Empreses_AFTER_DELETE` AFTER DELETE ON `Empreses` FOR EACH ROW
-BEGIN
-DECLARE id INT;
- set id=(select idUsuari from usuaris where nomUsuari=OLD.email);
- delete from usuaris_has_rols where usuaris_idUsuari=id;
- delete from usuaris where idUsuari=id;
-END$$
-
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Professors_AFTER_INSERT` $$
-USE `borsa`$$
-CREATE DEFINER=`usuariWeb`@`%` TRIGGER `borsa`.`Professors_AFTER_INSERT` AFTER INSERT ON `Professors` FOR EACH ROW
-BEGIN
-   INSERT INTO usuaris
-   (idUsuari, tipusUsuari,nomUsuari,contrasenya)
-   VALUES
-   (New.idProfessor,10,NEW.email,substring(md5(rand()),-8));
-END$$
-
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Professors_AFTER_UPDATE` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Professors_AFTER_UPDATE` AFTER UPDATE ON `Professors` FOR EACH ROW
-BEGIN
-if NEW.email <=> OLD.email THEN
-update usuaris set nomUsuari=NEW.email where nomUsuari=OLD.email;
-end if;
-END$$
-
-
-USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Professors_AFTER_DELETE` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Professors_AFTER_DELETE` AFTER DELETE ON `Professors` FOR EACH ROW
-BEGIN
-DECLARE id INT;
-DECLARE tipus INT;
- set id=(select idUsuari from usuaris where nomUsuari=OLD.email);
- set tipus=(select tipusUsuari from usuaris where nomUsuari=OLD.email);
- delete from usuaris_has_rols where usuaris_idUsuari=id and usuaris_tipus_usuari=tipus;
- delete from usuaris where idUsuari=id;
-END$$
-
-
-DELIMITER ;
-
-
 -- -----------------------------------------------------
 -- Data for table `borsa`.`TipusUsuaris`
 -- -----------------------------------------------------
@@ -640,6 +648,21 @@ INSERT INTO `borsa`.`TipusUsuaris` (`idTipusUsuaris`, `nomTipusUsuari`) VALUES (
 INSERT INTO `borsa`.`TipusUsuaris` (`idTipusUsuaris`, `nomTipusUsuari`) VALUES (30, 'Estudiant');
 
 COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `borsa`.`Rols`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `borsa`;
+INSERT INTO `borsa`.`Rols` (`idrol`, `nomRol`) VALUES (30, 'Alumne');
+INSERT INTO `borsa`.`Rols` (`idrol`, `nomRol`) VALUES (20, 'Empresa');
+INSERT INTO `borsa`.`Rols` (`idrol`, `nomRol`) VALUES (10, 'Professor');
+INSERT INTO `borsa`.`Rols` (`idrol`, `nomRol`) VALUES (40, 'Administrador');
+
+COMMIT;
+
+
 
 -- -----------------------------------------------------
 -- Data for table `borsa`.`EstatLaboral`
@@ -670,7 +693,7 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `borsa`;
-INSERT INTO `borsa`.`Contactes` (`idContacte`, `Nom`, `Llinatges`, `Telefon`, `email`, `Carrec`, `idEmpresa`) VALUES (DEFAULT, 'Jo', 'Mateix', '', 'jomateix@nissan.jp', NULL, 2);
+INSERT INTO `borsa`.`Contactes` (`idContacte`, `Nom`, `Llinatges`, `Telefon`, `email`, `Carrec`, `Empreses_idEmpresa`) VALUES (DEFAULT, 'Jo', 'Mateix', '', 'jomateix@nissan.jp', NULL, 2);
 
 COMMIT;
 
@@ -724,22 +747,6 @@ INSERT INTO `borsa`.`Professors` (`idProfessor`, `Nom`, `Llinatges`, `Telefon`, 
 INSERT INTO `borsa`.`Professors` (`idProfessor`, `Nom`, `Llinatges`, `Telefon`, `Email`, `Actiu`) VALUES (DEFAULT, 'Tomeu', 'Campaner Fornés', '699855477', 'cfb@iespaucasesnoves.cat', false);
 
 COMMIT;
-
-
-
--- -----------------------------------------------------
--- Data for table `borsa`.`rols`
--- -----------------------------------------------------
-START TRANSACTION;
-USE `borsa`;
-INSERT INTO `borsa`.`rols` (`idrol`, `nomRol`) VALUES (DEFAULT, 'Alumne');
-INSERT INTO `borsa`.`rols` (`idrol`, `nomRol`) VALUES (DEFAULT, 'Empresa');
-INSERT INTO `borsa`.`rols` (`idrol`, `nomRol`) VALUES (DEFAULT, 'Professor');
-INSERT INTO `borsa`.`rols` (`idrol`, `nomRol`) VALUES (DEFAULT, 'Administrador');
-
-COMMIT;
-
-
 -- -----------------------------------------------------
 -- Data for table `borsa`.`Estudis_has_Responsables`
 -- -----------------------------------------------------
@@ -775,3 +782,4 @@ INSERT INTO `borsa`.`Localitats` (`idLocalitat`, `nomLocalitat`, `idIlla`) VALUE
 INSERT INTO `borsa`.`Localitats` (`idLocalitat`, `nomLocalitat`, `idIlla`) VALUES ('071007310', 'Campanet', '071');
 
 COMMIT;
+

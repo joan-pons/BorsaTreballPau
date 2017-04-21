@@ -86,9 +86,9 @@
                            $('#mdResultat').modal('hide');
                            location.reload();
                         });
-                    }).fail(function () {
-                        $('#mrTitol').html("Problemes amb l'eliminació")
-                        $('#mrText').html("<p>La persona de contacte no s'ha pogut esborrar, possiblement perque està associada a alguna oferta.</p>");
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'eliminació');
+                        $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
                         $('#bmDacord').on('click', function () {
                             $('#mdResultat').modal('hide');
                         });
@@ -125,9 +125,9 @@
                             $(".btn-danger").show('fast');
                             $('#mdResultat').modal('hide');
                         });
-                    }).fail(function () {
-                        $('#mrTitol').html("Problemes amb la modificació")
-                        $('#mrText').html("<p>Les dades del contacte no s'han pogut modificar correctament.</p>");
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')
+                        $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
                         $('#bmDacord').on('click', function () {
                             $('#mdResultat').modal('hide');
                         });
@@ -166,11 +166,11 @@
             <p> L'empresa encara no té definida cap persona de contacte.</p>                 
         </div>
     {% else %}
-        {% for contacte in empresa.contactes(empresa) %}
+        {% for contacte in empresa.contactes %}
             <div class='well' id="cont{{contacte.idContacte}}">
                 <form id="f{{contacte.idContacte}}">
                     <input type="hidden" name="idContacte" value="{{contacte.idContacte}}">
-                    <input type="hidden" name="idEmpresa" value="{{contacte.idEmpresa}}">
+                    <input type="hidden" name="idEmpresa" value="{{contacte.Empreses_idEmpresa}}">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">

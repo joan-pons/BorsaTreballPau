@@ -9,22 +9,16 @@
 namespace Borsa;
 
 use \Illuminate\Database\Eloquent\Model as Model;
-use Borsa\Contacte as Contacte;
-use Borsa\DaoEmpresa as DaoEmpresa;
 
 /**
- * Description of Estudis
+ * Description of Rol
  *
  * @author joan
  */
-class Empresa extends Model {
+class Rol extends Model {
 
-    protected $table = 'Empreses';
-    protected $primaryKey = "idEmpresa";
+    protected $table = 'Rols';
+    protected $primaryKey = "idrol";
     public $timestamps = false;
-
-    public function contactes() {
-        return $this->hasMany('Borsa\Contacte', 'Empreses_idEmpresa', 'idEmpresa');
-    }
 
 }

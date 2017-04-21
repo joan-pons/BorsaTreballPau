@@ -6,6 +6,7 @@ use Borsa\Professor as Professor;
 use Borsa\Estudis as Estudis;
 use Borsa\Empresa as Empresa;
 use Borsa\DaoEmpresa as DaoEmpresa;
+use Borsa\Usuari as Usuari;
 
 require 'vendor/autoload.php';
 
@@ -96,7 +97,7 @@ $app->get('/empresa/dashBoard', function ($request, $response, $args) {
     $this->dbEloquent;
     $empresa = Empresa::find(2);
     //$contactes=DaoEmpresa::contactesEmpresa($empresa->idEmpresa);
-    return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa]);//,'contactes'=>$contactes]);
+    return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa]); //,'contactes'=>$contactes]);
 });
 $app->get('/empresa/modificarDades', function ($request, $response, $args) {
     $this->dbEloquent;
@@ -109,7 +110,7 @@ $app->put('/empresa/modificarDades', function ($request, $response, $args) {
 
 $app->get('/empresa/afegirContacte', function ($request, $response, $args) {
     $this->dbEloquent;
-    $empresa = Empresa::find(2);    
+    $empresa = Empresa::find(2);
     return $this->view->render($response, 'empresa/afegirContacte.html.twig', ['objEmpresa' => $empresa]);
 });
 $app->post('/empresa/afegirContacte', function ($request, $response, $args) {
@@ -131,7 +132,16 @@ $app->get('/empresa/contactesProves', function ($request, $response, $args) {
     $empresa = Empresa::find(2);
     return $response->withJson($empresa->contactes);
 });
-
+$app->get('/empresa/canviarContrasenya', function ($request, $response, $args) {
+    $this->dbEloquent;
+    $empresa = Empresa::find(2);
+    return $this->view->render($response, 'empresa/contrasenya.html.twig', ['idUsuari' => $empresa->idEmpresa, "tipusUsuari" => 20]);
+});
+$app->put('/empresa/canviarContrasenya', function ($request, $response, $args) {
+    $this->dbEloquent;
+    $empresa = Empresa::find(2);
+    return $this->view->render($response, 'empresa/contrasenya.html.twig', ['idUsuari' => $empresa->idEmpresa, "tipusUsuari" => 20]);
+});
 //Entrada Alumnes
 $app->get('/alumne', function ($request, $response, $args) {
     return $this->view->render($response, 'alumne/indexAlumne.html', ['tipus' => 30]);
@@ -165,6 +175,15 @@ $app->get('/estudisProfessor/{id}', function(Request $request, Response $respons
     $estudis = $prof->estudis;
     return $response->withJSON($estudis);
 });
+
+
+//Usuaris
+$app->get('/usuari/{id}', function(Request $request, Response $response, $args) {
+//return recuperaInteri($request, $response, $this->db);
+    $this->dbEloquent;
+    return $response->withJSON(Usuari::find($args['id'])->getEntitat());
+});
+
 //Final
 
 $app->run();

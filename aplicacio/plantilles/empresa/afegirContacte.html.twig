@@ -27,14 +27,14 @@
                     url: "/empresa/afegirContacte",
                     data: contacte
                 }).done(function () {
-                    $('#mrTitol').html('Alta correcta')
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-check"></span>&nbsp; Alta correcta')
                     $('#mrText').html("<p>El contacte s'ha afegit correctament a la llista de contactes de l'empresa.</p>");
                     $('#bmDacord').on('click', function () {
                         window.location.href = "dashBoard";
                     });
-                }).fail(function () {
-                    $('#mrTitol').html("Problemes amb l'alta")
-                    $('#mrText').html("<p>El contacte no s'ha pogut afegir correctament a la llista de contactes de l'empresa.</p>");
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'alta')
+                    $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });

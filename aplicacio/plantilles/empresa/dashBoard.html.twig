@@ -27,6 +27,7 @@
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
         <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
+        <li><a href="canviarContrasenya" id="mActualitza">Canviar contrasenya</a></li>
         <li><a href="contactes" id="mContactes">Contactes</a></li>
         <li><a href="ofertes" >Ofertes</a></li>
     </ul>
@@ -58,7 +59,7 @@
                     <p> L'empresa encara no té definida cap persona de contacte.</p>                 
                 </div>
             {% else %}
-                {% for contacte in empresa.contactes(empresa) %}
+                {% for contacte in empresa.contactes %}
                     <div class="well click" id="cont{{contacte.idContacte}}">
                         <p><label>Nom: &nbsp;</label>{{contacte.Nom }} {{contacte.Llinatges}}</p>
                         <p><label>Càrrec: &nbsp;{{contacte.Carrec }}</label></p>

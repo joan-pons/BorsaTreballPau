@@ -40,9 +40,9 @@
                     $('#bmDacord').on('click', function () {
                         window.location.href = "dashBoard";
                     });
-                }).fail(function () {
-                    $('#mrTitol').html("Problemes amb l'actualització")
-                    $('#mrText').html("<p>Les modificacions no s'han pogut realitzar.</p>");
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                    $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
