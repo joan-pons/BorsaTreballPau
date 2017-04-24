@@ -15,16 +15,20 @@ use \Illuminate\Database\Eloquent\Model as Model;
  *
  * @author joan
  */
-class Professor extends Model{
+class Professor extends Model {
 
     protected $table = 'Professors';
     protected $primaryKey = "idProfessor";
     public $timestamps = false;
-    
-    
-    public function estudis(){
+
+    public function estudis() {
         return $this->belongsToMany('Borsa\Estudis', 'Estudis_has_Responsables', 'professors_idProfessor', 'Estudis_Codi');
     }
-    
-    
+
+    public function getUsuari() {
+        $nomUsuari = $this->attributes['email'];
+        $entitat = Usuari::where('nomUsuari', $nomUsuari)->first();
+        return $entitat;
+    }
+
 }

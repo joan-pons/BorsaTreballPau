@@ -18,4 +18,5 @@ class Estudis extends Model{
     protected $table = 'Estudis';
     protected $primaryKey = "Codi";
     public $timestamps = false;
+    public $incrementing = false; //Si no, tracta la clau primaria com a integer
 }

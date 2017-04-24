@@ -1,0 +1,127 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Institut</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#dProfessor").click(function () {
+                $("#mActualitza")[0].click();
+            });
+            $("#dEstudis").click(function () {
+                $("#mEstudis")[0].click();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="#l">{{ professor.Nom }} {{ professor.Llinatges }}</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
+        <li><a href="canviarContrasenya" id="mContrasenya">Canviar contrasenya</a></li>
+        <li><a href="estudis" id="mEstudis">Estudis</a></li>
+        <li><a href="ofertes" >Ofertes</a></li>
+            {% if usuari.teRol(40) %}
+                <li><a href="usuaris" >Usuaris</a></li>
+                <li><a href="empreses" >Empreses</a></li>
+            {% endif %}
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <!--<li><a href="#">{{ professor.Nom }} {{ professor.Llinatges }}</a></li>-->
+        <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}          
+{% block contingut %}
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Dades de la professora / del professor</h3>
+            <div class="well click" id="dProfessor">
+                <p><label>Nom: &nbsp;</label>{{ professor.Nom }}</p>
+                <p><label>Llinatges: &nbsp;</label>{{ professor.Llinatges }}</p>
+                <p><label>Correu electrònic: &nbsp;</label>{{ professor.Email }}</p>
+                <p><label>Telèfon: &nbsp;</label>{{ professor.Telefon }}</p>
+                <p><label>Actiu: &nbsp;</label><span class="glyphicon {% if professor.Actiu %}glyphicon-ok{% else %}glyphicon-remove{% endif %}"></span></p>
+            </div>
+        </div><!--col-->
+        <div class="col-md-4">
+            {% if usuari.teRol(40) %}
+                <h3>Professors/res per validar</h3>
+                {% if companys is empty %}
+                    <div class='well'>
+                        <p> No hi ha companys pendents de validació.</p>                 
+                    </div>
+                {% else %}
+                    {% for company in companys %}
+                        <div class="well click">
+                            <p><label>Nom: &nbsp;</label>{{ company.Llinatges }}, {{ company.Nom }} </p>
+                            <p><label>Correu electrònic: &nbsp;</label>{{ company.Email }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+            {% if not professor.estudis is empty or not usuari.teRol(40) %}
+                <h3>Estudis dels que es responsable</h3>
+                {% if professor.estudis is empty %}
+                    <div class='well'>
+                        <p> Encara no és responsable de cap estudis.</p>                 
+                    </div>
+                {% else %}
+                    <div class="well click" id="dEstudis">
+                        <ul>
+                            {% for estudis in professor.estudis %}
+                                <li><p>{{estudis.Nom }}</p></li>
+                                    {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div><!--col-->
+
+        <div class="col-md-4">
+            {% if usuari.teRol(40) %}
+
+                <h3>Empreses pendents de validar</h3>
+                {% if empreses is empty %}
+                    <div class="well">
+                        <p>No hi ha cap empresa pendent de validació.</p>
+                    </div>
+                {% else %}
+                    {% for empresa in empreses %}
+                        <div class="well click">
+                            <p><label>Empresa: &nbsp;</label>{{ empresa.Nom }}</p>
+                            <p><label>Data de la sol·licitud: &nbsp;</label>{{ empresa.DataAlta }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+            {% endif %}
+            {% if  ofertes is empty  or not usuari.teRol(40) %}
+
+                <h3>Ofertes pendents de validar</h3>
+                {% if ofertes is empty %}
+                    <div class="well">
+                        <p>No hi ha cap oferta pendent de validació.</p>
+                    </div>
+                {% else %}
+                    {% for oferta in ofertes %}
+                        <div class="well click">
+                            <p>Oferta:</p>
+                            <p>Data de la sol·licitud:</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+            {% endif %}
+        </div><!--col-->
+    </div><!--row-->
+{% endblock %}  
+

@@ -26,11 +26,10 @@ class Usuari extends Model {
         return $this->belongsToMany("Borsa\Rol", 'Usuaris_has_Rols', 'Usuaris_idusuari', 'Rols_idrol');
     }
 
-    public function getNomUsuariAttribute($value)
-    {
+    public function getNomUsuariAttribute($value) {
         return $value;
     }
-    
+
     public function getEntitat() {
         $tipus = $this->attributes['tipusUsuari'];
         $nomUsuari = $this->attributes['nomUsuari'];
@@ -54,6 +53,16 @@ class Usuari extends Model {
         }
         //return array('tipus'=>$tipus, 'nomUsuari'=>$nomUsuari);
         return $entitat;
+    }
+
+    public function teRol($rolCercat) {
+        
+        foreach ($this->rols as $rol) {
+            if ($rol->idrol == $rolCercat) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

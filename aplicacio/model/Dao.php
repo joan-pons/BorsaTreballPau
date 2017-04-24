@@ -36,13 +36,14 @@ class Dao {
             }
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
-                case 23000:
+                case 23000:{
                     $missatge = array("missatge" => "La contrasenya no pot ser nula");
                     break;
-
-                default:
+                }
+                default:{
                     $missatge = array("missatge" => "La contrasenya no s'ha pogut canviar correctament.");
                     break;
+                }
             }
             return $response->withJson($missatge, 422);
         }

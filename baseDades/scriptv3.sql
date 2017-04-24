@@ -217,8 +217,11 @@ CREATE TABLE IF NOT EXISTS `borsa`.`Professors` (
   `Telefon` CHAR(9) NULL,
   `Email` VARCHAR(75) NOT NULL,
   `Actiu` TINYINT(1) NOT NULL DEFAULT 0,
+  `Validat` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`idProfessor`))
 ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `Email_UNIQUE` ON `borsa`.`Professors` (`Email` ASC);
 
 
 -- -----------------------------------------------------
@@ -575,6 +578,15 @@ END$$
 
 
 USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Empreses_BEFORE_INSERT` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Empreses_BEFORE_INSERT` BEFORE INSERT ON `Empreses` FOR EACH ROW
+BEGIN
+ SET New.DataAlta=curdate();
+END$$
+
+
+USE `borsa`$$
 DROP TRIGGER IF EXISTS `borsa`.`Professors_AFTER_INSERT` $$
 USE `borsa`$$
 CREATE DEFINER=`usuariWeb`@`%` TRIGGER `borsa`.`Professors_AFTER_INSERT` AFTER INSERT ON `Professors` FOR EACH ROW
@@ -638,6 +650,7 @@ SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 
+
 -- -----------------------------------------------------
 -- Data for table `borsa`.`TipusUsuaris`
 -- -----------------------------------------------------
@@ -661,8 +674,6 @@ INSERT INTO `borsa`.`Rols` (`idrol`, `nomRol`) VALUES (10, 'Professor');
 INSERT INTO `borsa`.`Rols` (`idrol`, `nomRol`) VALUES (40, 'Administrador');
 
 COMMIT;
-
-
 
 -- -----------------------------------------------------
 -- Data for table `borsa`.`EstatLaboral`
@@ -743,10 +754,11 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `borsa`;
-INSERT INTO `borsa`.`Professors` (`idProfessor`, `Nom`, `Llinatges`, `Telefon`, `Email`, `Actiu`) VALUES (DEFAULT, 'Joan', 'Pons Tugores', '666555444', 'ptj@iespaucasesnoves.cat', true);
-INSERT INTO `borsa`.`Professors` (`idProfessor`, `Nom`, `Llinatges`, `Telefon`, `Email`, `Actiu`) VALUES (DEFAULT, 'Tomeu', 'Campaner Fornés', '699855477', 'cfb@iespaucasesnoves.cat', false);
+INSERT INTO `borsa`.`Professors` (`idProfessor`, `Nom`, `Llinatges`, `Telefon`, `Email`, `Actiu`, `Validat`) VALUES (DEFAULT, 'Joan', 'Pons Tugores', '666555444', 'ptj@iespaucasesnoves.cat', true, DEFAULT);
+INSERT INTO `borsa`.`Professors` (`idProfessor`, `Nom`, `Llinatges`, `Telefon`, `Email`, `Actiu`, `Validat`) VALUES (DEFAULT, 'Tomeu', 'Campaner Fornés', '699855477', 'cfb@iespaucasesnoves.cat', false, DEFAULT);
 
 COMMIT;
+
 -- -----------------------------------------------------
 -- Data for table `borsa`.`Estudis_has_Responsables`
 -- -----------------------------------------------------
