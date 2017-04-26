@@ -1,5 +1,12 @@
+{% if tipus==10 %}
+    {% set action='professor/dashBoard' %}
+{% elseif tipus==20 %}
+    {% set action='empresa/dashBoard' %}
+{% else %}
+    {% set action='alumne/dashBoard' %}
+{% endif %}
 <div class="well">
-    <form action="entrar" method="POST">
+    <form id="fLogin" action="{{ action }}" method="GET">
         <input type="hidden" name="tipus" value="{{tipus}}">
         <div class="form-group">
             <label for="usuari">Email:</label>
@@ -13,3 +20,10 @@
         <button type="submit" name="bEntrar" >Entrar</button>
     </form>
 </div>
+<script>
+    $("#fLogin").on('submit', function (event) {
+        event.preventDefault();
+        //Ajax de validació
+        window.location='{{ action }}';
+    });
+</script>

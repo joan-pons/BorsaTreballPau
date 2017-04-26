@@ -169,5 +169,34 @@ class DaoEmpresa extends Dao {
             return $response->withJson($missatge, 422);
         }
     }
+    
+    public function activar(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+            $empresa = Empresa::find($args['idEmpresa']);
+            if ($empresa != null) {
+                $data = $request->getParsedBody();
+                $empresa->Activa=filter_var($data['Activa'], FILTER_SANITIZE_STRING)=='true';
+                $empresa->Validada=filter_var($data['Validada'], FILTER_SANITIZE_STRING)=='true';
+                $empresa->save();
+                return $response->withJSON($empresa);
+            } else {
+                return $response->withJson("No es troba cap empresa amb l'identificador demanat.", 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            switch ($ex->getCode()) {
+                case 23000:
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.");
+                    break;
+                case 'HY000':
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    break;
+                default:
+                    $missatge = array("missatge" => "L'empresa no s'ha pogut modificar.");
+                    break;
+            }
+            return $response->withJson($missatge, 422);
+        }
+    }
 
 }

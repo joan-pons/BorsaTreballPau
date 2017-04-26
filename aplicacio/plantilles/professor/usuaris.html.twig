@@ -1,0 +1,167 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Validació d'usuaris</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var dades;
+
+            $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#bmDacord').on('click', function () {
+                $('#mdResultat').modal('hide');
+            });
+            $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#mEsperaTitol').html('Realitzant les modificacions');
+            $('#mdEspera').on('shown.bs.modal', function (e) {
+
+                $.ajax({
+                    method: 'PUT',
+                    url: "/professor/usuaris/" + dades.idProfessor,
+                    data: dades
+                }).done(function () {
+                    $('#mrTitol').html('Actualització correcte')
+                    $('#mrText').html("<p>Les dades s'han modificat correctament.</p>");
+                    $('#bmDacord').on('click', function () {
+                        window.location.href = "usuaris";
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+            });
+
+            $("form").on('submit', function (event) {
+                event.preventDefault();
+                var f = event.target.id;
+                dades = {};
+                dades['idProfessor'] = $('#' + f + ' #idProfessor').val();
+                dades['Actiu'] = $('#' + f + ' #actiu').is(':checked');
+                dades['Validat'] = $('#' + f + ' #validat').is(':checked');
+                $('#mdEspera').modal('show');
+            });
+            $("#bModificar").on('click', function () {
+
+                $.ajax({
+                    method: 'GET',
+                    url: "/professor/" + $("#llista").val()
+                }).done(function (professor) {
+
+                    $("#bModificar").prop('disabled', 'disabled');
+                    $("#llista").prop('disabled', 'disabled');
+                    $("#bGuardar").prop('disabled', false);
+                    $("#bCancelar").prop('disabled', false);
+                    $("#validat").prop('disabled', false);
+                    $("#actiu").prop('disabled', false);
+                    $("#nom").html(professor.Llinatges + ", " + professor.Nom);
+                    $("#email").html(professor.Email);
+                    $("#telefon").html(professor.Telefon);
+
+                    $('#idProfessor').val(professor.idProfessor);
+                    if (professor.Actiu) {
+                        $("#actiu").prop('checked', 'checked');
+                    } else {
+                        $("#actiu").prop('checked', false);
+                    }
+                    if (professor.Validat) {
+                        $("#validat").prop('checked', 'checked');
+                    } else {
+                        $("#validat").prop('checked', false);
+                    }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert("Error");
+                })
+            });
+            $("#bCancelar").on('click', function () {
+                $("#bModificar").prop('disabled', false);
+                $("#llista").prop('disabled', false);
+                $("#bGuardar").prop('disabled', 'disabled');
+                $("#bCancelar").prop('disabled', 'disabled');
+                $("#validat").prop('disabled', 'disabled');
+                $("#actiu").prop('disabled', 'disabled');
+                $("#nom").html("");
+                $("#email").html("");
+                $("#telefon").html("");
+                $("#llista").val("");
+                $("#actiu").prop('checked', false);
+                $("#validat").prop('checked', false);
+            });
+            $("#fCanviar").on('submit', function (event) {
+                event.preventDefault();
+                var f = event.target.id;
+                dades = {};
+                dades['idProfessor'] = $('#idProfessor').val();
+                dades['Actiu'] = $('#actiu').is(':checked');
+                dades['Validat'] = $('#validat').is(':checked');
+                $('#mdEspera').modal('show');
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">{{ professor.Nom }} {{professor.Llinatges }}</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li><a href="usuarisPendents">Validar usuaris pendents</a></li>
+        <li  class="active"><a href="#">Activar / validar usuari</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+
+{% endblock %}                     
+
+{% block contingut %}
+    <h2>Validar / Activar usuaris</h2>
+    <div class="well">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    <label for="sel1">Professors/es disponibles:</label>
+                    <div class="input-group">
+                        <select class="form-control" id="llista">
+                            <option value="">Escull un professor</option>
+                            {% for company in companys %}
+                                <option value="{{ company.idProfessor }}">{{ company.Llinatges }}, {{ company.Nom }}</option>
+                            {% endfor %}
+                        </select> 
+                        <span class="input-group-btn"><button type="button" class="btn btn-default btn-success" id="bModificar">Modificar</button></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form id="fCanviar">
+        <input type="hidden" name="idProfessor" id="idProfessor">
+        <div class="well">
+            <div class='row'>
+                <div class='col-md-6'>
+                    <p><label>Nom: &nbsp;</label><span id="nom"></span> </p>
+                    <p><label>Correu electrònic: &nbsp;</label><span id="email"></span></p>
+                    <p><label>Telèfon: &nbsp;</label><span id="telefon"></span></p>
+                    <p><label>Validat: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %} disabled="disabled"></label></p>
+                    <p><label>Actiu: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %} disabled="disabled"></label></p>
+                </div>
+                <div class='col-md-6'>
+                    <button class="btn btn-success" type="submit" id="bGuardar" disabled="disabled">Guardar</button>
+                    <button class="btn btn-default" type="reset" id="bCancelar" disabled="disabled">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    {{include('auxiliars/modals.html.twig')}}
+{% endblock %}  

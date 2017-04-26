@@ -120,4 +120,33 @@ class DaoProfessor extends Dao {
             return $response->withJson($missatge, 422);
         }
     }
+    public function activar(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+
+            $professor = Professor::find($args['idProfessor']);
+            if ($professor != null) {
+                $data = $request->getParsedBody();
+                $professor->Actiu=filter_var($data['Actiu'], FILTER_SANITIZE_STRING)=='true';
+                $professor->Validat=filter_var($data['Validat'], FILTER_SANITIZE_STRING)=='true';
+                $professor->save();
+                return $response->withJSON($professor);
+            } else {
+                return $response->withJson("No es troba cap professor amb l'identificador demanat.", 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            switch ($ex->getCode()) {
+                case 23000:
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.");
+                    break;
+                case 'HY000':
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    break;
+                default:
+                    $missatge = array("missatge" => "El professor no s'ha pogut modificar.");
+                    break;
+            }
+            return $response->withJson($missatge, 422);
+        }
+    }
 }

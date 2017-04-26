@@ -1,0 +1,135 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Validació d'usuaris</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var dades;
+
+            $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#bmDacord').on('click', function () {
+                $('#mdResultat').modal('hide');
+            });
+            $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#mEsperaTitol').html('Realitzant les modificacions');
+            $('#mdEspera').on('shown.bs.modal', function (e) {
+
+                $.ajax({
+                    method: 'PUT',
+                    url: "/professor/empreses/" + dades.idEmpresa,
+                    data: dades
+                }).done(function () {
+                    $('#mrTitol').html('Actualització correcte')
+                    $('#mrText').html("<p>Les dades s'han modificat correctament.</p>");
+                    $('#bmDacord').on('click', function () {
+                        window.location.href = "empresesPendents";
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+            });
+
+            $("form").on('submit', function (event) {
+                event.preventDefault();
+                var f = event.target.id;
+                dades = {};
+                dades['idProfessor'] = $('#' + f + ' #idProfessor').val();
+                dades['Actiu'] = $('#' + f + ' #actiu').is(':checked');
+                dades['Validat'] = $('#' + f + ' #validat').is(':checked');
+                $('#mdEspera').modal('show');
+            });
+
+           
+            $("#bCancelar").on('click', function () {
+                $("#bModificar").prop('disabled', false);
+                $("#llista").prop('disabled', false);
+                $("#bGuardar").prop('disabled', 'disabled');
+                $("#bCancelar").prop('disabled', 'disabled');
+                $("#validat").prop('disabled', 'disabled');
+                $("#actiu").prop('disabled', 'disabled');
+                $("#nom").html("");
+                $("#email").html("");
+                $("#telefon").html("");
+                $("#llista").val("");
+                $("#url").html("");
+                $("#adreca").html("");
+                $("#codiPostal").html("");
+                $("#localitat").html("");
+                $("#provincia").html("");
+                $("#dataAlta").html("");
+                $("#descripcio").html("");
+
+                $("#actiu").prop('checked', false);
+                $("#validat").prop('checked', false);
+            });
+            $("form").on('submit', function (event) {
+                event.preventDefault();
+                var f = event.target.id;
+                dades = {};
+                dades['idEmpresa'] = $('#'+f+' #idEmpresa').val();
+                dades['Activa'] = $('#'+f+' #actiu').is(':checked');
+                dades['Validada'] = $('#'+f+' #validat').is(':checked');
+                $('#mdEspera').modal('show');
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">{{ professor.Nom }} {{professor.Llinatges }}</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Validar empreses pendents</a></li>
+        <li><a href="empreses">Activar / validar empresa</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="sortir.html"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+
+{% endblock %}                     
+
+{% block contingut %}
+    <h2>Validar / Activar empreses pendents</h2>
+    {% for empresa in empreses %}
+        <form id='f{{ empresa.idEmpresa }}'>
+            <input type="hidden" name="idEmpresa" id="idEmpresa" value="{{ empresa.idEmpresa }}">
+            <div class="well" id='emp{{ empresa.idEmpresa}}'>
+                <div class='row'>
+                    <div class='col-md-6'>
+                        <p><label>Nom: &nbsp;</label> {{ empresa.Nom }}</p>
+                        <p><label>Correu electrònic: &nbsp;</label>{{ empresa.email }}</p>
+                        <p><label>Telèfon: &nbsp;</label>{{ empresa.Telefon }}</p>
+                        <p><label>url: &nbsp;</label>{{ empresa.url }}</p>
+                        <p><label>Adreça: &nbsp;</label>{{ empresa.Adreca }}</p>
+                        <p><label>Codi postal: &nbsp;</label>{{ empresa.CodiPostal }}</p>
+                        <p><label>Localitat: &nbsp;</label>{{ empresa.Localitat }}</p>
+                        <p><label>Província: &nbsp;</label>{{ empresa.Provincia }}</p>
+                        <p><label>Data d'alta: &nbsp;</label>{{ empresa.DataAlta }}</p>
+                    </div>
+                    <div class='col-md-6'>
+                        <p><label>Descripció: &nbsp;</label></p>
+                        <div id='descripcio' class='well'>{{ empresa.Descripcio | raw }}</div>
+                        <p><label>Validada: &nbsp;<input id="validat" name="validat" type="checkbox" {%if empresa.Validada %} checked {% endif %}></label></p>
+                        <p><label>Activa: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if empresa.Activa %} checked {% endif %}></label></p>
+                        <button class="btn btn-success" type="submit" id="bGuardar">Guardar</button>
+                        <button class="btn btn-default" type="reset" id="bCancelar">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    {% endfor %}
+    {{include('auxiliars/modals.html.twig')}}
+{% endblock %}  
