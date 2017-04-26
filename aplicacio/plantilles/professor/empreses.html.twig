@@ -76,20 +76,24 @@
                     $("#descripcio").html(empresa.Descripcio);
 
                     $('#idEmpresa').val(empresa.idEmpresa);
+                    if (empresa.Validada) {
+                        $("#validat").prop('checked', 'checked');
+                        $("#actiu").prop('disabled', false);
+                    } else {
+                        $("#validat").prop('checked', false);
+                        $("#actiu").prop('disabled', 'disabled');
+                    }
                     if (empresa.Activa) {
                         $("#actiu").prop('checked', 'checked');
                     } else {
                         $("#actiu").prop('checked', false);
                     }
-                    if (empresa.Validada) {
-                        $("#validat").prop('checked', 'checked');
-                    } else {
-                        $("#validat").prop('checked', false);
-                    }
+
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     alert("Error");
                 })
             });
+
             $("#bCancelar").on('click', function () {
                 $("#bModificar").prop('disabled', false);
                 $("#llista").prop('disabled', false);
@@ -112,6 +116,7 @@
                 $("#actiu").prop('checked', false);
                 $("#validat").prop('checked', false);
             });
+
             $("#fCanviar").on('submit', function (event) {
                 event.preventDefault();
                 var f = event.target.id;
@@ -121,6 +126,16 @@
                 dades['Validada'] = $('#validat').is(':checked');
                 $('#mdEspera').modal('show');
             });
+
+            $('#validat').on('change', function (event) {
+                if ($(this).is(':checked')) {
+                    $("#actiu").prop('disabled', false);
+                } else {
+                    $("#actiu").prop('disabled', 'disabled');
+                    $("#actiu").prop('checked', false);
+                }
+            });
+            f
         });
     </script>
 {% endblock %}
@@ -179,7 +194,7 @@
                     <p><label>Descripció: &nbsp;</label></p>
                     <div id='descripcio' class='well'></div>
                     <p><label>Validada: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %} disabled="disabled"></label></p>
-                    <p><label>Activa: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %} disabled="disabled"></label></p>
+                    <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Activa: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %} disabled="disabled"></label></p>
                     <button class="btn btn-success" type="submit" id="bGuardar" disabled="disabled">Guardar</button>
                     <button class="btn btn-default" type="reset" id="bCancelar" disabled="disabled">Cancelar</button>
                 </div>

@@ -10,7 +10,7 @@
     <script>
         $(document).ready(function () {
             var dades;
-            
+
             $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
             $('#bmDacord').on('click', function () {
                 $('#mdResultat').modal('hide');
@@ -20,9 +20,9 @@
             $('#mdEspera').on('shown.bs.modal', function (e) {
 
                 $.ajax({
-                    method:'PUT',
-                    url:"/professor/usuaris/"+dades.idProfessor,
-                    data:dades
+                    method: 'PUT',
+                    url: "/professor/usuaris/" + dades.idProfessor,
+                    data: dades
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')
                     $('#mrText').html("<p>Les dades s'han modificat correctament.</p>");
@@ -31,7 +31,7 @@
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
-                    $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
@@ -41,14 +41,34 @@
                 });
             });
 
+            $(".btn-default").on('click', function () {
+                $(this).closest('form')[0].reset();
+                var id = event.target.id.replace("bCan", "");
+                if ($("#val" + id).is(':checked')) {
+                    $("#act" + id).prop('disabled', false);
+                } else {
+                    $("#act" + id).prop('disabled', 'disabled');
+                }
+            });
+
             $("form").on('submit', function (event) {
                 event.preventDefault();
-                var f=event.target.id;
-                dades={};
-                dades['idProfessor']=$('#'+f+' #idProfessor').val();
-                dades['Actiu']=$('#'+f+' #actiu').is(':checked');
-                dades['Validat']=$('#'+f+' #validat').is(':checked');
+                var f = event.target.id.replace('f', '');
+                dades = {};
+                dades['idProfessor'] = $('#idP' + f).val();
+                dades['Actiu'] = $('#act' + f).is(':checked');
+                dades['Validat'] = $('#val' + f).is(':checked');
                 $('#mdEspera').modal('show');
+            });
+
+            $('[name="validat"').on('change', function (event) {
+                var id = event.target.id.replace("val", "");
+                if ($("#" + event.target.id).is(':checked')) {
+                    $("#act" + id).prop('disabled', false);
+                } else {
+                    $("#act" + id).prop('disabled', 'disabled');
+                    $("#act" + id).prop('checked', false);
+                }
             });
         });
     </script>
@@ -77,19 +97,19 @@
     {% else %}
         {% for company in companys %}
             <form id="f{{ company.idProfessor }}">
-                <input type="hidden" name="idProfessor" id="idProfessor" value="{{ company.idProfessor }}">
+                <input type="hidden" name="idProfessor" id="idP{{ company.idProfessor }}" value="{{ company.idProfessor }}">
                 <div class="well click"  id="prof{{ company.idProfessor }}">
                     <div class='row'>
                         <div class='col-md-6'>
                             <p><label>Nom: &nbsp;</label>{{ company.Llinatges }}, {{ company.Nom }} </p>
                             <p><label>Correu electrònic: &nbsp;</label>{{ company.Email }}</p>
                             <p><label>Telèfon: &nbsp;</label>{{ company.Telefon }}</p>
-                            <p><label>Validat: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %}></label></p>
-                            <p><label>Actiu: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %}></label></p>
+                            <p><label>Validat: &nbsp;<input id="val{{ company.idProfessor }}" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %}></label></p>
+                            <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Actiu: &nbsp;<input id="act{{ company.idProfessor }}" name="actiu" type="checkbox" disabled="disabled"></label></p>
                         </div>
                         <div class='col-md-6'>
                             <button class="btn btn-success" type="submit" id="bGuar{{company.idProfessor}}">Guardar</button>
-                            <button class="btn btn-default" type="reset" >Netejar formulari</button>
+                            <button class="btn btn-default" type="button" id="bCan{{ company.idProfessor }}">Netejar formulari</button>
                         </div>
                     </div>
                 </div>

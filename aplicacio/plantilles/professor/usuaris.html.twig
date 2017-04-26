@@ -41,22 +41,12 @@
                 });
             });
 
-            $("form").on('submit', function (event) {
-                event.preventDefault();
-                var f = event.target.id;
-                dades = {};
-                dades['idProfessor'] = $('#' + f + ' #idProfessor').val();
-                dades['Actiu'] = $('#' + f + ' #actiu').is(':checked');
-                dades['Validat'] = $('#' + f + ' #validat').is(':checked');
-                $('#mdEspera').modal('show');
-            });
-            $("#bModificar").on('click', function () {
 
+            $("#bModificar").on('click', function () {
                 $.ajax({
                     method: 'GET',
                     url: "/professor/" + $("#llista").val()
                 }).done(function (professor) {
-
                     $("#bModificar").prop('disabled', 'disabled');
                     $("#llista").prop('disabled', 'disabled');
                     $("#bGuardar").prop('disabled', false);
@@ -68,20 +58,25 @@
                     $("#telefon").html(professor.Telefon);
 
                     $('#idProfessor').val(professor.idProfessor);
+                    if (professor.Validat) {
+                        $("#validat").prop('checked', 'checked');
+                        $("#actiu").prop('disabled', false);
+                    } else {
+                        $("#validat").prop('checked', false);
+                        $("#actiu").prop('disabled', 'disabled');
+                    }
+
                     if (professor.Actiu) {
                         $("#actiu").prop('checked', 'checked');
                     } else {
                         $("#actiu").prop('checked', false);
                     }
-                    if (professor.Validat) {
-                        $("#validat").prop('checked', 'checked');
-                    } else {
-                        $("#validat").prop('checked', false);
-                    }
+
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     alert("Error");
                 })
             });
+
             $("#bCancelar").on('click', function () {
                 $("#bModificar").prop('disabled', false);
                 $("#llista").prop('disabled', false);
@@ -96,6 +91,8 @@
                 $("#actiu").prop('checked', false);
                 $("#validat").prop('checked', false);
             });
+
+
             $("#fCanviar").on('submit', function (event) {
                 event.preventDefault();
                 var f = event.target.id;
@@ -105,6 +102,17 @@
                 dades['Validat'] = $('#validat').is(':checked');
                 $('#mdEspera').modal('show');
             });
+
+            $('#validat').on('change', function (event) {
+                
+                if ($(this).is(':checked')) {
+                    $("#actiu").prop('disabled', false);
+                } else {
+                    $("#actiu").prop('disabled', 'disabled');
+                    $("#actiu").prop('checked', false);
+                }
+            });
+
         });
     </script>
 {% endblock %}
@@ -153,7 +161,7 @@
                     <p><label>Correu electrònic: &nbsp;</label><span id="email"></span></p>
                     <p><label>Telèfon: &nbsp;</label><span id="telefon"></span></p>
                     <p><label>Validat: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %} disabled="disabled"></label></p>
-                    <p><label>Actiu: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %} disabled="disabled"></label></p>
+                    <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Actiu: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %} disabled="disabled"></label></p>
                 </div>
                 <div class='col-md-6'>
                     <button class="btn btn-success" type="submit" id="bGuardar" disabled="disabled">Guardar</button>

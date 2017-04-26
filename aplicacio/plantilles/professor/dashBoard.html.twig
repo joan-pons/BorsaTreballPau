@@ -36,11 +36,13 @@
     <ul class="nav navbar-nav">
         <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
         <li><a href="canviarContrasenya" id="mContrasenya">Canviar contrasenya</a></li>
-        <li><a href="estudis" id="mEstudis">Estudis</a></li>
-        <li><a href="ofertes" >Ofertes</a></li>
-            {% if usuari.teRol(40) %}
-            <li><a href="usuaris" >Usuaris</a></li>
-            <li><a href="empreses" >Empreses</a></li>
+            {% if professor.Actiu %}
+            <li><a href="estudis" id="mEstudis">Estudis</a></li>
+            <li><a href="ofertes" >Ofertes</a></li>
+                {% if usuari.teRol(40) %}
+                <li><a href="usuaris" >Usuaris</a></li>
+                <li><a href="empreses" >Empreses</a></li>
+                {% endif %}
             {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right ">
@@ -60,78 +62,79 @@
                 <p><label>Actiu: &nbsp;</label><span class="glyphicon {% if professor.Actiu %}glyphicon-ok{% else %}glyphicon-remove{% endif %}"></span></p>
             </div>
         </div><!--col-->
-        <div class="col-md-4">
-            {% if usuari.teRol(40) %}
-                <div id="professors">
-                    <h3>Professors/res per validar</h3>
-                    {% if companys is empty %}
+        {% if professor.Actiu %}
+            <div class="col-md-4">
+                {% if usuari.teRol(40) %}
+                    <div id="professors">
+                        <h3>Professors/res per validar</h3>
+                        {% if companys is empty %}
+                            <div class='well'>
+                                <p> No hi ha companys pendents de validació.</p>                 
+                            </div>
+                        {% else %}
+                            {% for company in companys %}
+                                <div class="well click" id="prof{{ company.idProfessor }}">
+                                    <p><label>Nom: &nbsp;</label>{{ company.Llinatges }}, {{ company.Nom }} </p>
+                                    <p><label>Correu electrònic: &nbsp;</label>{{ company.Email }}</p>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                {% if not professor.estudis is empty or not usuari.teRol(40) %}
+                    <h3>Estudis dels que es responsable</h3>
+                    {% if professor.estudis is empty %}
                         <div class='well'>
-                            <p> No hi ha companys pendents de validació.</p>                 
+                            <p> Encara no és responsable de cap estudis.</p>                 
                         </div>
                     {% else %}
-                        {% for company in companys %}
-                            <div class="well click" id="prof{{ company.idProfessor }}">
-                                <p><label>Nom: &nbsp;</label>{{ company.Llinatges }}, {{ company.Nom }} </p>
-                                <p><label>Correu electrònic: &nbsp;</label>{{ company.Email }}</p>
-                            </div>
-                        {% endfor %}
+                        <div class="well click" id="dEstudis">
+                            <ul>
+                                {% for estudis in professor.estudis %}
+                                    <li><p>{{ estudis.Nom }}</p></li>
+                                        {% endfor %}
+                            </ul>
+                        </div>
                     {% endif %}
                 {% endif %}
-            </div>
-            {% if not professor.estudis is empty or not usuari.teRol(40) %}
-                <h3>Estudis dels que es responsable</h3>
-                {% if professor.estudis is empty %}
-                    <div class='well'>
-                        <p> Encara no és responsable de cap estudis.</p>                 
-                    </div>
-                {% else %}
-                    <div class="well click" id="dEstudis">
-                        <ul>
-                            {% for estudis in professor.estudis %}
-                                <li><p>{{estudis.Nom }}</p></li>
-                                    {% endfor %}
-                        </ul>
+            </div><!--col-->
+
+            <div class="col-md-4">
+                {% if usuari.teRol(40) %}
+                    <div id='empreses'>
+                        <h3>Empreses pendents de validar</h3>
+                        {% if empreses is empty %}
+                            <div class="well">
+                                <p>No hi ha cap empresa pendent de validació.</p>
+                            </div>
+                        {% else %}
+                            {% for empresa in empreses %}
+                                <div class="well click" id='emp{{ empresa.idEmpresa}}'>
+                                    <p><label>Empresa: &nbsp;</label>{{ empresa.Nom }}</p>
+                                    <p><label>Data de la sol·licitud: &nbsp;</label>{{ empresa.DataAlta }}</p>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 {% endif %}
-            {% endif %}
-        </div><!--col-->
-
-        <div class="col-md-4">
-            {% if usuari.teRol(40) %}
-                <div id='empreses'>
-                    <h3>Empreses pendents de validar</h3>
-                    {% if empreses is empty %}
+                {% if not  ofertes is empty  or not usuari.teRol(40) %}
+                    <h3>Ofertes pendents de validar</h3>
+                    {% if ofertes is empty %}
                         <div class="well">
-                            <p>No hi ha cap empresa pendent de validació.</p>
+                            <p>No hi ha cap oferta pendent de validació.</p>
                         </div>
                     {% else %}
-                        {% for empresa in empreses %}
-                            <div class="well click" id='emp{{ empresa.idEmpresa}}'>
-                                <p><label>Empresa: &nbsp;</label>{{ empresa.Nom }}</p>
-                                <p><label>Data de la sol·licitud: &nbsp;</label>{{ empresa.DataAlta }}</p>
+                        {% for oferta in ofertes %}
+                            <div class="well click">
+                                <p>Oferta:</p>
+                                <p>Data de la sol·licitud:</p>
                             </div>
                         {% endfor %}
                     {% endif %}
-                </div>
-            {% endif %}
-            {% if  ofertes is empty  or not usuari.teRol(40) %}
-
-                <h3>Ofertes pendents de validar</h3>
-                {% if ofertes is empty %}
-                    <div class="well">
-                        <p>No hi ha cap oferta pendent de validació.</p>
-                    </div>
-                {% else %}
-                    {% for oferta in ofertes %}
-                        <div class="well click">
-                            <p>Oferta:</p>
-                            <p>Data de la sol·licitud:</p>
-                        </div>
-                    {% endfor %}
                 {% endif %}
-
-            {% endif %}
-        </div><!--col-->
+            </div><!--col-->
+        {% endif %}
     </div><!--row-->
 {% endblock %}  
 

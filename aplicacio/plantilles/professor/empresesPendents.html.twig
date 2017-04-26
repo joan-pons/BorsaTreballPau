@@ -41,47 +41,35 @@
                 });
             });
 
+            $(".btn-default").on('click', function () {
+                $(this).closest('form')[0].reset();
+                var id = event.target.id.replace("bCan", "");
+                if ($("#val" + id).is(':checked')) {
+                    $("#act" + id).prop('disabled',false);
+                } else {
+                    $("#act" + id).prop('disabled','disabled');
+                }
+            });
+            
+            
             $("form").on('submit', function (event) {
                 event.preventDefault();
-                var f = event.target.id;
+                var f = event.target.id.replace('f','');
                 dades = {};
-                dades['idProfessor'] = $('#' + f + ' #idProfessor').val();
-                dades['Actiu'] = $('#' + f + ' #actiu').is(':checked');
-                dades['Validat'] = $('#' + f + ' #validat').is(':checked');
+                dades['idEmpresa'] = $('#idE'+f).val();
+                dades['Activa'] = $('#act'+f).is(':checked');
+                dades['Validada'] = $('#val' + f).is(':checked');
                 $('#mdEspera').modal('show');
             });
 
-           
-            $("#bCancelar").on('click', function () {
-                $("#bModificar").prop('disabled', false);
-                $("#llista").prop('disabled', false);
-                $("#bGuardar").prop('disabled', 'disabled');
-                $("#bCancelar").prop('disabled', 'disabled');
-                $("#validat").prop('disabled', 'disabled');
-                $("#actiu").prop('disabled', 'disabled');
-                $("#nom").html("");
-                $("#email").html("");
-                $("#telefon").html("");
-                $("#llista").val("");
-                $("#url").html("");
-                $("#adreca").html("");
-                $("#codiPostal").html("");
-                $("#localitat").html("");
-                $("#provincia").html("");
-                $("#dataAlta").html("");
-                $("#descripcio").html("");
-
-                $("#actiu").prop('checked', false);
-                $("#validat").prop('checked', false);
-            });
-            $("form").on('submit', function (event) {
-                event.preventDefault();
-                var f = event.target.id;
-                dades = {};
-                dades['idEmpresa'] = $('#'+f+' #idEmpresa').val();
-                dades['Activa'] = $('#'+f+' #actiu').is(':checked');
-                dades['Validada'] = $('#'+f+' #validat').is(':checked');
-                $('#mdEspera').modal('show');
+            $('[name="validat"').on('change', function (event) {
+                var id = event.target.id.replace("val", "");
+                if ($("#" + event.target.id).is(':checked')) {
+                     $("#act" + id).prop('disabled',false);
+                } else {
+                    $("#act" + id).prop('disabled','disabled');
+                     $("#act" + id).prop('checked',false);
+                }
             });
         });
     </script>
@@ -105,7 +93,7 @@
     <h2>Validar / Activar empreses pendents</h2>
     {% for empresa in empreses %}
         <form id='f{{ empresa.idEmpresa }}'>
-            <input type="hidden" name="idEmpresa" id="idEmpresa" value="{{ empresa.idEmpresa }}">
+            <input type="hidden" name="idEmpresa" id="idE{{ empresa.idEmpresa }}" value="{{ empresa.idEmpresa }}">
             <div class="well" id='emp{{ empresa.idEmpresa}}'>
                 <div class='row'>
                     <div class='col-md-6'>
@@ -122,10 +110,10 @@
                     <div class='col-md-6'>
                         <p><label>Descripció: &nbsp;</label></p>
                         <div id='descripcio' class='well'>{{ empresa.Descripcio | raw }}</div>
-                        <p><label>Validada: &nbsp;<input id="validat" name="validat" type="checkbox" {%if empresa.Validada %} checked {% endif %}></label></p>
-                        <p><label>Activa: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if empresa.Activa %} checked {% endif %}></label></p>
+                        <p><label>Validada: &nbsp;<input id="val{{ empresa.idEmpresa }}" name="validat" type="checkbox" {%if empresa.Validada %} checked {% endif %}></label></p>
+                        <p><label>Activa: &nbsp;<input id="act{{ empresa.idEmpresa }}" name="actiu" type="checkbox" disabled="disabled"></label></p>
                         <button class="btn btn-success" type="submit" id="bGuardar">Guardar</button>
-                        <button class="btn btn-default" type="reset" id="bCancelar">Cancelar</button>
+                        <button class="btn btn-default" type="button" id="bCan{{ empresa.idEmpresa }}">Cancelar</button>
                     </div>
                 </div>
             </div>

@@ -78,6 +78,12 @@ $app->get('/', function ($request, $response, $args) {
     return $this->view->render($response, 'index.html.twig');
 });
 
+
+//////////////////////////////////////////////////////////////
+/////////////////////                  ///////////////////////
+/////////////////////   EMPRESA     ///////////////////////
+/////////////////////                  ///////////////////////
+//////////////////////////////////////////////////////////////
 // Entrada Empresa
 $app->get('/empresaLogin', function ($request, $response, $args) {
     return $this->view->render($response, 'empresa/indexEmpresa.html.twig', ['tipus' => 20]);
@@ -96,13 +102,13 @@ $app->post('/altaEmpresa', function ($request, $response) {
 // Entrada Empresa
 $app->get('/empresa/dashBoard', function ($request, $response, $args) {
     $this->dbEloquent;
-    $empresa = Empresa::find(2);
+    $empresa = Empresa::find($_SESSION['idUsuari']);
     //$contactes=DaoEmpresa::contactesEmpresa($empresa->idEmpresa);
     return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa]); //,'contactes'=>$contactes]);
 });
 $app->get('/empresa/modificarDades', function ($request, $response, $args) {
     $this->dbEloquent;
-    $empresa = Empresa::find(2);
+    $empresa = Empresa::find($_SESSION['idUsuari']);
     return $this->view->render($response, 'empresa/empresaDades.html.twig', ['objEmpresa' => $empresa]);
 });
 $app->put('/empresa/modificarDades/{idEmpresa}', function ($request, $response, $args) {
@@ -111,7 +117,7 @@ $app->put('/empresa/modificarDades/{idEmpresa}', function ($request, $response, 
 
 $app->get('/empresa/afegirContacte', function ($request, $response, $args) {
     $this->dbEloquent;
-    $empresa = Empresa::find(2);
+    $empresa = Empresa::find($_SESSION['idUsuari']);
     return $this->view->render($response, 'empresa/afegirContacte.html.twig', ['objEmpresa' => $empresa]);
 });
 $app->post('/empresa/afegirContacte', function ($request, $response, $args) {
@@ -125,17 +131,17 @@ $app->delete('/empresa/esborrarContacte/{idContacte}', function ($request, $resp
 });
 $app->get('/empresa/contactes', function ($request, $response, $args) {
     $this->dbEloquent;
-    $empresa = Empresa::find(2);
+    $empresa = Empresa::find($_SESSION['idUsuari']);
     return $this->view->render($response, 'empresa/contactes.html.twig', ['empresa' => $empresa]);
 });
 $app->get('/empresa/contactesProves', function ($request, $response, $args) {
     $this->dbEloquent;
-    $empresa = Empresa::find(2);
+    $empresa = Empresa::find($_SESSION['idUsuari']);
     return $response->withJson($empresa->contactes);
 });
 $app->get('/empresa/canviarContrasenya', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(2);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $empresa = $usuari->getEntitat();
     return $this->view->render($response, 'empresa/contrasenya.html.twig', ['empresa' => $empresa, "tipusUsuari" => 20, "usuari" => $usuari]);
 });
@@ -153,6 +159,12 @@ $app->get('/alumne', function ($request, $response, $args) {
     return $this->view->render($response, 'alumne/indexAlumne.html', ['tipus' => 30]);
 });
 
+
+//////////////////////////////////////////////////////////////
+/////////////////////                  ///////////////////////
+/////////////////////   PROFESSORS     ///////////////////////
+/////////////////////                  ///////////////////////
+//////////////////////////////////////////////////////////////
 //Entrada Professors
 $app->get('/professorLogin', function ($request, $response, $args) {
     return $this->view->render($response, 'professor/indexProfessor.html.twig', ['tipus' => 10]);
@@ -168,7 +180,7 @@ $app->post('/altaProfessor', function ($request, $response) {
 });
 $app->get('/professor/dashBoard', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(4);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $prof = $usuari->getEntitat();
     $empreses = null;
     $companys = null;
@@ -182,7 +194,7 @@ $app->get('/professor/dashBoard', function ($request, $response, $args) {
 
 $app->get('/professor/modificarDades', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(6);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $prof = $usuari->getEntitat();
     return $this->view->render($response, 'professor/professorDades.html.twig', ['professor' => $prof]);
 });
@@ -193,7 +205,7 @@ $app->put('/professor/modificarDades/{idProfessor}', function ($request, $respon
 
 $app->get('/professor/canviarContrasenya', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(6);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $professor = $usuari->getEntitat();
     return $this->view->render($response, 'professor/contrasenya.html.twig', ['professor' => $professor, "tipusUsuari" => 10, "usuari" => $usuari]);
 });
@@ -203,7 +215,7 @@ $app->put('/professor/canviarContrasenya/{idusuari}', function ($request, $respo
 
 $app->get('/professor/estudis', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(4);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $professor = $usuari->getEntitat();
     $etiquetes = array("subtitol" => "", "labelLlista" => "dels que és responsable");
     $estudis = Estudis::orderBy('Nom', 'ASC')->get();
@@ -221,7 +233,7 @@ $app->delete('/professor/estudis/{idProfessor}/{codiEstudis}', function ($reques
 
 $app->get('/professor/usuarisPendents', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(4);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $prof = $usuari->getEntitat();
     $companys = null;
     if ($usuari->teRol(40)) {
@@ -236,7 +248,7 @@ $app->put('/professor/usuaris/{idProfessor}', function ($request, $response, $ar
 
 $app->get('/professor/usuaris', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(4);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $prof = $usuari->getEntitat();
     $companys = Professor::orderBy('Email', 'ASC')->get();
     return $this->view->render($response, 'professor/usuaris.html.twig', ['professor' => $prof, 'companys' => $companys]);
@@ -244,7 +256,7 @@ $app->get('/professor/usuaris', function ($request, $response, $args) {
 
 $app->get('/professor/empreses', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(4);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $prof = $usuari->getEntitat();
     $empreses = Empresa::orderBy('Nom', 'ASC')->get();
     return $this->view->render($response, 'professor/empreses.html.twig', ['professor' => $prof, 'empreses' => $empreses]);
@@ -252,7 +264,7 @@ $app->get('/professor/empreses', function ($request, $response, $args) {
 
 $app->get('/professor/empresesPendents', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find(4);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $prof = $usuari->getEntitat();
     $empreses = null;
     $empreses = Empresa::where('Validada', 0)->orderBy('DataAlta', 'ASC')->orderBy('Nom', 'ASC')->get();
@@ -264,12 +276,12 @@ $app->put('/professor/empreses/{idEmpresa}', function ($request, $response, $arg
 });
 
 $app->get('/professor/{id}', function(Request $request, Response $response, $args) {
-//return recuperaInteri($request, $response, $this->db);
     $this->dbEloquent;
     return $response->withJSON(Professor::find($args['id']));
 });
+
+
 $app->get('/estudis', function(Request $request, Response $response) {
-//return recuperaInteri($request, $response, $this->db);
     $this->dbEloquent;
     //  return $response->withJson(Estudis::All());
     return $this->view->render($response, 'estudis.html.twig', [
@@ -278,13 +290,12 @@ $app->get('/estudis', function(Request $request, Response $response) {
 });
 
 $app->get('/estudisProfessor/{id}', function(Request $request, Response $response, $args) {
-//return recuperaInteri($request, $response, $this->db);
     $this->dbEloquent;
-    $usuari = Usuari::find(4);
+    $usuari = Usuari::find($_SESSION['idUsuari']);
     $prof = $usuari->getEntitat();
     $estudis = $prof->estudis;
-    $empreses = Empresa::where('Validada', false)->get();
-    return $response->withJSON($empreses);
+//    $empreses = Empresa::where('Validada', false)->get();
+    return $response->withJSON(estudis);
 });
 
 
@@ -296,6 +307,7 @@ $app->get('/usuari/{id}', function(Request $request, Response $response, $args) 
 });
 
 //Final
-
+session_start();
+$_SESSION['idUsuari'] = 4;
 $app->run();
 
