@@ -18,11 +18,12 @@ use \Psr\Http\Message\ResponseInterface as Response;
  */
 class Dao {
 
-    public function canviarContrasenya(Request $request, Response $response, \Slim\Container $container) {
+    public function canviarContrasenya(Request $request, Response $response, $args, \Slim\Container $container) {
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();
-            $usuari = Usuari::where('nomUsuari', $data['nomUsuari'])->first();
+           // $usuari = Usuari::where('nomUsuari', $args['nomUsuari'])->first();
+             $usuari = Usuari::find($args['idusuari']);
             if ($usuari != null) {
                 if ($usuari->contrasenya == $data['antic']) {
                     $usuari->contrasenya = $data['nou'];

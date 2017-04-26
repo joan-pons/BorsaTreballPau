@@ -41,17 +41,22 @@ class DaoProfessor extends Dao {
         }
     }
 
-    public function modificarProfessor(Request $request, Response $response, \Slim\Container $container) {
+    public function modificarProfessor(Request $request, Response $response, $args, \Slim\Container $container) {
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();
-            $professor = Professor::find($data['idProfessor']);
-            $professor->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
-            $professor->Llinatges = filter_var($data['Llinatges'], FILTER_SANITIZE_STRING);
-            $professor->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
-            $professor->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
-            $professor->save();
-            return $response->withJSON($professor);
+            $professor = Professor::find($args['idProfessor']);
+            if ($professor != null) {
+                $professor->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
+                $professor->Llinatges = filter_var($data['Llinatges'], FILTER_SANITIZE_STRING);
+                $professor->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
+                $professor->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
+                $professor->save();
+                return $response->withJSON($professor);
+            } else {
+                $missatge = array("missatge" => "No s'ha trobat el professor que es vol modificar.");
+                return $response->withJson($missatge, 422);
+            }
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
@@ -73,10 +78,15 @@ class DaoProfessor extends Dao {
             $container->dbEloquent;
             $data = $request->getParsedBody();
             $professor = Professor::find($data['idProfessor']);
-            $CodiEstudis = filter_var($data['codiEstudis'], FILTER_SANITIZE_STRING);
-            $professor->estudis()->sync([$CodiEstudis],false);
-            
-            return $response->withJSON($professor);
+            if ($professor != null) {
+                $CodiEstudis = filter_var($data['codiEstudis'], FILTER_SANITIZE_STRING);
+                $professor->estudis()->sync([$CodiEstudis], false);
+
+                return $response->withJSON($professor);
+            } else {
+                $missatge = array("missatge" => "No s'ha trobat el professor que es vol modificar.");
+                return $response->withJson($missatge, 422);
+            }
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
@@ -98,7 +108,7 @@ class DaoProfessor extends Dao {
             $container->dbEloquent;
 
             $professor = Professor::find($args['idProfessor']);
-            $estudis=$args['codiEstudis'];
+            $estudis = $args['codiEstudis'];
             if ($professor != null) {
                 $professor->estudis()->detach($estudis);
                 return $response->withJSON($professor);
@@ -120,6 +130,7 @@ class DaoProfessor extends Dao {
             return $response->withJson($missatge, 422);
         }
     }
+
     public function activar(Request $request, Response $response, $args, \Slim\Container $container) {
         try {
             $container->dbEloquent;
@@ -127,8 +138,8 @@ class DaoProfessor extends Dao {
             $professor = Professor::find($args['idProfessor']);
             if ($professor != null) {
                 $data = $request->getParsedBody();
-                $professor->Actiu=filter_var($data['Actiu'], FILTER_SANITIZE_STRING)=='true';
-                $professor->Validat=filter_var($data['Validat'], FILTER_SANITIZE_STRING)=='true';
+                $professor->Actiu = filter_var($data['Actiu'], FILTER_SANITIZE_STRING) == 'true';
+                $professor->Validat = filter_var($data['Validat'], FILTER_SANITIZE_STRING) == 'true';
                 $professor->save();
                 return $response->withJSON($professor);
             } else {
@@ -149,4 +160,5 @@ class DaoProfessor extends Dao {
             return $response->withJson($missatge, 422);
         }
     }
+
 }

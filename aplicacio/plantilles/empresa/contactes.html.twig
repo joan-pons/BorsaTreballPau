@@ -113,7 +113,7 @@
                 $('#mdEspera').on('shown.bs.modal', function (e) {
                     $.ajax({
                         method: 'PUT',
-                        url: "/empresa/modificarContacte",
+                        url: "/empresa/modificarContacte/"+contacte.idContacte,
                         data: contacte
                     }).done(function () {
                         $('#mrTitol').html('Modificació correcta')

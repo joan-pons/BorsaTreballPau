@@ -24,7 +24,7 @@
                 });
                 $.ajax({
                     method:'PUT',
-                    url:"/professor/modificarDades",
+                    url:"/professor/modificarDades/"+professor.idProfessor,
                     data:professor
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')

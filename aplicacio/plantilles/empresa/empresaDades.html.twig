@@ -32,7 +32,7 @@
                 empresa.descripcio = $('#textDescripcio').summernote('code');
                 $.ajax({
                     method:'PUT',
-                    url:"/empresa/modificarDades",
+                    url:"/empresa/modificarDades/"+empresa.idEmpresa,
                     data:empresa
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')

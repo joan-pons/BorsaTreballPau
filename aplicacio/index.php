@@ -105,8 +105,8 @@ $app->get('/empresa/modificarDades', function ($request, $response, $args) {
     $empresa = Empresa::find(2);
     return $this->view->render($response, 'empresa/empresaDades.html.twig', ['objEmpresa' => $empresa]);
 });
-$app->put('/empresa/modificarDades', function ($request, $response, $args) {
-    return DaoEmpresa::modificarEmpresa($request, $response, $this);
+$app->put('/empresa/modificarDades/{idEmpresa}', function ($request, $response, $args) {
+    return DaoEmpresa::modificarEmpresa($request, $response, $args, $this);
 });
 
 $app->get('/empresa/afegirContacte', function ($request, $response, $args) {
@@ -117,8 +117,8 @@ $app->get('/empresa/afegirContacte', function ($request, $response, $args) {
 $app->post('/empresa/afegirContacte', function ($request, $response, $args) {
     return DaoEmpresa::altaContacte($request, $response, $this);
 });
-$app->put('/empresa/modificarContacte', function ($request, $response) {
-    return DaoEmpresa::modificarContacte($request, $response, $this);
+$app->put('/empresa/modificarContacte/{idContacte}', function ($request, $response, $args) {
+    return DaoEmpresa::modificarContacte($request, $response, $args, $this);
 });
 $app->delete('/empresa/esborrarContacte/{idContacte}', function ($request, $response, $args) {
     return DaoEmpresa::esborrarContacte($request, $response, $args, $this);
@@ -135,11 +135,12 @@ $app->get('/empresa/contactesProves', function ($request, $response, $args) {
 });
 $app->get('/empresa/canviarContrasenya', function ($request, $response, $args) {
     $this->dbEloquent;
-    $empresa = Empresa::find(2);
-    return $this->view->render($response, 'empresa/contrasenya.html.twig', ['empresa' => $empresa, "tipusUsuari" => 20, "nomUsuari" => $empresa->email]);
+    $usuari = Usuari::find(2);
+    $empresa = $usuari->getEntitat();
+    return $this->view->render($response, 'empresa/contrasenya.html.twig', ['empresa' => $empresa, "tipusUsuari" => 20, "usuari" => $usuari]);
 });
-$app->put('/empresa/canviarContrasenya', function ($request, $response, $args) {
-    return DaoEmpresa::canviarContrasenya($request, $response, $this);
+$app->put('/empresa/canviarContrasenya/{idusuari}', function ($request, $response, $args) {
+    return DaoEmpresa::canviarContrasenya($request, $response, $args, $this);
 });
 
 $app->get('/empresa/{id}', function(Request $request, Response $response, $args) {
@@ -186,18 +187,18 @@ $app->get('/professor/modificarDades', function ($request, $response, $args) {
     return $this->view->render($response, 'professor/professorDades.html.twig', ['professor' => $prof]);
 });
 
-$app->put('/professor/modificarDades', function ($request, $response, $args) {
-    return DaoProfessor::modificarProfessor($request, $response, $this);
+$app->put('/professor/modificarDades/{idProfessor}', function ($request, $response, $args) {
+    return DaoProfessor::modificarProfessor($request, $response, $args, $this);
 });
 
 $app->get('/professor/canviarContrasenya', function ($request, $response, $args) {
     $this->dbEloquent;
     $usuari = Usuari::find(6);
     $professor = $usuari->getEntitat();
-    return $this->view->render($response, 'professor/contrasenya.html.twig', ['professor' => $professor, "tipusUsuari" => 10, "nomUsuari" => $professor->Email]);
+    return $this->view->render($response, 'professor/contrasenya.html.twig', ['professor' => $professor, "tipusUsuari" => 10, "usuari" => $usuari]);
 });
-$app->put('/professor/canviarContrasenya', function ($request, $response, $args) {
-    return DaoProfessor::canviarContrasenya($request, $response, $this);
+$app->put('/professor/canviarContrasenya/{idusuari}', function ($request, $response, $args) {
+    return DaoProfessor::canviarContrasenya($request, $response, $args, $this);
 });
 
 $app->get('/professor/estudis', function ($request, $response, $args) {
