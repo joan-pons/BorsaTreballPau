@@ -8,8 +8,10 @@ use Borsa\Empresa as Empresa;
 use Borsa\DaoEmpresa as DaoEmpresa;
 use Borsa\Usuari as Usuari;
 use Borsa\DaoProfessor as DaoProfessor;
+use Borsa\Dao as Dao;
 
 require 'vendor/autoload.php';
+session_start();
 
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
@@ -78,12 +80,42 @@ $app->get('/', function ($request, $response, $args) {
     return $this->view->render($response, 'index.html.twig');
 });
 
+$app->get('/sortir', function ($request, $response, $args) {
+    session_unset();
+    session_destroy();
+    return $response->withRedirect("/");
+});
 
+$app->get('/login', function ($request, $response, $args) {
+    return Dao::entrada($request, $response, $args, $this);
+//    $this->dbEloquent;
+//    $data = $request->getQueryParams();
+//    $usuari = Usuari::where('nomUsuari', $data['nomUsuari'])->first();
+//    if ($usuari == null || $usuari->contrasenya != $data['password']) {
+//        $missatge = array("missatge" => "L'usuari i/o la contrasenya estan equivocats.");
+//        return $response->withJson($missatge, 401);
+//    } else {
+//        session_unset();
+//        session_destroy();
+//
+//        session_start();
+//        $_SESSION["idUsuari"] = $usuari->idusuari;
+//        $rols = [];
+//        foreach ($usuari->rols as $rol) {
+//            $rols[] = $rol->idrol;
+//        }
+//        $_SESSION["rols"] = $rols;
+//        return $response->withJSON( array("missatge" => "Usuari validat correctament."));
+//    }
+//   
+//    $_SESSION["idUsuari"] = 4;
+//    return $response->withJSON($_SESSION);
+});
 //////////////////////////////////////////////////////////////
 /////////////////////                  ///////////////////////
-/////////////////////   EMPRESA     ///////////////////////
-/////////////////////                  ///////////////////////
-//////////////////////////////////////////////////////////////
+//|||||||||||||||||||      EMPRESA     |||||||||||||||||||||||
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 // Entrada Empresa
 $app->get('/empresaLogin', function ($request, $response, $args) {
     return $this->view->render($response, 'empresa/indexEmpresa.html.twig', ['tipus' => 20]);
@@ -91,7 +123,6 @@ $app->get('/empresaLogin', function ($request, $response, $args) {
 
 //Alta empresa
 $app->get('/altaEmpresa', function ($request, $response, $args) {
-//   $objEmpresa=new Empresa(1,'Bestard','<h1>Bestard</h1><p>Idòa això</p>','Carrer nou 9','07330','Lloseta','Balears','987456321','info@bestard.com',true,false,'12/03/2017','www.bestar.com');
     return $this->view->render($response, 'empresa/altaEmpresa.html.twig');
 });
 
@@ -103,14 +134,15 @@ $app->post('/altaEmpresa', function ($request, $response) {
 $app->get('/empresa/dashBoard', function ($request, $response, $args) {
     $this->dbEloquent;
     $empresa = Empresa::find($_SESSION['idUsuari']);
-    //$contactes=DaoEmpresa::contactesEmpresa($empresa->idEmpresa);
     return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa]); //,'contactes'=>$contactes]);
 });
+
 $app->get('/empresa/modificarDades', function ($request, $response, $args) {
     $this->dbEloquent;
     $empresa = Empresa::find($_SESSION['idUsuari']);
     return $this->view->render($response, 'empresa/empresaDades.html.twig', ['objEmpresa' => $empresa]);
 });
+
 $app->put('/empresa/modificarDades/{idEmpresa}', function ($request, $response, $args) {
     return DaoEmpresa::modificarEmpresa($request, $response, $args, $this);
 });
@@ -165,6 +197,7 @@ $app->get('/alumne', function ($request, $response, $args) {
 /////////////////////   PROFESSORS     ///////////////////////
 /////////////////////                  ///////////////////////
 //////////////////////////////////////////////////////////////
+//
 //Entrada Professors
 $app->get('/professorLogin', function ($request, $response, $args) {
     return $this->view->render($response, 'professor/indexProfessor.html.twig', ['tipus' => 10]);
@@ -178,17 +211,22 @@ $app->get('/altaProfessor', function ($request, $response, $args) {
 $app->post('/altaProfessor', function ($request, $response) {
     return DaoProfessor::altaProfessor($request, $response, $this);
 });
+
 $app->get('/professor/dashBoard', function ($request, $response, $args) {
     $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $prof = $usuari->getEntitat();
-    $empreses = null;
-    $companys = null;
-    if ($usuari->teRol(40)) {
-        $empreses = Empresa::where('Validada', 0)->orderBy('DataAlta', 'ASC')->orderBy('Nom', 'ASC')->get();
-        $companys = Professor::where('Validat', 0)->orderBy('Email', 'ASC')->get();
+    $usuari = Usuari::find($_SESSION["idUsuari"]);
+    if ($usuari != null) {
+        $prof = $usuari->getEntitat();
+        $empreses = null;
+        $companys = null;
+        if ($usuari->teRol(40)) {
+            $empreses = Empresa::where('Validada', 0)->orderBy('DataAlta', 'ASC')->orderBy('Nom', 'ASC')->get();
+            $companys = Professor::where('Validat', 0)->orderBy('Email', 'ASC')->get();
+        }
+        return $this->view->render($response, 'professor/dashBoard.html.twig', ['professor' => $prof, 'usuari' => $usuari, 'empreses' => $empreses, 'companys' => $companys]);
+    } else {
+        return $response->withJSON('Errada: ' . $_SESSION);
     }
-    return $this->view->render($response, 'professor/dashBoard.html.twig', ['professor' => $prof, 'usuari' => $usuari, 'empreses' => $empreses, 'companys' => $companys]);
 });
 
 
@@ -254,6 +292,27 @@ $app->get('/professor/usuaris', function ($request, $response, $args) {
     return $this->view->render($response, 'professor/usuaris.html.twig', ['professor' => $prof, 'companys' => $companys]);
 });
 
+$app->get('/professor/administrador', function ($request, $response, $args) {
+    $this->dbEloquent;
+    $usuari = Usuari::find($_SESSION['idUsuari']);
+    $prof = $usuari->getEntitat();
+    $companys = Professor::orderBy('Email', 'ASC')->get();
+    return $this->view->render($response, 'professor/administrador.html.twig', ['professor' => $prof, 'companys' => $companys]);
+});
+
+
+$app->get('/professor/rols/{idProfessor}', function(Request $request, Response $response, $args) {
+    return DaoProfessor::rols($request, $response, $args, $this);
+});
+
+$app->put('/professor/rols/{idProfessor}', function(Request $request, Response $response, $args) {
+    return DaoProfessor::afegirRol($request, $response, $args, $this);
+});
+
+$app->delete('/professor/rols/{idProfessor}', function(Request $request, Response $response, $args) {
+    return DaoProfessor::eliminarRol($request, $response, $args, $this);
+});
+
 $app->get('/professor/empreses', function ($request, $response, $args) {
     $this->dbEloquent;
     $usuari = Usuari::find($_SESSION['idUsuari']);
@@ -279,6 +338,7 @@ $app->get('/professor/{id}', function(Request $request, Response $response, $arg
     $this->dbEloquent;
     return $response->withJSON(Professor::find($args['id']));
 });
+
 
 
 $app->get('/estudis', function(Request $request, Response $response) {
@@ -307,7 +367,6 @@ $app->get('/usuari/{id}', function(Request $request, Response $response, $args) 
 });
 
 //Final
-session_start();
-$_SESSION['idUsuari'] = 4;
+
 $app->run();
 

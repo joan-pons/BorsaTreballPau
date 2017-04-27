@@ -161,4 +161,94 @@ class DaoProfessor extends Dao {
         }
     }
 
+    public function rols(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+
+            $professor = Professor::find($args['idProfessor']);
+            if ($professor != null) {
+                $usuari = $professor->getUsuari();
+                return $response->withJSON($usuari->rols);
+            } else {
+                return $response->withJson("No es troba cap professor amb l'identificador demanat.", 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            switch ($ex->getCode()) {
+                case 23000:
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.");
+                    break;
+                case 'HY000':
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    break;
+                default:
+                    $missatge = array("missatge" => "El professor no s'ha pogut modificar.");
+                    break;
+            }
+            return $response->withJson($missatge, 422);
+        }
+    }
+
+    public function afegirRol(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+            $professor = Professor::find($args['idProfessor']);
+            if ($professor != null) {
+                $usuari = $professor->getUsuari();
+                $data = $request->getParsedBody();
+                $idrol = filter_var($data['idrol'], FILTER_SANITIZE_NUMBER_INT);
+                $usuari->rols()->sync([$idrol], false);
+
+                return $response->withJSON($professor);
+            } else {
+                $missatge = array("missatge" => "No s'ha trobat el professor que es vol modificar.");
+                return $response->withJson($missatge, 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            switch ($ex->getCode()) {
+                case 23000:
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja és administrador");
+                    break;
+                case 'HY000':
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    break;
+                default:
+                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la seva llista.");
+                    break;
+            }
+            return $response->withJson($missatge, 422);
+        }
+    }
+
+    public function eliminarRol(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+            $professor = Professor::find($args['idProfessor']);
+            
+            if ($professor != null) {
+                $usuari = $professor->getUsuari();
+                $data = $request->getParsedBody();
+                $idrol = filter_var($data['idrol'], FILTER_SANITIZE_NUMBER_INT);
+                $usuari->rols()->detach([$idrol]);
+
+                return $response->withJSON($professor);
+            } else {
+                $missatge = array("missatge" => "No s'ha trobat el professor que es vol modificar.");
+                return $response->withJson($missatge, 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            switch ($ex->getCode()) {
+                case 23000:
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja és administrador");
+                    break;
+                case 'HY000':
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    break;
+                default:
+                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la seva llista.");
+                    break;
+            }
+            return $response->withJson($missatge, 422);
+        }
+    }
+
 }

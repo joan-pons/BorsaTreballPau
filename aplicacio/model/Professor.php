@@ -26,7 +26,7 @@ class Professor extends Model {
     }
 
     public function getUsuari() {
-        $nomUsuari = $this->attributes['email'];
+        $nomUsuari = $this->attributes['Email'];
         $entitat = Usuari::where('nomUsuari', $nomUsuari)->first();
         return $entitat;
     }

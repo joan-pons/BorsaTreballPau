@@ -10,20 +10,49 @@
         <input type="hidden" name="tipus" value="{{tipus}}">
         <div class="form-group">
             <label for="usuari">Email:</label>
-            <input type="email" class="form-control" id="email" name="email" >
+            <input type="email" class="form-control" id="email" name="email" value="ptj@iespaucasesnoves.cat">
         </div>
         <div class="form-group">
             <label for="password">Contrasenya: </label>
-            <input type="password" class="form-control" id="password" name="password" >
+            <input type="password" class="form-control" id="password" name="password" value="12345678">
         </div>
         <h5>Ha oblidat la contrasenya? <small><a href="#">Cliqui aquí</a></small></h5>
         <button type="submit" name="bEntrar" >Entrar</button>
     </form>
 </div>
+{{include('auxiliars/modals.html.twig')}}
 <script>
+    var dadesLogin;
+    $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+    $('#bmDacord').on('click', function () {
+        $('#mdResultat').modal('hide');
+    });
+    $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+    $('#mEsperaTitol').html('Validant l\'usuari');
+    $('#mdEspera').on('shown.bs.modal', function (e) {
+        $.ajax({
+            method: 'GET',
+            url: "/login",
+            data: dadesLogin
+        }).done(function (usuari) {
+            $('#mdEspera').modal('hide');
+            window.location = '{{ action }}';
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la validació');
+            $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+            $('#bmDacord').on('click', function () {
+                $('#mdResultat').modal('hide');
+            });
+            $('#mdEspera').modal('hide');
+            $('#mdResultat').modal('show');
+        });
+    });
+
+
     $("#fLogin").on('submit', function (event) {
         event.preventDefault();
-        //Ajax de validació
-        window.location='{{ action }}';
+        dadesLogin = {tipus:{{tipus}} , nomUsuari: $("#email").val(), password: $("#password").val()};
+        $('#mdEspera').modal('show');
     });
 </script>
+

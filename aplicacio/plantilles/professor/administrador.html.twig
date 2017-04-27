@@ -18,31 +18,54 @@
             $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
             $('#mEsperaTitol').html('Realitzant les modificacions');
             $('#mdEspera').on('shown.bs.modal', function (e) {
-
-                $.ajax({
-                    method: 'PUT',
-                    url: "/professor/usuaris/" + dades.idProfessor,
-                    data: dades
-                }).done(function () {
-                    $('#mrTitol').html('Actualització correcte')
-                    $('#mrText').html("<p>Les dades s'han modificat correctament.</p>");
-                    $('#bmDacord').on('click', function () {
-                        window.location.href = "usuaris";
+                if (dades.Admin) {
+                    $.ajax({
+                        method: 'PUT',
+                        url: "/professor/rols/" + dades.idProfessor,
+                        data: {idrol: 40}
+                    }).done(function () {
+                        $('#mrTitol').html('Actualització correcte')
+                        $('#mrText').html("<p>S'ha afegit correctament el rol.</p>");
+                        $('#bmDacord').on('click', function () {
+                            window.location.href = "administrador";
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
                     });
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
-                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
-                    $('#bmDacord').on('click', function () {
-                        $('#mdResultat').modal('hide');
+                }else{
+                    $.ajax({
+                        method: 'DELETE',
+                        url: "/professor/rols/" + dades.idProfessor,
+                        data: {idrol: 40}
+                    }).done(function () {
+                        $('#mrTitol').html('Actualització correcte')
+                        $('#mrText').html("<p>S'ha eliminat correctament el rol.</p>");
+                        $('#bmDacord').on('click', function () {
+                            window.location.href = "administrador";
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
                     });
-                }).always(function () {
-                    $('#mdEspera').modal('hide');
-                    $('#mdResultat').modal('show');
-                });
+                }
             });
 
 
             $("#bModificar").on('click', function () {
+                //Recupera professor
                 $.ajax({
                     method: 'GET',
                     url: "/professor/" + $("#llista").val()
@@ -51,26 +74,25 @@
                     $("#llista").prop('disabled', 'disabled');
                     $("#bGuardar").prop('disabled', false);
                     $("#bCancelar").prop('disabled', false);
-                    $("#validat").prop('disabled', false);
-                    $("#actiu").prop('disabled', false);
+                    $("#admin").prop('disabled', false);
                     $("#nom").html(professor.Llinatges + ", " + professor.Nom);
                     $("#email").html(professor.Email);
                     $("#telefon").html(professor.Telefon);
 
                     $('#idProfessor').val(professor.idProfessor);
-                    if (professor.Validat) {
-                        $("#validat").prop('checked', 'checked');
-                        $("#actiu").prop('disabled', false);
-                    } else {
-                        $("#validat").prop('checked', false);
-                        $("#actiu").prop('disabled', 'disabled');
-                    }
+                    $.ajax({
+                        method: 'GET',
+                        url: "/professor/rols/" + $("#llista").val()
+                    }).done(function (rols) {
+                        for (var rol in rols) {
+                            if (rols[rol].idrol === 40) {
+                                $("#admin").prop('checked', 'checked');
+                            }
+                        }
 
-                    if (professor.Actiu) {
-                        $("#actiu").prop('checked', 'checked');
-                    } else {
-                        $("#actiu").prop('checked', false);
-                    }
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        alert("Error");
+                    })
 
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     alert("Error");
@@ -82,14 +104,12 @@
                 $("#llista").prop('disabled', false);
                 $("#bGuardar").prop('disabled', 'disabled');
                 $("#bCancelar").prop('disabled', 'disabled');
-                $("#validat").prop('disabled', 'disabled');
-                $("#actiu").prop('disabled', 'disabled');
+                $("#admin").prop('disabled', 'disabled');
                 $("#nom").html("");
                 $("#email").html("");
                 $("#telefon").html("");
                 $("#llista").val("");
-                $("#actiu").prop('checked', false);
-                $("#validat").prop('checked', false);
+                $("#admin").prop('checked', false);
             });
 
 
@@ -98,20 +118,10 @@
                 var f = event.target.id;
                 dades = {};
                 dades['idProfessor'] = $('#idProfessor').val();
-                dades['Actiu'] = $('#actiu').is(':checked');
-                dades['Validat'] = $('#validat').is(':checked');
+                dades['Admin'] = $('#admin').is(':checked');
                 $('#mdEspera').modal('show');
             });
 
-            $('#validat').on('change', function (event) {
-                
-                if ($(this).is(':checked')) {
-                    $("#actiu").prop('disabled', false);
-                } else {
-                    $("#actiu").prop('disabled', 'disabled');
-                    $("#actiu").prop('checked', false);
-                }
-            });
 
         });
     </script>
@@ -133,7 +143,7 @@
 {% endblock %}                     
 
 {% block contingut %}
-    <h2>Validar / Activar usuaris</h2>
+    <h2>Rol d'administrador</h2>
     <div class="well">
         <div class="row">
             <div class="col-md-8">
@@ -158,13 +168,16 @@
         <div class="well">
             <div class='row'>
                 <div class='col-md-6'>
-                    <p><label>Nom: &nbsp;</label><span id="nom"></span> </p>
+                    <p><label>Nom: &nbsp;</label><span id="nom" class='form-control-static'></span> </p>
                     <p><label>Correu electrònic: &nbsp;</label><span id="email"></span></p>
                     <p><label>Telèfon: &nbsp;</label><span id="telefon"></span></p>
-                    <p><label>Validat: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %} disabled="disabled"></label></p>
-                    <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Actiu: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %} disabled="disabled"></label></p>
+                    <p><label>Administrador: &nbsp;<input  id="admin" name="admin" type="checkbox" disabled="disabled"></label></p>
                 </div>
                 <div class='col-md-6'>
+                    <div class='well'>
+                        <p>El rol d'administrador permet validar usuaris i empreses. No s'hauria d'assignar a tothom.</p>
+                        <p><strong>Alerta:</strong> Si lleva aquest rol del seu usuari ja no li podrà tornar a assignar, ho haurà de fer un altre administrador.</p>
+                    </div>
                     <button class="btn btn-success" type="submit" id="bGuardar" disabled="disabled">Guardar</button>
                     <button class="btn btn-default" type="reset" id="bCancelar" disabled="disabled">Cancelar</button>
                 </div>
