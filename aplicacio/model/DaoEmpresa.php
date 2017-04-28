@@ -19,16 +19,16 @@ class DaoEmpresa extends Dao {
             $container->dbEloquent;
             $data = $request->getParsedBody();
             $empresa = new Empresa;
-            $empresa->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
-            $empresa->Descripcio = $data['descripcio'];
-            $empresa->Adreca = filter_var($data['Adreca'], FILTER_SANITIZE_STRING);
-            $empresa->CodiPostal = filter_var($data['CodiPostal'], FILTER_SANITIZE_STRING);
-            $empresa->Localitat = filter_var($data['Localitat'], FILTER_SANITIZE_STRING);
-            $empresa->Provincia = filter_var($data['Provincia'], FILTER_SANITIZE_STRING);
-            $empresa->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
+            $empresa->nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+            $empresa->descripcio = $data['descripcio'];
+            $empresa->adreca = filter_var($data['adreca'], FILTER_SANITIZE_STRING);
+            $empresa->codiPostal = filter_var($data['codiPostal'], FILTER_SANITIZE_STRING);
+            $empresa->localitat = filter_var($data['localitat'], FILTER_SANITIZE_STRING);
+            $empresa->provincia = filter_var($data['provincia'], FILTER_SANITIZE_STRING);
+            $empresa->telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
             $empresa->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
-            $empresa->Activa = filter_var($data['Actiu'], FILTER_SANITIZE_STRING) == 'true';
-            $empresa->Validada = false;
+            $empresa->activa = filter_var($data['actiu'], FILTER_SANITIZE_STRING) == 'true';
+            $empresa->validada = false;
             $empresa->url = filter_var($data['url'], FILTER_SANITIZE_URL);
             //$empresa->DataAlta= \Carbon::now();
             $empresa->save();
@@ -56,16 +56,16 @@ class DaoEmpresa extends Dao {
             $data = $request->getParsedBody();
             $empresa = Empresa::find($args['idEmpresa']);
             if ($empresa != null) {
-                $empresa->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
-                $empresa->Descripcio = $data['descripcio'];
-                $empresa->Adreca = filter_var($data['Adreca'], FILTER_SANITIZE_STRING);
-                $empresa->CodiPostal = filter_var($data['CodiPostal'], FILTER_SANITIZE_STRING);
-                $empresa->Localitat = filter_var($data['Localitat'], FILTER_SANITIZE_STRING);
-                $empresa->Provincia = filter_var($data['Provincia'], FILTER_SANITIZE_STRING);
-                $empresa->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
+                $empresa->nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+                $empresa->descripcio = $data['descripcio'];
+                $empresa->adreca = filter_var($data['adreca'], FILTER_SANITIZE_STRING);
+                $empresa->codiPostal = filter_var($data['codiPostal'], FILTER_SANITIZE_STRING);
+                $empresa->localitat = filter_var($data['localitat'], FILTER_SANITIZE_STRING);
+                $empresa->Provincia = filter_var($data['provincia'], FILTER_SANITIZE_STRING);
+                $empresa->telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
                 $empresa->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
-                $empresa->Activa = filter_var($data['Actiu'], FILTER_SANITIZE_STRING) == 'true';
-                $empresa->Validada = false;
+                $empresa->activa = filter_var($data['actiu'], FILTER_SANITIZE_STRING) == 'true';
+                $empresa->validada = false;
                 $empresa->url = filter_var($data['url'], FILTER_SANITIZE_URL);
                 //$empresa->DataAlta= \Carbon::now();
                 $empresa->save();
@@ -95,11 +95,11 @@ class DaoEmpresa extends Dao {
             $container->dbEloquent;
             $data = $request->getParsedBody();
             $contacte = new Contacte;
-            $contacte->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
-            $contacte->Llinatges = filter_var($data['Llinatges'], FILTER_SANITIZE_STRING);
-            $contacte->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
+            $contacte->nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+            $contacte->llinatges = filter_var($data['llinatges'], FILTER_SANITIZE_STRING);
+            $contacte->telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
             $contacte->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
-            $contacte->Carrec = filter_var($data['Carrec'], FILTER_SANITIZE_STRING);
+            $contacte->carrec = filter_var($data['carrec'], FILTER_SANITIZE_STRING);
             $contacte->Empreses_idEmpresa = filter_var($data['idEmpresa'], FILTER_SANITIZE_NUMBER_INT);
             $contacte->save();
             return $response->withJSON($contacte);
@@ -125,10 +125,10 @@ class DaoEmpresa extends Dao {
             $data = $request->getParsedBody();
             $contacte = Contacte::find($args['idContacte']);
             if ($contacte != null) {
-                $contacte->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
-                $contacte->Llinatges = filter_var($data['Llinatges'], FILTER_SANITIZE_STRING);
-                $contacte->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
-                $contacte->Carrec = filter_var($data['Carrec'], FILTER_SANITIZE_STRING);
+                $contacte->nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+                $contacte->llinatges = filter_var($data['llinatges'], FILTER_SANITIZE_STRING);
+                $contacte->telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
+                $contacte->carrec = filter_var($data['carrec'], FILTER_SANITIZE_STRING);
                 $contacte->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
                 $contacte->Empreses_idEmpresa = filter_var($data['idEmpresa'], FILTER_SANITIZE_NUMBER_INT);
                 $contacte->save();
@@ -186,8 +186,8 @@ class DaoEmpresa extends Dao {
             $empresa = Empresa::find($args['idEmpresa']);
             if ($empresa != null) {
                 $data = $request->getParsedBody();
-                $empresa->Activa = filter_var($data['Activa'], FILTER_SANITIZE_STRING) == 'true';
-                $empresa->Validada = filter_var($data['Validada'], FILTER_SANITIZE_STRING) == 'true';
+                $empresa->activa = filter_var($data['activa'], FILTER_SANITIZE_STRING) == 'true';
+                $empresa->validada = filter_var($data['validada'], FILTER_SANITIZE_STRING) == 'true';
                 $empresa->save();
                 return $response->withJSON($empresa);
             } else {

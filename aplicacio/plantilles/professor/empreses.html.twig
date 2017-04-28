@@ -21,7 +21,7 @@
 
                 $.ajax({
                     method: 'PUT',
-                    url: "/professor/empreses/" + dades.idEmpresa,
+                    url: "/administrador/empreses/" + dades.idEmpresa,
                     data: dades
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')
@@ -46,8 +46,8 @@
                 var f = event.target.id;
                 dades = {};
                 dades['idProfessor'] = $('#' + f + ' #idProfessor').val();
-                dades['Actiu'] = $('#' + f + ' #actiu').is(':checked');
-                dades['Validat'] = $('#' + f + ' #validat').is(':checked');
+                dades['actiu'] = $('#' + f + ' #actiu').is(':checked');
+                dades['validat'] = $('#' + f + ' #validat').is(':checked');
                 $('#mdEspera').modal('show');
             });
 
@@ -64,33 +64,37 @@
                     $("#bCancelar").prop('disabled', false);
                     $("#validat").prop('disabled', false);
                     $("#actiu").prop('disabled', false);
-                    $("#nom").html(empresa.Nom);
+                    $("#nom").html(empresa.nom);
                     $("#email").html(empresa.email);
-                    $("#telefon").html(empresa.Telefon);
+                    $("#telefon").html(empresa.telefon);
                     $("#url").html(empresa.url);
-                    $("#adreca").html(empresa.Adreca);
-                    $("#codiPostal").html(empresa.CodiPostal);
-                    $("#localitat").html(empresa.Localitat);
-                    $("#provincia").html(empresa.Provincia);
-                    $("#dataAlta").html(empresa.DataAlta);
-                    $("#descripcio").html(empresa.Descripcio);
+                    $("#adreca").html(empresa.adreca);
+                    $("#codiPostal").html(empresa.codiPostal);
+                    $("#localitat").html(empresa.localitat);
+                    $("#provincia").html(empresa.provincia);
+                    $("#dataAlta").html(empresa.dataAlta);
+                    $("#descripcio").html(empresa.descripcio);
 
                     $('#idEmpresa').val(empresa.idEmpresa);
-                    if (empresa.Validada) {
+                    if (empresa.validada) {
                         $("#validat").prop('checked', 'checked');
                         $("#actiu").prop('disabled', false);
                     } else {
                         $("#validat").prop('checked', false);
                         $("#actiu").prop('disabled', 'disabled');
                     }
-                    if (empresa.Activa) {
+                    if (empresa.activa) {
                         $("#actiu").prop('checked', 'checked');
                     } else {
                         $("#actiu").prop('checked', false);
                     }
 
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    alert("Error");
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
                 })
             });
 
@@ -122,8 +126,8 @@
                 var f = event.target.id;
                 dades = {};
                 dades['idEmpresa'] = $('#idEmpresa').val();
-                dades['Activa'] = $('#actiu').is(':checked');
-                dades['Validada'] = $('#validat').is(':checked');
+                dades['activa'] = $('#actiu').is(':checked');
+                dades['validada'] = $('#validat').is(':checked');
                 $('#mdEspera').modal('show');
             });
 
@@ -141,7 +145,7 @@
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">{{ professor.Nom }} {{professor.Llinatges }}</a>
+    <a class="navbar-brand" href="/professor/dashBoard">{{ professor.nom }} {{professor.llinatges }}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -165,7 +169,7 @@
                         <select class="form-control" id="llista">
                             <option value="">Esculli una empresa</option>
                             {% for empresa in empreses %}
-                                <option value="{{ empresa.idEmpresa }}">{{ empresa.Nom }}</option>
+                                <option value="{{ empresa.idEmpresa }}">{{ empresa.nom }}</option>
                             {% endfor %}
                         </select> 
                         <span class="input-group-btn"><button type="button" class="btn btn-default btn-success" id="bModificar">Modificar</button></span>
@@ -193,8 +197,8 @@
                 <div class='col-md-6'>
                     <p><label>Descripció: &nbsp;</label></p>
                     <div id='descripcio' class='well'></div>
-                    <p><label>Validada: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %} disabled="disabled"></label></p>
-                    <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Activa: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %} disabled="disabled"></label></p>
+                    <p><label>Validada: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.validat %} checked {% endif %} disabled="disabled"></label></p>
+                    <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Activa: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.actiu %} checked {% endif %} disabled="disabled"></label></p>
                     <button class="btn btn-success" type="submit" id="bGuardar" disabled="disabled">Guardar</button>
                     <button class="btn btn-default" type="reset" id="bCancelar" disabled="disabled">Cancelar</button>
                 </div>

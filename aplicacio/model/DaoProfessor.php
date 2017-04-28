@@ -19,9 +19,9 @@ class DaoProfessor extends Dao {
             $container->dbEloquent;
             $data = $request->getParsedBody();
             $professor = new Professor;
-            $professor->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
-            $professor->Llinatges = filter_var($data['Llinatges'], FILTER_SANITIZE_STRING);
-            $professor->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
+            $professor->nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+            $professor->llinatges = filter_var($data['llinatges'], FILTER_SANITIZE_STRING);
+            $professor->telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
             $professor->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
             $professor->save();
             return $response->withJSON($professor);
@@ -47,9 +47,9 @@ class DaoProfessor extends Dao {
             $data = $request->getParsedBody();
             $professor = Professor::find($args['idProfessor']);
             if ($professor != null) {
-                $professor->Nom = filter_var($data['Nom'], FILTER_SANITIZE_STRING);
-                $professor->Llinatges = filter_var($data['Llinatges'], FILTER_SANITIZE_STRING);
-                $professor->Telefon = filter_var($data['Telefon'], FILTER_SANITIZE_STRING);
+                $professor->nom = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+                $professor->llinatges = filter_var($data['llinatges'], FILTER_SANITIZE_STRING);
+                $professor->telefon = filter_var($data['telefon'], FILTER_SANITIZE_STRING);
                 $professor->email = filter_var($data['email'], FILTER_SANITIZE_EMAIL);
                 $professor->save();
                 return $response->withJSON($professor);
@@ -79,8 +79,8 @@ class DaoProfessor extends Dao {
             $data = $request->getParsedBody();
             $professor = Professor::find($data['idProfessor']);
             if ($professor != null) {
-                $CodiEstudis = filter_var($data['codiEstudis'], FILTER_SANITIZE_STRING);
-                $professor->estudis()->sync([$CodiEstudis], false);
+                $codiEstudis = filter_var($data['codiEstudis'], FILTER_SANITIZE_STRING);
+                $professor->estudis()->sync([$codiEstudis], false);
 
                 return $response->withJSON($professor);
             } else {
@@ -138,8 +138,8 @@ class DaoProfessor extends Dao {
             $professor = Professor::find($args['idProfessor']);
             if ($professor != null) {
                 $data = $request->getParsedBody();
-                $professor->Actiu = filter_var($data['Actiu'], FILTER_SANITIZE_STRING) == 'true';
-                $professor->Validat = filter_var($data['Validat'], FILTER_SANITIZE_STRING) == 'true';
+                $professor->actiu = filter_var($data['actiu'], FILTER_SANITIZE_STRING) == 'true';
+                $professor->validat = filter_var($data['validat'], FILTER_SANITIZE_STRING) == 'true';
                 $professor->save();
                 return $response->withJSON($professor);
             } else {
@@ -195,7 +195,7 @@ class DaoProfessor extends Dao {
             if ($professor != null) {
                 $usuari = $professor->getUsuari();
                 $data = $request->getParsedBody();
-                $idrol = filter_var($data['idrol'], FILTER_SANITIZE_NUMBER_INT);
+                $idrol = filter_var($data['idRol'], FILTER_SANITIZE_NUMBER_INT);
                 $usuari->rols()->sync([$idrol], false);
 
                 return $response->withJSON($professor);
@@ -227,8 +227,8 @@ class DaoProfessor extends Dao {
             if ($professor != null) {
                 $usuari = $professor->getUsuari();
                 $data = $request->getParsedBody();
-                $idrol = filter_var($data['idrol'], FILTER_SANITIZE_NUMBER_INT);
-                $usuari->rols()->detach([$idrol]);
+                $idRol = filter_var($data['idRol'], FILTER_SANITIZE_NUMBER_INT);
+                $usuari->rols()->detach([$idRol]);
 
                 return $response->withJSON($professor);
             } else {

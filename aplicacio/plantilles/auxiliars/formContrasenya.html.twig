@@ -1,7 +1,7 @@
 <h2>Canviar contrasenya</h2>
 <div class="well">
     <form id="fCanvi">
-        <input type="hidden" name="idUsuari" value="{{ usuari.idusuari }}">
+        <input type="hidden" name="idUsuari" value="{{ usuari.idUsuari }}">
         <input type="hidden" name="tipusUsuari" value="{{ usuari.tipusUsuari }}">
         <div class="row">
             <div class="col-md-4">
@@ -10,11 +10,11 @@
                     <input type="password" class="form-control" id="antic" name="antic" required="required" minlength="8" maxlength="75">
                 </div>
                 <div class="form-group required">
-                    <label for="password" class="control-label">Contrasenya nova:</label>
+                    <label for="nou" class="control-label">Contrasenya nova:</label>
                     <input type="password" class="form-control" id="nou" name="nou" required="required"  minlength="8" maxlength="75">
                 </div>
                 <div class="form-group required">
-                    <label for="password2" class="control-label">Repetir contrasenya nova:</label>
+                    <label for="repetir" class="control-label">Repetir contrasenya nova:</label>
                     <input type="password" class="form-control" id="repetir"  required="required"  minlength="8" maxlength="75">
                 </div>
             </div><!--col-->

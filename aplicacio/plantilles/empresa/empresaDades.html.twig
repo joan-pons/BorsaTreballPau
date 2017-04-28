@@ -1,7 +1,7 @@
 {% extends "auxiliars/base.html.twig" %}
 
 {% block head %}
-    <title>Borsa de treball: Alta Empresa</title>
+    <title>Borsa de treball: Modificar Empresa</title>
     <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/borsa.css">
@@ -64,14 +64,13 @@
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">Empresa</a>
+    <a class="navbar-brand" href="dashBoard">{{empresa.nom}}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
         <li class="active"><a href="#">Actualitzar dades</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">
-        <li><a href="dashBoard">{{objEmpresa.Nom}}</a></li>
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
 

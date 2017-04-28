@@ -23,7 +23,7 @@ class Dao {
         $container->dbEloquent;
         $data = $request->getQueryParams();
         $usuari = Usuari::where('nomUsuari', $data['nomUsuari'])->first();
-        if ($usuari == null || $usuari->contrasenya != $data['password']) {
+        if ($usuari == null || $usuari->contrasenya != $data['password'] || $usuari->tipusUsuari != $data['tipus']) {
             $missatge = array("missatge" => "L'usuari i/o la contrasenya estan equivocats.");
             return $response->withJson($missatge, 401);
         } else {
@@ -31,10 +31,10 @@ class Dao {
             session_destroy();
 
             session_start();
-            $_SESSION['idUsuari'] = $usuari->idusuari;
+            $_SESSION['idUsuari'] = $usuari->idUsuari;
             $rols = [];
             foreach ($usuari->rols as $rol) {
-                $rols[] = $rol->idrol;
+                $rols[] = $rol->idRol;
             }
             $_SESSION['rols'] = $rols;
             return $response->withJSON(array("missatge" => "L'usuari s'ha validat correctament"));

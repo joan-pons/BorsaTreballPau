@@ -18,7 +18,7 @@ use \Illuminate\Database\Eloquent\Model as Model;
 class Rol extends Model {
 
     protected $table = 'Rols';
-    protected $primaryKey = "idrol";
+    protected $primaryKey = "idRol";
     public $timestamps = false;
 
 }

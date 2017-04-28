@@ -21,7 +21,7 @@
 
                 $.ajax({
                     method: 'PUT',
-                    url: "/professor/usuaris/" + dades.idProfessor,
+                    url: "/administrador/usuaris/" + dades.idProfessor,
                     data: dades
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')
@@ -53,12 +53,12 @@
                     $("#bCancelar").prop('disabled', false);
                     $("#validat").prop('disabled', false);
                     $("#actiu").prop('disabled', false);
-                    $("#nom").html(professor.Llinatges + ", " + professor.Nom);
-                    $("#email").html(professor.Email);
-                    $("#telefon").html(professor.Telefon);
+                    $("#nom").html(professor.llinatges + ", " + professor.nom);
+                    $("#email").html(professor.email);
+                    $("#telefon").html(professor.telefon);
 
                     $('#idProfessor').val(professor.idProfessor);
-                    if (professor.Validat) {
+                    if (professor.validat) {
                         $("#validat").prop('checked', 'checked');
                         $("#actiu").prop('disabled', false);
                     } else {
@@ -66,7 +66,7 @@
                         $("#actiu").prop('disabled', 'disabled');
                     }
 
-                    if (professor.Actiu) {
+                    if (professor.actiu) {
                         $("#actiu").prop('checked', 'checked');
                     } else {
                         $("#actiu").prop('checked', false);
@@ -98,8 +98,8 @@
                 var f = event.target.id;
                 dades = {};
                 dades['idProfessor'] = $('#idProfessor').val();
-                dades['Actiu'] = $('#actiu').is(':checked');
-                dades['Validat'] = $('#validat').is(':checked');
+                dades['actiu'] = $('#actiu').is(':checked');
+                dades['validat'] = $('#validat').is(':checked');
                 $('#mdEspera').modal('show');
             });
 
@@ -118,7 +118,7 @@
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">{{ professor.Nom }} {{professor.Llinatges }}</a>
+    <a class="navbar-brand" href="/professor/dashBoard">{{ professor.nom }} {{professor.llinatges }}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -143,7 +143,7 @@
                         <select class="form-control" id="llista">
                             <option value="">Escull un professor</option>
                             {% for company in companys %}
-                                <option value="{{ company.idProfessor }}">{{ company.Llinatges }}, {{ company.Nom }}</option>
+                                <option value="{{ company.idProfessor }}">{{ company.llinatges }}, {{ company.nom }}</option>
                             {% endfor %}
                         </select> 
                         <span class="input-group-btn"><button type="button" class="btn btn-default btn-success" id="bModificar">Modificar</button></span>
@@ -161,8 +161,8 @@
                     <p><label>Nom: &nbsp;</label><span id="nom"></span> </p>
                     <p><label>Correu electrònic: &nbsp;</label><span id="email"></span></p>
                     <p><label>Telèfon: &nbsp;</label><span id="telefon"></span></p>
-                    <p><label>Validat: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %} disabled="disabled"></label></p>
-                    <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Actiu: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.Actiu %} checked {% endif %} disabled="disabled"></label></p>
+                    <p><label>Validat: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.validat %} checked {% endif %} disabled="disabled"></label></p>
+                    <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Actiu: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.actiu %} checked {% endif %} disabled="disabled"></label></p>
                 </div>
                 <div class='col-md-6'>
                     <button class="btn btn-success" type="submit" id="bGuardar" disabled="disabled">Guardar</button>

@@ -22,11 +22,11 @@ class Professor extends Model {
     public $timestamps = false;
 
     public function estudis() {
-        return $this->belongsToMany('Borsa\Estudis', 'Estudis_has_Responsables', 'professors_idProfessor', 'Estudis_Codi');
+        return $this->belongsToMany('Borsa\Estudis', 'Estudis_has_Responsables', 'professors_idProfessor', 'Estudis_codi');
     }
 
     public function getUsuari() {
-        $nomUsuari = $this->attributes['Email'];
+        $nomUsuari = $this->attributes['email'];
         $entitat = Usuari::where('nomUsuari', $nomUsuari)->first();
         return $entitat;
     }

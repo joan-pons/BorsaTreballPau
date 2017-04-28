@@ -19,11 +19,11 @@ use Borsa\Professor as Professor;
 class Usuari extends Model {
 
     protected $table = 'Usuaris';
-    protected $primaryKey = "idusuari";
+    protected $primaryKey = "idUsuari";
     public $timestamps = false;
 
     public function rols() {
-        return $this->belongsToMany("Borsa\Rol", 'Usuaris_has_Rols', 'Usuaris_idusuari', 'Rols_idrol');
+        return $this->belongsToMany("Borsa\Rol", 'Usuaris_has_Rols', 'Usuaris_idUsuari', 'Rols_idRol');
     }
 
     public function getNomUsuariAttribute($value) {
@@ -58,7 +58,7 @@ class Usuari extends Model {
     public function teRol($rolCercat) {
         
         foreach ($this->rols as $rol) {
-            if ($rol->idrol == $rolCercat) {
+            if ($rol->idRol == $rolCercat) {
                 return true;
             }
         }

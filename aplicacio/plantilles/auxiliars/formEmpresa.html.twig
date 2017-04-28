@@ -8,12 +8,12 @@
                         <input type="hidden" class="form-control" id="idEmpresa" name="idEmpresa" value="{{objEmpresa.idEmpresa}}">
                         <div class="form-group required">
                             <label class='control-label' for="Nom">Nom:</label>
-                            <input type="text" required="required" class="form-control " id="Nom" name="Nom" value="{{objEmpresa.Nom}}">
+                            <input type="text" required="required" class="form-control " id="nom" name="nom" value="{{objEmpresa.nom}}">
                         </div>
 
                         <div class="form-group">
                             <label for="Telefon">Teléfon:</label>
-                            <input type="text" class="form-control" id="Telefon" name="Telefon" value="{{objEmpresa.Telefon}}">
+                            <input type="text" class="form-control" id="telefon" name="telefon" value="{{objEmpresa.telefon}}">
                         </div>
                         <div class="form-group required">
                             <label for="email" class='control-label'>Correu electrònic:</label>
@@ -26,28 +26,28 @@
                         <div class="form-group">
                             <label for="Actiu">Estat:</label>
                             <div>
-                                <label class="radio-inline"><input type="radio" id="Actiu" name="Actiu" value="true"  {% if objEmpresa.Activa==true %}checked="checked"{% endif %}> Activa</label>
-                                <label class="radio-inline"><input type="radio" id="Inactiu" name="Actiu" value="false" {% if objEmpresa.Activa==false %}checked="checked"{% endif %}> Inactiva</label>
+                                <label class="radio-inline"><input type="radio" id="Actiu" name="actiu" value="true"  {% if objEmpresa.Activa==true %}checked="checked"{% endif %}> Activa</label>
+                                <label class="radio-inline"><input type="radio" id="Inactiu" name="actiu" value="false" {% if objEmpresa.Activa==false %}checked="checked"{% endif %}> Inactiva</label>
                             </div>
                         </div>
                     </div><!--col-->
 
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="Adreca">Adreca:</label>
-                            <input type="text" class="form-control" id="Adreca" name="Adreca" value="{{objEmpresa.Adreca}}">
+                            <label for="adreca">Adreca:</label>
+                            <input type="text" class="form-control" id="adreca" name="adreca" value="{{objEmpresa.adreca}}">
                         </div>
                         <div class="form-group">
-                            <label for="CodiPostal">Codi postal:</label>
-                            <input type="text" class="form-control" id="CodiPostal" name="CodiPostal" value="{{objEmpresa.CodiPostal}}">
+                            <label for="codiPostal">Codi postal:</label>
+                            <input type="text" class="form-control" id="codiPostal" name="codiPostal" value="{{objEmpresa.codiPostal}}">
                         </div>
                         <div class="form-group">
-                            <label for="Localitat">Localitat:</label>
-                            <input type="text" class="form-control" id="Localitat" name="Localitat" value="{{objEmpresa.Localitat}}">
+                            <label for="localitat">Localitat:</label>
+                            <input type="text" class="form-control" id="localitat" name="localitat" value="{{objEmpresa.localitat}}">
                         </div>
                         <div class="form-group">
-                            <label for="Provincia">Provincia:</label>
-                            <input type="text" class="form-control" id="Provincia" name="Provincia" value="{{objEmpresa.Provincia}}">
+                            <label for="provincia">Provincia:</label>
+                            <input type="text" class="form-control" id="provincia" name="provincia" value="{{objEmpresa.provincia}}">
                         </div>
                     </div><!--col-->
                 </div><!--row -->
@@ -56,7 +56,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="textOferta">Descripció de l'empresa: </label>
-                            <div id="textDescripcio">{{objEmpresa.Descripcio | raw}}</div>
+                            <div id="textDescripcio">{{objEmpresa.descripcio | raw}}</div>
                         </div>
                     </div><!--col -->
                 </div> <!--Row -->

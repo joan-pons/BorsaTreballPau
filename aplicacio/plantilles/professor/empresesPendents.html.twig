@@ -21,7 +21,7 @@
 
                 $.ajax({
                     method: 'PUT',
-                    url: "/professor/empreses/" + dades.idEmpresa,
+                    url: "/administrador/empreses/" + dades.idEmpresa,
                     data: dades
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')
@@ -57,8 +57,8 @@
                 var f = event.target.id.replace('f','');
                 dades = {};
                 dades['idEmpresa'] = $('#idE'+f).val();
-                dades['Activa'] = $('#act'+f).is(':checked');
-                dades['Validada'] = $('#val' + f).is(':checked');
+                dades['activa'] = $('#act'+f).is(':checked');
+                dades['validada'] = $('#val' + f).is(':checked');
                 $('#mdEspera').modal('show');
             });
 
@@ -76,7 +76,7 @@
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">{{ professor.Nom }} {{professor.Llinatges }}</a>
+    <a class="navbar-brand" href="/professor/dashBoard">{{ professor.nom }} {{professor.llinatges }}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -97,20 +97,20 @@
             <div class="well" id='emp{{ empresa.idEmpresa}}'>
                 <div class='row'>
                     <div class='col-md-6'>
-                        <p><label>Nom: &nbsp;</label> {{ empresa.Nom }}</p>
+                        <p><label>Nom: &nbsp;</label> {{ empresa.nom }}</p>
                         <p><label>Correu electrònic: &nbsp;</label>{{ empresa.email }}</p>
-                        <p><label>Telèfon: &nbsp;</label>{{ empresa.Telefon }}</p>
+                        <p><label>Telèfon: &nbsp;</label>{{ empresatTelefon }}</p>
                         <p><label>url: &nbsp;</label>{{ empresa.url }}</p>
-                        <p><label>Adreça: &nbsp;</label>{{ empresa.Adreca }}</p>
-                        <p><label>Codi postal: &nbsp;</label>{{ empresa.CodiPostal }}</p>
-                        <p><label>Localitat: &nbsp;</label>{{ empresa.Localitat }}</p>
-                        <p><label>Província: &nbsp;</label>{{ empresa.Provincia }}</p>
-                        <p><label>Data d'alta: &nbsp;</label>{{ empresa.DataAlta }}</p>
+                        <p><label>Adreça: &nbsp;</label>{{ empresa.adreca }}</p>
+                        <p><label>Codi postal: &nbsp;</label>{{ empresa.codiPostal }}</p>
+                        <p><label>Localitat: &nbsp;</label>{{ empresa.localitat }}</p>
+                        <p><label>Província: &nbsp;</label>{{ empresa.provincia }}</p>
+                        <p><label>Data d'alta: &nbsp;</label>{{ empresa.dataAlta }}</p>
                     </div>
                     <div class='col-md-6'>
                         <p><label>Descripció: &nbsp;</label></p>
-                        <div id='descripcio' class='well'>{{ empresa.Descripcio | raw }}</div>
-                        <p><label>Validada: &nbsp;<input id="val{{ empresa.idEmpresa }}" name="validat" type="checkbox" {%if empresa.Validada %} checked {% endif %}></label></p>
+                        <div id='descripcio' class='well'>{{ empresa.descripcio | raw }}</div>
+                        <p><label>Validada: &nbsp;<input id="val{{ empresa.idEmpresa }}" name="validat" type="checkbox" {%if empresa.validada %} checked {% endif %}></label></p>
                         <p><label>Activa: &nbsp;<input id="act{{ empresa.idEmpresa }}" name="actiu" type="checkbox" disabled="disabled"></label></p>
                         <button class="btn btn-success" type="submit" id="bGuardar">Guardar</button>
                         <button class="btn btn-default" type="button" id="bCan{{ empresa.idEmpresa }}">Cancelar</button>

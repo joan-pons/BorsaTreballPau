@@ -19,34 +19,34 @@
             });
             $('#professors > .click').on('click', function (event) {
                 var id = event.currentTarget.id;
-                window.location.href = "usuarisPendents#" + id;
+                window.location.href = "/administrador/usuarisPendents#" + id;
             });
             $('#empreses > .click').on('click', function (event) {
                 var id = event.currentTarget.id;
-                window.location.href = "empresesPendents#" + id;
+                window.location.href = "/administrador/empresesPendents#" + id;
             });
         });
     </script>
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="#l">{{ professor.Nom }} {{ professor.Llinatges }}</a>
+    <a class="navbar-brand" href="#l">{{ professor.nom }} {{ professor.llinatges }}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
         <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
         <li><a href="canviarContrasenya" id="mContrasenya">Canviar contrasenya</a></li>
-            {% if professor.Actiu %}
+            {% if professor.actiu %}
             <li><a href="estudis" id="mEstudis">Estudis</a></li>
             <li><a href="ofertes" >Ofertes</a></li>
                 {% if usuari.teRol(40) %}
-                <li><a href="usuaris" >Usuaris</a></li>
-                <li><a href="empreses" >Empreses</a></li>
+                <li><a href="/administrador/usuaris" >Usuaris</a></li>
+                <li><a href="/administrador/empreses" >Empreses</a></li>
                 {% endif %}
             {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right ">
-        <!--<li><a href="#">{{ professor.Nom }} {{ professor.Llinatges }}</a></li>-->
+        <!--<li><a href="#">{{ professor.nom }} {{ professor.llinatges }}</a></li>-->
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
 {% endblock %}          
@@ -55,14 +55,14 @@
         <div class="col-md-4">
             <h3>Dades de la professora / del professor</h3>
             <div class="well click" id="dProfessor">
-                <p><label>Nom: &nbsp;</label>{{ professor.Nom }}</p>
-                <p><label>Llinatges: &nbsp;</label>{{ professor.Llinatges }}</p>
-                <p><label>Correu electrònic: &nbsp;</label>{{ professor.Email }}</p>
-                <p><label>Telèfon: &nbsp;</label>{{ professor.Telefon }}</p>
-                <p><label>Actiu: &nbsp;</label><span class="glyphicon {% if professor.Actiu %}glyphicon-ok{% else %}glyphicon-remove{% endif %}"></span></p>
+                <p><label>Nom: &nbsp;</label>{{ professor.nom }}</p>
+                <p><label>Llinatges: &nbsp;</label>{{ professor.llinatges }}</p>
+                <p><label>Correu electrònic: &nbsp;</label>{{ professor.email }}</p>
+                <p><label>Telèfon: &nbsp;</label>{{ professor.telefon }}</p>
+                <p><label>Actiu: &nbsp;</label><span class="glyphicon {% if professor.actiu %}glyphicon-ok{% else %}glyphicon-remove{% endif %}"></span></p>
             </div>
         </div><!--col-->
-        {% if professor.Actiu %}
+        {% if professor.actiu %}
             <div class="col-md-4">
                 {% if usuari.teRol(40) %}
                     <div id="professors">
@@ -74,8 +74,8 @@
                         {% else %}
                             {% for company in companys %}
                                 <div class="well click" id="prof{{ company.idProfessor }}">
-                                    <p><label>Nom: &nbsp;</label>{{ company.Llinatges }}, {{ company.Nom }} </p>
-                                    <p><label>Correu electrònic: &nbsp;</label>{{ company.Email }}</p>
+                                    <p><label>Nom: &nbsp;</label>{{ company.llinatges }}, {{ company.nom }} </p>
+                                    <p><label>Correu electrònic: &nbsp;</label>{{ company.email }}</p>
                                 </div>
                             {% endfor %}
                         {% endif %}
@@ -92,7 +92,7 @@
                         <div class="well click" id="dEstudis">
                             <ul>
                                 {% for estudis in professor.estudis %}
-                                    <li><p>{{ estudis.Nom }}</p></li>
+                                    <li><p>{{ estudis.nom }}</p></li>
                                         {% endfor %}
                             </ul>
                         </div>
@@ -111,8 +111,8 @@
                         {% else %}
                             {% for empresa in empreses %}
                                 <div class="well click" id='emp{{ empresa.idEmpresa}}'>
-                                    <p><label>Empresa: &nbsp;</label>{{ empresa.Nom }}</p>
-                                    <p><label>Data de la sol·licitud: &nbsp;</label>{{ empresa.DataAlta }}</p>
+                                    <p><label>Empresa: &nbsp;</label>{{ empresa.nom }}</p>
+                                    <p><label>Data de la sol·licitud: &nbsp;</label>{{ empresa.dataAlta }}</p>
                                 </div>
                             {% endfor %}
                         {% endif %}

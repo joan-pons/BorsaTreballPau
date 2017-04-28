@@ -17,12 +17,11 @@
                 window.location.href = "contactes#"+id;
             });
         });
-
     </script>
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="#">Empresa</a>
+    <a class="navbar-brand" href="#">{{empresa.nom}}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -32,7 +31,6 @@
         <li><a href="ofertes" >Ofertes</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">
-        <li><a href="#">{{ empresa.Nom }}</a></li>
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
 {% endblock %}          
@@ -41,15 +39,15 @@
         <div class="col-md-4">
             <h3>Dades de l'empresa</h3>
             <div class="well click" id="dEmpresa">
-                <p><label>Nom: &nbsp;</label>{{ empresa.Nom }}</p>
-                <p><label>Telefon: &nbsp;</label>{{ empresa.Telefon }}</p>
+                <p><label>Nom: &nbsp;</label>{{ empresa.nom }}</p>
+                <p><label>Telefon: &nbsp;</label>{{ empresa.telefon }}</p>
                 <p><label>Correu electrònic: &nbsp;</label>{{ empresa.email }}</p>
-                <p><label>Activa: &nbsp;</label>{% if empresa.Activa %} Si {%else%} No {%endif%}</p>
+                <p><label>Activa: &nbsp;</label><span class="glyphicon {% if empresa.activa %}glyphicon-ok{% else %}glyphicon-remove{% endif %}"></span></p>
                 <p>&nbsp;</p>
-                <p><label>Adreça: &nbsp;</label>{{ empresa.Adreca }}</p>
-                <p><label>Codi postal: &nbsp;</label>{{ empresa.CodiPostal }}</p>
-                <p><label>Localitat: &nbsp;</label>{{ empresa.Localitat }}</p>
-                <p><label>Província: &nbsp;</label>{{ empresa.Provincia }}</p>
+                <p><label>Adreça: &nbsp;</label>{{ empresa.adreca }}</p>
+                <p><label>Codi postal: &nbsp;</label>{{ empresa.codiPostal }}</p>
+                <p><label>Localitat: &nbsp;</label>{{ empresa.localitat }}</p>
+                <p><label>Província: &nbsp;</label>{{ empresa.provincia }}</p>
             </div>
         </div><!--col-->
         <div class="col-md-4" id="contactes">
@@ -61,8 +59,8 @@
             {% else %}
                 {% for contacte in empresa.contactes %}
                     <div class="well click" id="cont{{contacte.idContacte}}">
-                        <p><label>Nom: &nbsp;</label>{{contacte.Nom }} {{contacte.Llinatges}}</p>
-                        <p><label>Càrrec: &nbsp;{{contacte.Carrec }}</label></p>
+                        <p><label>Nom: &nbsp;</label>{{contacte.nom }} {{contacte.llinatges}}</p>
+                        <p><label>Càrrec: &nbsp;</label>{{contacte.carrec }}</p>
                         <p><label>Correu electrònic: &nbsp;</label>{{contacte.email }}</p>
                     </div>
                 {% endfor %}

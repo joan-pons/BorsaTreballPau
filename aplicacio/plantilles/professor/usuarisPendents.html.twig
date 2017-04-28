@@ -21,7 +21,7 @@
 
                 $.ajax({
                     method: 'PUT',
-                    url: "/professor/usuaris/" + dades.idProfessor,
+                    url: "/administrador/usuaris/" + dades.idProfessor,
                     data: dades
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')
@@ -56,8 +56,8 @@
                 var f = event.target.id.replace('f', '');
                 dades = {};
                 dades['idProfessor'] = $('#idP' + f).val();
-                dades['Actiu'] = $('#act' + f).is(':checked');
-                dades['Validat'] = $('#val' + f).is(':checked');
+                dades['actiu'] = $('#act' + f).is(':checked');
+                dades['validat'] = $('#val' + f).is(':checked');
                 $('#mdEspera').modal('show');
             });
 
@@ -75,7 +75,7 @@
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">{{ professor.Nom }} {{professor.Llinatges }}</a>
+    <a class="navbar-brand" href="/professor/dashBoard">{{ professor.nom }} {{professor.llinatges }}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -102,10 +102,10 @@
                 <div class="well click"  id="prof{{ company.idProfessor }}">
                     <div class='row'>
                         <div class='col-md-6'>
-                            <p><label>Nom: &nbsp;</label>{{ company.Llinatges }}, {{ company.Nom }} </p>
-                            <p><label>Correu electrònic: &nbsp;</label>{{ company.Email }}</p>
-                            <p><label>Telèfon: &nbsp;</label>{{ company.Telefon }}</p>
-                            <p><label>Validat: &nbsp;<input id="val{{ company.idProfessor }}" name="validat" type="checkbox" {%if company.Validat %} checked {% endif %}></label></p>
+                            <p><label>Nom: &nbsp;</label>{{ company.llinatges }}, {{ company.nom }} </p>
+                            <p><label>Correu electrònic: &nbsp;</label>{{ company.email }}</p>
+                            <p><label>Telèfon: &nbsp;</label>{{ company.telefon }}</p>
+                            <p><label>Validat: &nbsp;<input id="val{{ company.idProfessor }}" name="validat" type="checkbox" {%if company.validat %} checked {% endif %}></label></p>
                             <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Actiu: &nbsp;<input id="act{{ company.idProfessor }}" name="actiu" type="checkbox" disabled="disabled"></label></p>
                         </div>
                         <div class='col-md-6'>

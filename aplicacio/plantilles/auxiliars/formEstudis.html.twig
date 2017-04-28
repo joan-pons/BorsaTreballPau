@@ -10,7 +10,7 @@
                     <select class="form-control" id="graus" name="graus">
                         <option value="">Escull uns estudis</option>
                         {% for grau in estudis %}
-                            <option value="{{ grau.Codi }}">{{ grau.Codi }} {{ grau.Nom }}</option>
+                            <option value="{{ grau.codi }}">{{ grau.codi }} {{ grau.nom }}</option>
                         {% endfor %}
                     </select>
                     <span class="input-group-btn"><button type="button" class="btn btn-default btn-success" id="bAfegir">Afegir</button></span>
@@ -23,7 +23,7 @@
         <p><label>Estudis {{ etiquetes.labelLlista }}:</label></p>
         <ul>
             {% for grau in professor.estudis %}
-                <li><p>{{ grau.Nom }} &nbsp; <button type="button" class="btn btn-xs btn-danger" id="b{{ grau.Codi }}"> &nbsp; <span class="glyphicon glyphicon-trash"></span> &nbsp; </button></p></li>
+                <li><p>{{ grau.nom }} &nbsp; <button type="button" class="btn btn-xs btn-danger" id="b{{ grau.codi }}"> &nbsp; <span class="glyphicon glyphicon-trash"></span> &nbsp; </button></p></li>
                 {% endfor %}
         </ul>
     </div>

@@ -18,11 +18,11 @@
             $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
             $('#mEsperaTitol').html('Realitzant les modificacions');
             $('#mdEspera').on('shown.bs.modal', function (e) {
-                if (dades.Admin) {
+                if (dades.admin) {
                     $.ajax({
                         method: 'PUT',
-                        url: "/professor/rols/" + dades.idProfessor,
-                        data: {idrol: 40}
+                        url: "/administrador/rols/" + dades.idProfessor,
+                        data: {idRol: 40}
                     }).done(function () {
                         $('#mrTitol').html('Actualització correcte')
                         $('#mrText').html("<p>S'ha afegit correctament el rol.</p>");
@@ -39,10 +39,10 @@
                         $('#mdEspera').modal('hide');
                         $('#mdResultat').modal('show');
                     });
-                }else{
+                } else {
                     $.ajax({
                         method: 'DELETE',
-                        url: "/professor/rols/" + dades.idProfessor,
+                        url: "/administrador/rols/" + dades.idProfessor,
                         data: {idrol: 40}
                     }).done(function () {
                         $('#mrTitol').html('Actualització correcte')
@@ -75,27 +75,35 @@
                     $("#bGuardar").prop('disabled', false);
                     $("#bCancelar").prop('disabled', false);
                     $("#admin").prop('disabled', false);
-                    $("#nom").html(professor.Llinatges + ", " + professor.Nom);
-                    $("#email").html(professor.Email);
-                    $("#telefon").html(professor.Telefon);
+                    $("#nom").html(professor.llinatges + ", " + professor.nom);
+                    $("#email").html(professor.email);
+                    $("#telefon").html(professor.telefon);
 
                     $('#idProfessor').val(professor.idProfessor);
                     $.ajax({
                         method: 'GET',
-                        url: "/professor/rols/" + $("#llista").val()
+                        url: "/administrador/rols/" + $("#llista").val()
                     }).done(function (rols) {
                         for (var rol in rols) {
-                            if (rols[rol].idrol === 40) {
+                            if (rols[rol].idRol === 40) {
                                 $("#admin").prop('checked', 'checked');
                             }
                         }
 
                     }).fail(function (jqXHR, textStatus, errorThrown) {
-                        alert("Error");
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
                     })
 
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    alert("Error");
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
                 })
             });
 
@@ -118,7 +126,7 @@
                 var f = event.target.id;
                 dades = {};
                 dades['idProfessor'] = $('#idProfessor').val();
-                dades['Admin'] = $('#admin').is(':checked');
+                dades['admin'] = $('#admin').is(':checked');
                 $('#mdEspera').modal('show');
             });
 
@@ -128,13 +136,13 @@
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">{{ professor.Nom }} {{professor.Llinatges }}</a>
+    <a class="navbar-brand" href="/professor/dashBoard">{{ professor.nom }} {{professor.llinatges }}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
         <li><a href="usuarisPendents">Validar usuaris pendents</a></li>
-        <li  class="active"><a href="#">Activar / validar usuari</a></li>
-        <li><a href="administrador">Rol administrador</a></li>
+        <li><a href="usuaris">Activar / validar usuari</a></li>
+        <li  class="active"><a href="#">Rol administrador</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
@@ -153,7 +161,7 @@
                         <select class="form-control" id="llista">
                             <option value="">Escull un professor</option>
                             {% for company in companys %}
-                                <option value="{{ company.idProfessor }}">{{ company.Llinatges }}, {{ company.Nom }}</option>
+                                <option value="{{ company.idProfessor }}">{{ company.llinatges }}, {{ company.nom }}</option>
                             {% endfor %}
                         </select> 
                         <span class="input-group-btn"><button type="button" class="btn btn-default btn-success" id="bModificar">Modificar</button></span>

@@ -14,9 +14,9 @@
 
             $('form [name="bGuardar"]').hide();
             $('form [name="bCancel"]').hide();
+            
             $('form [name="bEditar"]').on('click', function (event) {
                 var ident = event.currentTarget.id.replace('bEd', '');
-
                 var form = 'f' + ident;
                 $("#" + form + " input").removeAttr('readonly');
                 $("form .btn-primary").hide('fast');
@@ -146,7 +146,7 @@
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">Empresa</a>
+    <a class="navbar-brand" href="dashBoard">{{ empresa.nom }}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -154,7 +154,6 @@
         <li><a href="afegirContacte"><span class="glyphicon glyphicon-plus"></span> Afegir</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">
-        <li><a href="#">{{ empresa.Nom }}</a></li>
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
 {% endblock %}          
@@ -174,20 +173,20 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="Nom">Nom:</label>
-                                <input type="text" class="form-control" id="Nom" name="Nom"  readonly="readonly" value="{{contacte.Nom}}">
+                                <label for="nom">Nom:</label>
+                                <input type="text" class="form-control" id="nom" name="nom"  readonly="readonly" value="{{contacte.nom}}">
                             </div>
                         </div><!--col-->
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="Llinatges">Llinatges:</label>
-                                <input type="text" class="form-control" id="Llinatges" name="Llinatges"  readonly="readonly"  value="{{contacte.Llinatges}}">
+                                <label for="llinatges">Llinatges:</label>
+                                <input type="text" class="form-control" id="llinatges" name="llinatges"  readonly="readonly"  value="{{contacte.llinatges}}">
                             </div>
                         </div><!--col-->
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="email">Càrrec: </label>
-                                <input type="text" class="form-control" id="carrec" name="Carrec" readonly="readonly"  value="{{contacte.Carrec}}">
+                                <label for="carrec">Càrrec: </label>
+                                <input type="text" class="form-control" id="carrec" name="carrec" readonly="readonly"  value="{{contacte.carrec}}">
                             </div>
                         </div><!--col-->
                     </div><!--row-->
@@ -200,8 +199,8 @@
                         </div><!--col-->
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label for="Telefon">Telefon:</label>
-                                <input type="text" class="form-control" id="Telefon" name="Telefon" readonly="readonly" value="{{contacte.Telefon}}">
+                                <label for="telefon">Telefon:</label>
+                                <input type="text" class="form-control" id="telefon" name="telefon" readonly="readonly" value="{{contacte.telefon}}">
                             </div>
                         </div><!--col-->
                         <div class="col-md-4">

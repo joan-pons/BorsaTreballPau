@@ -67,7 +67,7 @@ $container['dbEloquent'] = function ($container) {
 $container['view'] = function ($container) {
     $view = new \Slim\Views\Twig('plantilles'/* , ['cache' => 'path/to/cache'] */);
 
-    // Instantiate and add Slim specific extension
+// Instantiate and add Slim specific extension
     $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 
@@ -88,35 +88,15 @@ $app->get('/sortir', function ($request, $response, $args) {
 
 $app->get('/login', function ($request, $response, $args) {
     return Dao::entrada($request, $response, $args, $this);
-//    $this->dbEloquent;
-//    $data = $request->getQueryParams();
-//    $usuari = Usuari::where('nomUsuari', $data['nomUsuari'])->first();
-//    if ($usuari == null || $usuari->contrasenya != $data['password']) {
-//        $missatge = array("missatge" => "L'usuari i/o la contrasenya estan equivocats.");
-//        return $response->withJson($missatge, 401);
-//    } else {
-//        session_unset();
-//        session_destroy();
-//
-//        session_start();
-//        $_SESSION["idUsuari"] = $usuari->idusuari;
-//        $rols = [];
-//        foreach ($usuari->rols as $rol) {
-//            $rols[] = $rol->idrol;
-//        }
-//        $_SESSION["rols"] = $rols;
-//        return $response->withJSON( array("missatge" => "Usuari validat correctament."));
-//    }
-//   
-//    $_SESSION["idUsuari"] = 4;
-//    return $response->withJSON($_SESSION);
 });
-//////////////////////////////////////////////////////////////
-/////////////////////                  ///////////////////////
-//|||||||||||||||||||      EMPRESA     |||||||||||||||||||||||
-//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+//  //////////////////////////////////////////////////////////
+// //////////////////                       /////////////////
+//||||||||||||||||||       Empresa         |||||||||||||||||
+// \\\\\\\\\\\\\\\\\\                       \\\\\\\\\\\\\\\\\
+//  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 // Entrada Empresa
+
 $app->get('/empresaLogin', function ($request, $response, $args) {
     return $this->view->render($response, 'empresa/indexEmpresa.html.twig', ['tipus' => 20]);
 });
@@ -130,73 +110,86 @@ $app->post('/altaEmpresa', function ($request, $response) {
     return DaoEmpresa::altaEmpresa($request, $response, $this);
 });
 
-// Entrada Empresa
-$app->get('/empresa/dashBoard', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $empresa = Empresa::find($_SESSION['idUsuari']);
-    return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa]); //,'contactes'=>$contactes]);
+$app->group('/empresa', function() {
+    $this->get('/dashBoard', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $empresa = Empresa::find($_SESSION['idUsuari']);
+        return $this->view->render($response, 'empresa/dashBoard.html.twig', ['empresa' => $empresa]); //,'contactes'=>$contactes]);
+    });
+
+    $this->get('/modificarDades', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $empresa = Empresa::find($_SESSION['idUsuari']);
+        return $this->view->render($response, 'empresa/empresaDades.html.twig', ['objEmpresa' => $empresa]);
+    });
+
+    $this->put('/modificarDades/{idEmpresa}', function ($request, $response, $args) {
+        return DaoEmpresa::modificarEmpresa($request, $response, $args, $this);
+    });
+
+    $this->get('/afegirContacte', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $empresa = Empresa::find($_SESSION['idUsuari']);
+        return $this->view->render($response, 'empresa/afegirContacte.html.twig', ['objEmpresa' => $empresa]);
+    });
+    $this->post('/afegirContacte', function ($request, $response, $args) {
+        return DaoEmpresa::altaContacte($request, $response, $this);
+    });
+    $this->put('/modificarContacte/{idContacte}', function ($request, $response, $args) {
+        return DaoEmpresa::modificarContacte($request, $response, $args, $this);
+    });
+    $this->delete('/esborrarContacte/{idContacte}', function ($request, $response, $args) {
+        return DaoEmpresa::esborrarContacte($request, $response, $args, $this);
+    });
+    $this->get('/contactes', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $empresa = Empresa::find($_SESSION['idUsuari']);
+        return $this->view->render($response, 'empresa/contactes.html.twig', ['empresa' => $empresa]);
+    });
+    $this->get('/contactesProves', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $empresa = Empresa::find($_SESSION['idUsuari']);
+        return $response->withJson($empresa->contactes);
+    });
+    $this->get('/canviarContrasenya', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $empresa = $usuari->getEntitat();
+        return $this->view->render($response, 'empresa/contrasenya.html.twig', ['empresa' => $empresa, "tipusUsuari" => 20, "usuari" => $usuari]);
+    });
+    $this->put('/canviarContrasenya/{idusuari}', function ($request, $response, $args) {
+        return DaoEmpresa::canviarContrasenya($request, $response, $args, $this);
+    });
+
+    $this->get('/{id}', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        return $response->withJSON(Empresa::find($args['id']));
+    });
+})->add(function ($request, $response, $next) {
+    if (in_array(20, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
+        return $response = $next($request, $response);
+    } else {
+        return $response->withJSON(array('missatge' => 'No autoritzat'), 403);
+    }
 });
 
-$app->get('/empresa/modificarDades', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $empresa = Empresa::find($_SESSION['idUsuari']);
-    return $this->view->render($response, 'empresa/empresaDades.html.twig', ['objEmpresa' => $empresa]);
-});
-
-$app->put('/empresa/modificarDades/{idEmpresa}', function ($request, $response, $args) {
-    return DaoEmpresa::modificarEmpresa($request, $response, $args, $this);
-});
-
-$app->get('/empresa/afegirContacte', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $empresa = Empresa::find($_SESSION['idUsuari']);
-    return $this->view->render($response, 'empresa/afegirContacte.html.twig', ['objEmpresa' => $empresa]);
-});
-$app->post('/empresa/afegirContacte', function ($request, $response, $args) {
-    return DaoEmpresa::altaContacte($request, $response, $this);
-});
-$app->put('/empresa/modificarContacte/{idContacte}', function ($request, $response, $args) {
-    return DaoEmpresa::modificarContacte($request, $response, $args, $this);
-});
-$app->delete('/empresa/esborrarContacte/{idContacte}', function ($request, $response, $args) {
-    return DaoEmpresa::esborrarContacte($request, $response, $args, $this);
-});
-$app->get('/empresa/contactes', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $empresa = Empresa::find($_SESSION['idUsuari']);
-    return $this->view->render($response, 'empresa/contactes.html.twig', ['empresa' => $empresa]);
-});
-$app->get('/empresa/contactesProves', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $empresa = Empresa::find($_SESSION['idUsuari']);
-    return $response->withJson($empresa->contactes);
-});
-$app->get('/empresa/canviarContrasenya', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $empresa = $usuari->getEntitat();
-    return $this->view->render($response, 'empresa/contrasenya.html.twig', ['empresa' => $empresa, "tipusUsuari" => 20, "usuari" => $usuari]);
-});
-$app->put('/empresa/canviarContrasenya/{idusuari}', function ($request, $response, $args) {
-    return DaoEmpresa::canviarContrasenya($request, $response, $args, $this);
-});
-
-$app->get('/empresa/{id}', function(Request $request, Response $response, $args) {
-//return recuperaInteri($request, $response, $this->db);
-    $this->dbEloquent;
-    return $response->withJSON(Empresa::find($args['id']));
-});
+//  //////////////////////////////////////////////////////////
+// //////////////////                       /////////////////
+//||||||||||||||||||       Alumne          |||||||||||||||||
+// \\\\\\\\\\\\\\\\\\                       \\\\\\\\\\\\\\\\\
+//  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//  
 //Entrada Alumnes
 $app->get('/alumne', function ($request, $response, $args) {
     return $this->view->render($response, 'alumne/indexAlumne.html', ['tipus' => 30]);
 });
 
 
-//////////////////////////////////////////////////////////////
-/////////////////////                  ///////////////////////
-/////////////////////   PROFESSORS     ///////////////////////
-/////////////////////                  ///////////////////////
-//////////////////////////////////////////////////////////////
+//  //////////////////////////////////////////////////////////
+// //////////////////                       /////////////////
+//||||||||||||||||||       Professor       |||||||||||||||||
+// \\\\\\\\\\\\\\\\\\                       \\\\\\\\\\\\\\\\\
+//  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //
 //Entrada Professors
 $app->get('/professorLogin', function ($request, $response, $args) {
@@ -212,151 +205,170 @@ $app->post('/altaProfessor', function ($request, $response) {
     return DaoProfessor::altaProfessor($request, $response, $this);
 });
 
-$app->get('/professor/dashBoard', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION["idUsuari"]);
-    if ($usuari != null) {
+$app->group('/professor', function() {
+    $this->get('/dashBoard', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        if ($usuari != null) {
+            $prof = $usuari->getEntitat();
+            $empreses = null;
+            $companys = null;
+            if ($usuari->teRol(40)) {
+                $empreses = Empresa::where('Validada', 0)->orderBy('DataAlta', 'ASC')->orderBy('Nom', 'ASC')->get();
+                $companys = Professor::where('Validat', 0)->orderBy('Email', 'ASC')->get();
+            }
+            return $this->view->render($response, 'professor/dashBoard.html.twig', ['professor' => $prof, 'usuari' => $usuari, 'empreses' => $empreses, 'companys' => $companys]);
+        } else {
+            return $response->withJSON('Errada: ' . $_SESSION);
+        }
+    });
+
+
+    $this->get('/modificarDades', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
         $prof = $usuari->getEntitat();
-        $empreses = null;
+        return $this->view->render($response, 'professor/professorDades.html.twig', ['professor' => $prof]);
+    });
+
+    $this->put('/modificarDades/{idProfessor}', function ($request, $response, $args) {
+        return DaoProfessor::modificarProfessor($request, $response, $args, $this);
+    });
+
+    $this->get('/canviarContrasenya', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $professor = $usuari->getEntitat();
+        return $this->view->render($response, 'professor/contrasenya.html.twig', ['professor' => $professor, "tipusUsuari" => 10, "usuari" => $usuari]);
+    });
+    $this->put('/canviarContrasenya/{idusuari}', function ($request, $response, $args) {
+        return DaoProfessor::canviarContrasenya($request, $response, $args, $this);
+    });
+
+    $this->get('/estudis', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $professor = $usuari->getEntitat();
+        $etiquetes = array("subtitol" => "", "labelLlista" => "dels que és responsable");
+        $estudis = Estudis::orderBy('Nom', 'ASC')->get();
+        return $this->view->render($response, 'professor/professorEstudis.html.twig', ['professor' => $professor, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
+    });
+
+    $this->post('/estudis', function($request, $response, $args) {
+        return DaoProfessor::afegirEstudis($request, $response, $this);
+    });
+
+    $this->delete('/estudis/{idProfessor}/{codiEstudis}', function ($request, $response, $args) {
+        return DaoProfessor::esborrarEstudis($request, $response, $args, $this);
+    });
+
+    $this->get('/{id}', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        return $response->withJSON(Professor::find($args['id']));
+    });
+
+    $this->get('/estudisProfessor/{id}', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $prof = $usuari->getEntitat();
+        $estudis = $prof->estudis;
+        return $response->withJSON(estudis);
+    });
+})->add(function ($request, $response, $next) {
+    if (in_array(10, $_SESSION['rols'])) {
+        return $response = $next($request, $response);
+    } else {
+        return $response->withJSON(array('missatge' => 'No autoritzat'), 403);
+    }
+});
+//  //////////////////////////////////////////////////////////
+// //////////////////                       /////////////////
+//||||||||||||||||||       Administrador   |||||||||||||||||
+// \\\\\\\\\\\\\\\\\\                       \\\\\\\\\\\\\\\\\
+//  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+$app->group('/administrador', function() {
+    $this->get('/usuarisPendents', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $prof = $usuari->getEntitat();
         $companys = null;
         if ($usuari->teRol(40)) {
-            $empreses = Empresa::where('Validada', 0)->orderBy('DataAlta', 'ASC')->orderBy('Nom', 'ASC')->get();
-            $companys = Professor::where('Validat', 0)->orderBy('Email', 'ASC')->get();
+            $companys = Professor::where('validat', 0)->orderBy('email', 'ASC')->get();
         }
-        return $this->view->render($response, 'professor/dashBoard.html.twig', ['professor' => $prof, 'usuari' => $usuari, 'empreses' => $empreses, 'companys' => $companys]);
+        return $this->view->render($response, 'professor/usuarisPendents.html.twig', ['professor' => $prof, 'companys' => $companys]);
+    });
+
+    $this->put('/usuaris/{idProfessor}', function ($request, $response, $args) {
+        return DaoProfessor::activar($request, $response, $args, $this);
+    });
+
+    $this->get('/usuaris', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $prof = $usuari->getEntitat();
+        $companys = Professor::orderBy('email', 'ASC')->get();
+        return $this->view->render($response, 'professor/usuaris.html.twig', ['professor' => $prof, 'companys' => $companys]);
+    });
+
+    $this->get('/administrador', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $prof = $usuari->getEntitat();
+        $companys = Professor::orderBy('email', 'ASC')->get();
+        return $this->view->render($response, 'professor/administrador.html.twig', ['professor' => $prof, 'companys' => $companys]);
+    });
+
+
+    $this->get('/rols/{idProfessor}', function(Request $request, Response $response, $args) {
+        return DaoProfessor::rols($request, $response, $args, $this);
+    });
+
+    $this->put('/rols/{idProfessor}', function(Request $request, Response $response, $args) {
+        return DaoProfessor::afegirRol($request, $response, $args, $this);
+    });
+
+    $this->delete('/rols/{idProfessor}', function(Request $request, Response $response, $args) {
+        return DaoProfessor::eliminarRol($request, $response, $args, $this);
+    });
+
+    $this->get('/empreses', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $prof = $usuari->getEntitat();
+        $empreses = Empresa::orderBy('nom', 'ASC')->get();
+        return $this->view->render($response, 'professor/empreses.html.twig', ['professor' => $prof, 'empreses' => $empreses]);
+    });
+
+    $this->get('/empresesPendents', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION['idUsuari']);
+        $prof = $usuari->getEntitat();
+        $empreses = null;
+        $empreses = Empresa::where('validada', 0)->orderBy('dataAlta', 'ASC')->orderBy('nom', 'ASC')->get();
+        return $this->view->render($response, 'professor/empresesPendents.html.twig', ['professor' => $prof, 'usuari' => $usuari, 'empreses' => $empreses]);
+    });
+
+    $this->put('/empreses/{idEmpresa}', function ($request, $response, $args) {
+        return DaoEmpresa::activar($request, $response, $args, $this);
+    });
+})->add(function ($request, $response, $next) {
+    if (in_array(40, $_SESSION['rols'])) {
+        return $response = $next($request, $response);
     } else {
-        return $response->withJSON('Errada: ' . $_SESSION);
+        return $response->withJSON(array('missatge' => 'No autoritzat'), 403);
     }
 });
 
 
-$app->get('/professor/modificarDades', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $prof = $usuari->getEntitat();
-    return $this->view->render($response, 'professor/professorDades.html.twig', ['professor' => $prof]);
-});
-
-$app->put('/professor/modificarDades/{idProfessor}', function ($request, $response, $args) {
-    return DaoProfessor::modificarProfessor($request, $response, $args, $this);
-});
-
-$app->get('/professor/canviarContrasenya', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $professor = $usuari->getEntitat();
-    return $this->view->render($response, 'professor/contrasenya.html.twig', ['professor' => $professor, "tipusUsuari" => 10, "usuari" => $usuari]);
-});
-$app->put('/professor/canviarContrasenya/{idusuari}', function ($request, $response, $args) {
-    return DaoProfessor::canviarContrasenya($request, $response, $args, $this);
-});
-
-$app->get('/professor/estudis', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $professor = $usuari->getEntitat();
-    $etiquetes = array("subtitol" => "", "labelLlista" => "dels que és responsable");
-    $estudis = Estudis::orderBy('Nom', 'ASC')->get();
-    return $this->view->render($response, 'professor/professorEstudis.html.twig', ['professor' => $professor, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
-});
-
-$app->post('/professor/estudis', function($request, $response, $args) {
-    return DaoProfessor::afegirEstudis($request, $response, $this);
-});
-
-$app->delete('/professor/estudis/{idProfessor}/{codiEstudis}', function ($request, $response, $args) {
-    return DaoProfessor::esborrarEstudis($request, $response, $args, $this);
-});
-
-
-$app->get('/professor/usuarisPendents', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $prof = $usuari->getEntitat();
-    $companys = null;
-    if ($usuari->teRol(40)) {
-        $companys = Professor::where('Validat', 0)->orderBy('Email', 'ASC')->get();
-    }
-    return $this->view->render($response, 'professor/usuarisPendents.html.twig', ['professor' => $prof, 'companys' => $companys]);
-});
-
-$app->put('/professor/usuaris/{idProfessor}', function ($request, $response, $args) {
-    return DaoProfessor::activar($request, $response, $args, $this);
-});
-
-$app->get('/professor/usuaris', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $prof = $usuari->getEntitat();
-    $companys = Professor::orderBy('Email', 'ASC')->get();
-    return $this->view->render($response, 'professor/usuaris.html.twig', ['professor' => $prof, 'companys' => $companys]);
-});
-
-$app->get('/professor/administrador', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $prof = $usuari->getEntitat();
-    $companys = Professor::orderBy('Email', 'ASC')->get();
-    return $this->view->render($response, 'professor/administrador.html.twig', ['professor' => $prof, 'companys' => $companys]);
-});
-
-
-$app->get('/professor/rols/{idProfessor}', function(Request $request, Response $response, $args) {
-    return DaoProfessor::rols($request, $response, $args, $this);
-});
-
-$app->put('/professor/rols/{idProfessor}', function(Request $request, Response $response, $args) {
-    return DaoProfessor::afegirRol($request, $response, $args, $this);
-});
-
-$app->delete('/professor/rols/{idProfessor}', function(Request $request, Response $response, $args) {
-    return DaoProfessor::eliminarRol($request, $response, $args, $this);
-});
-
-$app->get('/professor/empreses', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $prof = $usuari->getEntitat();
-    $empreses = Empresa::orderBy('Nom', 'ASC')->get();
-    return $this->view->render($response, 'professor/empreses.html.twig', ['professor' => $prof, 'empreses' => $empreses]);
-});
-
-$app->get('/professor/empresesPendents', function ($request, $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $prof = $usuari->getEntitat();
-    $empreses = null;
-    $empreses = Empresa::where('Validada', 0)->orderBy('DataAlta', 'ASC')->orderBy('Nom', 'ASC')->get();
-    return $this->view->render($response, 'professor/empresesPendents.html.twig', ['professor' => $prof, 'usuari' => $usuari, 'empreses' => $empreses]);
-});
-
-$app->put('/professor/empreses/{idEmpresa}', function ($request, $response, $args) {
-    return DaoEmpresa::activar($request, $response, $args, $this);
-});
-
-$app->get('/professor/{id}', function(Request $request, Response $response, $args) {
-    $this->dbEloquent;
-    return $response->withJSON(Professor::find($args['id']));
-});
 
 
 
 $app->get('/estudis', function(Request $request, Response $response) {
     $this->dbEloquent;
-    //  return $response->withJson(Estudis::All());
-    return $this->view->render($response, 'estudis.html.twig', [
-                'estudis' => Estudis::All()
-    ]);
+    return $this->view->render($response, 'estudis.html.twig', ['estudis' => Estudis::All()]);
 });
 
-$app->get('/estudisProfessor/{id}', function(Request $request, Response $response, $args) {
-    $this->dbEloquent;
-    $usuari = Usuari::find($_SESSION['idUsuari']);
-    $prof = $usuari->getEntitat();
-    $estudis = $prof->estudis;
-//    $empreses = Empresa::where('Validada', false)->get();
-    return $response->withJSON(estudis);
-});
 
 
 //Usuaris
