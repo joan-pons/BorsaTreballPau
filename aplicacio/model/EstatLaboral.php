@@ -7,18 +7,22 @@
  */
 
 namespace Borsa;
+
 use \Illuminate\Database\Eloquent\Model as Model;
+use Borsa\Alumne as Alumne;
+
 /**
- * Description of Estudis
+ * Description of Professor
  *
  * @author joan
  */
-class Estudis extends Model{
+class EstatLaboral extends Model {
 
-    protected $table = 'Estudis';
-    protected $primaryKey = "Codi";
+    protected $table = 'EstatLaboral';
+    protected $primaryKey = "idEstatLaboral";
     public $timestamps = false;
-    public $incrementing = false; //Si no, tracta la clau primaria com a integer
-    
-    
+
+    public function alumnes(){
+        return $this->hasMany("Borsa\Alumne", 'idAlumne');
+    }
 }

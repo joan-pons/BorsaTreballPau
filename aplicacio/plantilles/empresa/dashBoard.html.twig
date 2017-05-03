@@ -16,6 +16,9 @@
                 var id=event.currentTarget.id;
                 window.location.href = "contactes#"+id;
             });
+            $(".click a").on('click',function(event){
+              event.stopPropagation();  
+            });
         });
     </script>
 {% endblock %}
@@ -42,6 +45,7 @@
                 <p><label>Nom: &nbsp;</label>{{ empresa.nom }}</p>
                 <p><label>Telefon: &nbsp;</label>{{ empresa.telefon }}</p>
                 <p><label>Correu electrònic: &nbsp;</label>{{ empresa.email }}</p>
+                <p><label>url:&nbsp;</label><a href="{%if not(empresa.url starts with 'http') %}{{'http://'}}{%endif%}{{empresa.url}}" target="_blank">{{empresa.url}}</a></p>
                 <p><label>Activa: &nbsp;</label><span class="glyphicon {% if empresa.activa %}glyphicon-ok{% else %}glyphicon-remove{% endif %}"></span></p>
                 <p>&nbsp;</p>
                 <p><label>Adreça: &nbsp;</label>{{ empresa.adreca }}</p>

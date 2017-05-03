@@ -1,0 +1,74 @@
+
+<h3>Idiomes {{ etiquetes.labelLlista }}:</h3>
+<form id="llengues" action="#" method="GET">
+    <div class="row">
+        <div class="col-md-6">
+            {% for idioma in idiomes %}
+                {%set skill=0 %}
+                {% for llengua in actor.idiomes %}
+                    {% if idioma.idIdioma==llengua.idIdioma %}
+                        {% set skill=llengua.pivot.NIvellsIdioma_idNIvellsIdioma %}
+                    {%endif%}
+                {% endfor %}
+                <div class="well">
+                    <h4>{{ idioma.idioma }}</h4>
+                    <div class="form-group">
+                        <div>
+                            {% for nivell in nivellsIdioma %}
+                                <label class="radio-inline"><input type="radio" id="{{ idioma.idioma }}{{nivell.idNivellIdioma}}" name="l{{ idioma.idIdioma }}" value="{{nivell.idNivellIdioma}}" {% if nivell.idNivellIdioma==skill %}checked="checked"{% endif %}>{{ nivell.nivell }}</label>
+                                {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-md-6">
+            <div class="well">
+                <button class="btn btn-success" type="submit" name="bGuardar" id="bGuardar">Guardar</button>
+                <button class="btn btn-default" type="reset"  name="bCancel" id="bCancel">Cancel·lar</button>
+            </div>
+        </div>
+    </div>
+</form>
+{{include('auxiliars/modals.html.twig')}}
+<script>
+    var resultat = [];
+    $('#llengues').on('submit', function (event) {
+        resultat = {};
+        resultat.nivells=[]
+        event.preventDefault();
+    {% for idioma in idiomes %}
+            if (typeof $('input[name="l{{idioma.idIdioma}}"]') !== "undefined" && $('input[name="l{{idioma.idIdioma}}"]:checked').val() > 1) {
+                // alert('{{idioma.idioma}} ' + $('input[name="l{{idioma.idIdioma}}"]:checked').val());
+                resultat.nivells.push({idIdioma: '{{idioma.idIdioma}}', NIvellsIdioma_idNIvellsIdioma: $('input[name="l{{idioma.idIdioma}}"]:checked').val()});
+            }
+    {% endfor %}
+    
+   // alert(JSON.stringify(resultat));
+            $('#mEsperaTitol').html("Realitzant la modificació.");
+            $('#mdEspera').on('shown.bs.modal', function (e) {
+                $.ajax({
+                    method: 'PUT',
+                    url: "idiomes/" + {{identificador}},
+                    data: resultat
+                }).done(function () {
+                    $('#mrTitol').html('Modificació correcta')
+                    $('#mrText').html("<p>Els idiomes s'han modificat correctament.</p>");
+                    $('#bmDacord').on('click', function () {
+                        window.location = "dashBoard";
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+            });
+
+            $('#mdEspera').modal('show');
+        });
+</script>

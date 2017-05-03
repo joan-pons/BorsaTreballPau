@@ -1,21 +1,25 @@
-{% extends "auxiliars/base.html" %}
+{% extends "auxiliars/base.html.twig" %}
 
 {% block head %}
-        <title>Borsa de treball: Alumnes</title>
-        <link rel="shortcut icon" type="image/ico" href="imatges/logoPau2.ico"/>
+    <title>Borsa de treball: Alumnes</title>
+    <link rel="shortcut icon" type="image/ico" href="imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/borsa.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 {% endblock %}
 
 {% block navegacio %}
 
-                        <a class="navbar-brand" href="#">Alumne</a>
-                    
+    <a class="navbar-brand" href="#">Alumne</a>
+
 {% endblock %}                     
 
-    {% block contingut %}
+{% block contingut %}
 
-            <div class="row">
-                <div class="col-md-8">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean fermentum tempor odio. In hac habitasse platea dictumst. In blandit rhoncus enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce fringilla ante et congue ultrices. Integer in interdum neque, in laoreet justo. Ut finibus, mi ac convallis posuere, dolor elit tristique tortor, id lacinia diam diam eget sem. Aenean vestibulum ornare magna non sagittis. Pellentesque neque nisi, consequat congue lobortis ac, tempus ac lectus. Sed condimentum est eu turpis aliquam dignissim. Fusce sodales consequat velit a auctor. Donec sagittis viverra est at semper.</p>
+    <div class="row">
+        <div class="col-md-8">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean fermentum tempor odio. In hac habitasse platea dictumst. In blandit rhoncus enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce fringilla ante et congue ultrices. Integer in interdum neque, in laoreet justo. Ut finibus, mi ac convallis posuere, dolor elit tristique tortor, id lacinia diam diam eget sem. Aenean vestibulum ornare magna non sagittis. Pellentesque neque nisi, consequat congue lobortis ac, tempus ac lectus. Sed condimentum est eu turpis aliquam dignissim. Fusce sodales consequat velit a auctor. Donec sagittis viverra est at semper.</p>
 
             <p>Vestibulum mi felis, imperdiet at ex ut, porta convallis purus. Nunc at sapien sit amet risus pretium efficitur quis eget dui. Morbi dapibus turpis quis mauris aliquet, eget rhoncus sapien ultrices. Ut semper commodo eros auctor facilisis. Mauris maximus, lorem mattis mollis ultrices, augue purus pharetra magna, vel auctor lacus eros sed ex. Integer bibendum mi metus, sed condimentum lorem pellentesque eu. Fusce ultricies tempus urna, nec consectetur felis. Nulla feugiat est scelerisque nisi tempus lobortis.</p>
 
@@ -24,11 +28,11 @@
             <p>Aliquam erat volutpat. Suspendisse iaculis dui nec felis dapibus hendrerit. Suspendisse aliquam nunc neque. Nullam sed ipsum mattis, pellentesque lacus ac, finibus ipsum. Mauris a accumsan ipsum, a mollis nibh. Integer a justo in risus tempus ultrices sit amet at risus. Nam finibus nisi ipsum, non molestie mi condimentum sit amet. Ut eu dictum purus. Vivamus ac ornare sapien, mattis tempor eros. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis et viverra sem. Etiam ut purus ornare, rhoncus neque quis, fringilla purus. Cras id vehicula ex. Fusce posuere vestibulum elementum. Mauris sit amet elit facilisis, venenatis magna nec, sagittis nunc. Vivamus lacinia condimentum felis, at condimentum neque dictum non.</p>
 
             <p>Praesent nec eleifend risus. Vivamus molestie leo quis erat varius faucibus. Etiam sapien leo, semper sit amet auctor eget, laoreet ac nunc. Donec sed congue urna. Curabitur vulputate cursus dolor. Nunc congue accumsan faucibus. Phasellus sit amet bibendum augue, et consectetur nulla. Nulla facilisi. Aenean elementum porttitor purus, id dapibus tellus lobortis nec. Mauris pretium sem ac purus efficitur consectetur. In finibus semper pellentesque. Nulla lacinia sem vel cursus viverra. Pellentesque vitae convallis arcu, in luctus elit. Pellentesque tempus dolor sem, sed ultrices diam scelerisque nec.</p>
- 
-                </div><!--col-->
-                <div class="col-md-4">
-                    {{include('auxiliars/login.html')}}
-                </div><!--col-->
 
-            </div><!--row-->
+        </div><!--col-->
+        <div class="col-md-4">
+            {{include('auxiliars/login.html.twig')}}
+        </div><!--col-->
+
+    </div><!--row-->
 {% endblock %}                     

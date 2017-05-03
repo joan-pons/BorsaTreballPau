@@ -1,0 +1,126 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: {{alumne.nom}} {{ alumne.llinatges }}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $("#dAlumne").click(function () {
+                $("#mActualitza")[0].click();
+            });
+            $("#dEstudis").click(function () {
+                $("#mEstudis")[0].click();
+            });
+            $("#dIdiomes").click(function () {
+                $("#mIdiomes")[0].click();
+            });
+            $(".click a").on('click', function (event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="#">{{alumne.nom}} {{ alumne.llinatges }}</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
+        <li><a href="canviarContrasenya">Canviar contrasenya</a></li>
+        <li><a href="estudis" id="mEstudis">Estudis</a></li>
+        <li><a href="idiomes" id="mIdiomes">Idiomes</a></li>
+        <li><a href="estatLaboral">Estat laboral</a></li>
+        <li><a href="formacio">Altra formació</a></li>
+        <li><a href="ofertes">Ofertes</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}          
+{% block contingut %}
+    <div class="row">
+        <div class="col-md-4">
+            <h3>Les teves dades</h3>
+            <div class="well click" id="dAlumne">
+                <p><label>Nom:&nbsp;</label>{{alumne.nom}}</p>
+                <p><label>Llinatges:&nbsp;</label>{{alumne.llinatges}}</p>
+                <p><label>Telefon:&nbsp;</label>{{alumne.telefon}}</p>
+                <p><label>Correu electrònic:&nbsp;</label>{{alumne.email}}</p>
+                <p><label>url:&nbsp;</label><a  href="{%if not(alumne.url starts with 'http') %}{{'http://'}}{%endif%}{{alumne.url}}" target="_blank">{{alumne.url}}</a></p>
+                <p>&nbsp;</p>
+                <p><label>Adreça:&nbsp;</label>{{alumne.adreca}}</p>
+                <p><label>Codi postal:&nbsp;</label>{{alumne.codiPostal}}</p>
+                <p><label>Localitat:&nbsp;</label>{{alumne.localitat}}</p>
+                <p><label>Província:&nbsp;</label>{{alumne.provincia}}</p>
+            </div>
+        </div><!--col-->
+
+        <div class="col-md-4">
+            <h3>Estudis acabats</h3>
+            {% if alumne.estudis is empty %}
+                <div class="well"><p> Encara no té cap estudis registrats </p></div>
+            {% else %}
+                <div class="well click" id="dEstudis">
+                    <ul>
+                        {% for grau in alumne.estudis %}
+                            <li><p>{{grau.nom}}</p></li>
+                                {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <h3>Idiomes</h3>
+            {% if alumne.idiomes is empty %}
+                <div class="well"><p> Encara no tens cap idioma registrat </p></div>
+            {% else %}
+                <div class="well click" id="dIdiomes">
+                    <ul>
+                        {%for idioma in alumne.idiomes %}
+                            {% set level='Gens' %}
+                            {%for nivell in nivellsIdioma %}
+                                {% if nivell.idNivellIdioma==idioma.pivot.NIvellsIdioma_idNIvellsIdioma %}
+                                    {% set level=nivell.nivell%}
+                                {% endif %}
+                            {% endfor %}
+                            <li><p>{{idioma.idioma}}: {{level}}</p></li>
+                            {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            <h3>Estat laboral</h3>
+            {% if alumne.estatsLaborals is empty %}
+                <div class="well"><p> Encara no tens cap estat laboral registrat </p></div>
+            {% else %}
+                <div class="well click" id="dIdiomes">
+                    <ul>
+                        <li>Estudiant</li>
+                        <li>Treballant</li>
+                    </ul>
+                </div>
+            {% endif %}
+        </div><!--col-->
+        <div class="col-md-4">
+            <h3>Ofertes en marxa</h3>
+            {% if alumne.ofertes is empty %}
+                <div class="well"><p> No hi ha cap oferta en vigor. </p></div>
+            {% else %}
+                <div class="well click">
+                    <p>Títol:</p>
+                    <p>Data de publicació:</p>
+                    <p>Data de finalització:</p>                      
+                </div>
+                <div class="well click">
+                    <p>Títol:</p>
+                    <p>Data de publicació:</p>
+                    <p>Data de finalització:</p>
+                </div>
+            {% endif %}
+        </div><!--col-->
+    </div><!--row-->
+{% endblock %}

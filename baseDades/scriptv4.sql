@@ -16,43 +16,25 @@ CREATE SCHEMA IF NOT EXISTS `borsa` DEFAULT CHARACTER SET utf8 ;
 USE `borsa` ;
 
 -- -----------------------------------------------------
--- Table `borsa`.`EstatLaboral`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `borsa`.`EstatLaboral` ;
-
-CREATE TABLE IF NOT EXISTS `borsa`.`EstatLaboral` (
-  `idEstatLaboral` INT NOT NULL AUTO_INCREMENT,
-  `nomEstatLaboral` VARCHAR(50) NULL,
-  PRIMARY KEY (`idEstatLaboral`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `borsa`.`Alumnes`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `borsa`.`Alumnes` ;
 
 CREATE TABLE IF NOT EXISTS `borsa`.`Alumnes` (
   `idAlumne` INT NOT NULL,
-  `Nom` VARCHAR(45) NOT NULL,
-  `Llinatges` VARCHAR(45) NOT NULL,
-  `Adreca` VARCHAR(100) NULL,
-  `CodiPostal` CHAR(5) NULL,
-  `Localitat` VARCHAR(45) NULL,
-  `Provincia` VARCHAR(45) NULL,
-  `Telefon` CHAR(9) NULL,
-  `Email` VARCHAR(75) NOT NULL,
-  `Actiu` TINYINT(1) NOT NULL DEFAULT 0,
-  `EstatLaboral_idEstatLaboral` INT NOT NULL,
-  PRIMARY KEY (`idAlumne`),
-  CONSTRAINT `fk_Alumnes_EstatLaboral1`
-    FOREIGN KEY (`EstatLaboral_idEstatLaboral`)
-    REFERENCES `borsa`.`EstatLaboral` (`idEstatLaboral`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  `nom` VARCHAR(45) NOT NULL,
+  `llinatges` VARCHAR(45) NOT NULL,
+  `adreca` VARCHAR(100) NULL,
+  `codiPostal` CHAR(5) NULL,
+  `localitat` VARCHAR(45) NULL,
+  `provincia` VARCHAR(45) NULL,
+  `telefon` CHAR(9) NULL,
+  `email` VARCHAR(75) NOT NULL,
+  `actiu` TINYINT(1) NOT NULL DEFAULT 0,
+  `url` VARCHAR(150) NULL,
+  `descripcio` TEXT NULL,
+  PRIMARY KEY (`idAlumne`))
 ENGINE = InnoDB;
-
-CREATE INDEX `fk_Alumnes_EstatLaboral1_idx` ON `borsa`.`Alumnes` (`EstatLaboral_idEstatLaboral` ASC);
 
 
 -- -----------------------------------------------------
@@ -305,6 +287,18 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `borsa`.`EstatLaboral`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `borsa`.`EstatLaboral` ;
+
+CREATE TABLE IF NOT EXISTS `borsa`.`EstatLaboral` (
+  `idEstatLaboral` INT NOT NULL AUTO_INCREMENT,
+  `nomEstatLaboral` VARCHAR(50) NULL,
+  PRIMARY KEY (`idEstatLaboral`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `borsa`.`Illes`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `borsa`.`Illes` ;
@@ -450,11 +444,11 @@ CREATE INDEX `fk_Ofertes_has_Estudis_Ofertes1_idx` ON `borsa`.`Ofertes_has_Estud
 
 
 -- -----------------------------------------------------
--- Table `borsa`.`Alumnes_has_Estudis`
+-- Table `borsa`.`Alumne_has_Estudis`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `borsa`.`Alumnes_has_Estudis` ;
+DROP TABLE IF EXISTS `borsa`.`Alumne_has_Estudis` ;
 
-CREATE TABLE IF NOT EXISTS `borsa`.`Alumnes_has_Estudis` (
+CREATE TABLE IF NOT EXISTS `borsa`.`Alumne_has_Estudis` (
   `Alumnes_idAlumne` INT NOT NULL,
   `Estudis_codi` CHAR(7) NOT NULL,
   `any` INT NULL,
@@ -472,9 +466,9 @@ CREATE TABLE IF NOT EXISTS `borsa`.`Alumnes_has_Estudis` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE INDEX `fk_Alumnes_has_Estudis_Estudis1_idx` ON `borsa`.`Alumnes_has_Estudis` (`Estudis_codi` ASC);
+CREATE INDEX `fk_Alumnes_has_Estudis_Estudis1_idx` ON `borsa`.`Alumne_has_Estudis` (`Estudis_codi` ASC);
 
-CREATE INDEX `fk_Alumnes_has_Estudis_Alumnes1_idx` ON `borsa`.`Alumnes_has_Estudis` (`Alumnes_idAlumne` ASC);
+CREATE INDEX `fk_Alumnes_has_Estudis_Alumnes1_idx` ON `borsa`.`Alumne_has_Estudis` (`Alumnes_idAlumne` ASC);
 
 
 -- -----------------------------------------------------
@@ -501,6 +495,72 @@ ENGINE = InnoDB;
 CREATE INDEX `fk_Usuaris_has_Rols_Rols1_idx` ON `borsa`.`Usuaris_has_Rols` (`Rols_idRol` ASC);
 
 CREATE INDEX `fk_Usuaris_has_Rols_Usuaris1_idx` ON `borsa`.`Usuaris_has_Rols` (`Usuaris_idUsuari` ASC);
+
+
+-- -----------------------------------------------------
+-- Table `borsa`.`Alumne_has_EstatLaboral`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `borsa`.`Alumne_has_EstatLaboral` ;
+
+CREATE TABLE IF NOT EXISTS `borsa`.`Alumne_has_EstatLaboral` (
+  `Alumnes_idAlumne` INT NOT NULL,
+  `EstatLaboral_idEstatLaboral` INT NOT NULL,
+  PRIMARY KEY (`Alumnes_idAlumne`, `EstatLaboral_idEstatLaboral`),
+  CONSTRAINT `fk_Alumnes_has_EstatLaboral_Alumnes1`
+    FOREIGN KEY (`Alumnes_idAlumne`)
+    REFERENCES `borsa`.`Alumnes` (`idAlumne`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Alumnes_has_EstatLaboral_EstatLaboral1`
+    FOREIGN KEY (`EstatLaboral_idEstatLaboral`)
+    REFERENCES `borsa`.`EstatLaboral` (`idEstatLaboral`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_Alumnes_has_EstatLaboral_EstatLaboral1_idx` ON `borsa`.`Alumne_has_EstatLaboral` (`EstatLaboral_idEstatLaboral` ASC);
+
+CREATE INDEX `fk_Alumnes_has_EstatLaboral_Alumnes1_idx` ON `borsa`.`Alumne_has_EstatLaboral` (`Alumnes_idAlumne` ASC);
+
+
+-- -----------------------------------------------------
+-- Table `borsa`.`Ofertes_has_EstatLaboral`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `borsa`.`Ofertes_has_EstatLaboral` ;
+
+CREATE TABLE IF NOT EXISTS `borsa`.`Ofertes_has_EstatLaboral` (
+  `Ofertes_idOferta` INT NOT NULL,
+  `EstatLaboral_idEstatLaboral` INT NOT NULL,
+  PRIMARY KEY (`Ofertes_idOferta`, `EstatLaboral_idEstatLaboral`),
+  CONSTRAINT `fk_Ofertes_has_EstatLaboral_Ofertes1`
+    FOREIGN KEY (`Ofertes_idOferta`)
+    REFERENCES `borsa`.`Ofertes` (`idOferta`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Ofertes_has_EstatLaboral_EstatLaboral1`
+    FOREIGN KEY (`EstatLaboral_idEstatLaboral`)
+    REFERENCES `borsa`.`EstatLaboral` (`idEstatLaboral`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE INDEX `fk_Ofertes_has_EstatLaboral_EstatLaboral1_idx` ON `borsa`.`Ofertes_has_EstatLaboral` (`EstatLaboral_idEstatLaboral` ASC);
+
+CREATE INDEX `fk_Ofertes_has_EstatLaboral_Ofertes1_idx` ON `borsa`.`Ofertes_has_EstatLaboral` (`Ofertes_idOferta` ASC);
+
+SET SQL_MODE = '';
+GRANT USAGE ON *.* TO usuariWeb;
+ DROP USER usuariWeb;
+SET SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+CREATE USER 'usuariWeb' IDENTIFIED BY 'seCret_16';
+
+GRANT SELECT, INSERT, TRIGGER ON TABLE `borsa`.* TO 'usuariWeb';
+GRANT SELECT, INSERT, TRIGGER, UPDATE, DELETE ON TABLE `borsa`.* TO 'usuariWeb';
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 
 USE `borsa`;
 
@@ -589,6 +649,17 @@ END$$
 
 
 USE `borsa`$$
+DROP TRIGGER IF EXISTS `borsa`.`Professors_BEFORE_INSERT` $$
+USE `borsa`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Professors_BEFORE_INSERT` BEFORE INSERT ON `Professors` FOR EACH ROW
+BEGIN
+if NEW.validat = false THEN
+	set NEW.actiu=false;
+ end if;
+END$$
+
+
+USE `borsa`$$
 DROP TRIGGER IF EXISTS `borsa`.`Professors_AFTER_INSERT` $$
 USE `borsa`$$
 CREATE DEFINER=`usuariWeb`@`%` TRIGGER `borsa`.`Professors_AFTER_INSERT` AFTER INSERT ON `Professors` FOR EACH ROW
@@ -626,17 +697,6 @@ END$$
 
 
 USE `borsa`$$
-DROP TRIGGER IF EXISTS `borsa`.`Professors_BEFORE_INSERT` $$
-USE `borsa`$$
-CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`Professors_BEFORE_INSERT` BEFORE INSERT ON `Professors` FOR EACH ROW
-BEGIN
-if NEW.validat = false THEN
-	set NEW.actiu=false;
- end if;
-END$$
-
-
-USE `borsa`$$
 DROP TRIGGER IF EXISTS `borsa`.`usuaris_AFTER_INSERT` $$
 USE `borsa`$$
 CREATE DEFINER = CURRENT_USER TRIGGER `borsa`.`usuaris_AFTER_INSERT` AFTER INSERT ON `Usuaris` FOR EACH ROW
@@ -649,18 +709,8 @@ END$$
 
 
 DELIMITER ;
-SET SQL_MODE = '';
-GRANT USAGE ON *.* TO usuariWeb;
- DROP USER usuariWeb;
-SET SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
-CREATE USER 'usuariWeb' IDENTIFIED BY 'seCret_16';
 
-GRANT SELECT, INSERT, TRIGGER ON TABLE `borsa`.* TO 'usuariWeb';
-GRANT SELECT, INSERT, TRIGGER, UPDATE, DELETE ON TABLE `borsa`.* TO 'usuariWeb';
 
-SET SQL_MODE=@OLD_SQL_MODE;
-SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
-SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 
 -- -----------------------------------------------------
 -- Data for table `borsa`.`TipusUsuaris`
@@ -695,6 +745,19 @@ USE `borsa`;
 INSERT INTO `borsa`.`EstatLaboral` (`idEstatLaboral`, `nomEstatLaboral`) VALUES (DEFAULT, 'Estudiant');
 INSERT INTO `borsa`.`EstatLaboral` (`idEstatLaboral`, `nomEstatLaboral`) VALUES (DEFAULT, 'Aturat');
 INSERT INTO `borsa`.`EstatLaboral` (`idEstatLaboral`, `nomEstatLaboral`) VALUES (DEFAULT, 'Treballant');
+
+COMMIT;
+
+
+
+-- -----------------------------------------------------
+-- Data for table `borsa`.`Alumnes`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `borsa`;
+INSERT INTO `borsa`.`Alumnes` (`idAlumne`, `nom`, `llinatges`, `adreca`, `codiPostal`, `localitat`, `provincia`, `telefon`, `email`, `actiu`, `url`, `descripcio`) VALUES (1, 'Rafel', 'Sastre', 'Carrer s\'olivera 12', '07320', 'Selva', 'Illes Balears', '666555444', 'rap.rural@ruralstudio.cat', 1, NULL, NULL);
+INSERT INTO `borsa`.`Alumnes` (`idAlumne`, `nom`, `llinatges`, `adreca`, `codiPostal`, `localitat`, `provincia`, `telefon`, `email`, `actiu`, `url`, `descripcio`) VALUES (2, 'Borja', 'Perez', 'Plaça Major 4', '07514', 'Llucmajor', 'Iiles Balears', '698523654', 'borja@gmail.com', 1, NULL, NULL);
+INSERT INTO `borsa`.`Alumnes` (`idAlumne`, `nom`, `llinatges`, `adreca`, `codiPostal`, `localitat`, `provincia`, `telefon`, `email`, `actiu`, `url`, `descripcio`) VALUES (3, 'Cristian', 'Martínez', 'Carrer Albada 32', '07436', 'Can Picafort', 'Illes Balears', '647854123', 'cristian@gmail.com', 1, NULL, NULL);
 
 COMMIT;
 
@@ -766,8 +829,8 @@ COMMIT;
 -- -----------------------------------------------------
 START TRANSACTION;
 USE `borsa`;
-INSERT INTO `borsa`.`Professors` (`idProfessor`, `nom`, `llinatges`, `telefon`, `email`, `actiu`, `validat`) VALUES (DEFAULT, 'Joan', 'Pons Tugores', '666555444', 'ptj@iespaucasesnoves.cat', true, DEFAULT);
-INSERT INTO `borsa`.`Professors` (`idProfessor`, `nom`, `llinatges`, `telefon`, `email`, `actiu`, `validat`) VALUES (DEFAULT, 'Tomeu', 'Campaner Fornés', '699855477', 'cfb@iespaucasesnoves.cat', false, DEFAULT);
+INSERT INTO `borsa`.`Professors` (`idProfessor`, `nom`, `llinatges`, `telefon`, `email`, `actiu`, `validat`) VALUES (DEFAULT, 'Joan', 'Pons Tugores', '666555444', 'ptj@iespaucasesnoves.cat', true, true);
+INSERT INTO `borsa`.`Professors` (`idProfessor`, `nom`, `llinatges`, `telefon`, `email`, `actiu`, `validat`) VALUES (DEFAULT, 'Tomeu', 'Campaner Fornés', '699855477', 'cfb@iespaucasesnoves.cat', false, false);
 
 COMMIT;
 
@@ -795,3 +858,12 @@ INSERT INTO `borsa`.`Localitats` (`idLocalitat`, `nomLocalitat`, `idIlla`) VALUE
 
 COMMIT;
 
+
+-- -----------------------------------------------------
+-- Data for table `borsa`.`Usuaris_has_Rols`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `borsa`;
+INSERT INTO `borsa`.`Usuaris_has_Rols` (`Usuaris_idUsuari`, `Rols_idRol`) VALUES (7, 40);
+
+COMMIT;

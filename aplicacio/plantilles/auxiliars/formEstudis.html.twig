@@ -1,11 +1,11 @@
-<h3>Estudis <small>{{ etiquetes.subtitol }}</small></h3>
-
+<h2>Estudis <small>{{ etiquetes.subtitol }}</small></h2>
+<h3>Estudis oficials disponibles:</h3>
 <div class="well">
     <div class="row">
         <div class="col-md-6">
 
             <div class="form-group">
-                <label for="sel1">Estudis oficials disponibles:</label>
+                <label for="sel1"></label>
                 <div class="input-group">
                     <select class="form-control" id="graus" name="graus">
                         <option value="">Escull uns estudis</option>
@@ -18,16 +18,66 @@
             </div>
         </div>
     </div><!--row-->
+    <div class="row" id="dNou">
+        <form id="nouEstudi">
+            <input type="hidden" name="idAlumne" id="idAlumne" value="{{alumne.idAlumne}}">
+            <input type="hidden" name="idGrau" id="idGrau">
 
-    <div class="form-group">
-        <p><label>Estudis {{ etiquetes.labelLlista }}:</label></p>
-        <ul>
-            {% for grau in professor.estudis %}
-                <li><p>{{ grau.nom }} &nbsp; <button type="button" class="btn btn-xs btn-danger" id="b{{ grau.codi }}"> &nbsp; <span class="glyphicon glyphicon-trash"></span> &nbsp; </button></p></li>
-                {% endfor %}
-        </ul>
-    </div>
+            <div class='col-md-4'>
+                <div class="form-group">
+                    <label>Any de finalització:</label> 
+                    <input type="number" min="1970" max="1970" id="anyNou" name="any">
+                </div>
+                <div class="form-group">
+                    <label>Nota final:</label> 
+                    <input type="number" min="5" max="10" id="notaNou" name="nota" value='5'>
+                </div>
+            </div>
+
+            <div class='col-md-6'>
+                <button class="btn btn-success" type="submit" id="bGuardarNou">Guardar</button>
+                <button class="btn btn-default" type="reset" id="bCancelarNou">Cancelar</button>
+            </div>
+        </form>
+    </div>                    
 </div>
-        
-        
+
+<h3>Estudis {{ etiquetes.labelLlista }}:</h3>
+{%if alumne.estudis is empty %}
+    <div class="well">
+        <p>Encara no hi ha cap estudis registrats.</p>
+    </div>
+{% else %}
+    {% for grau in alumne.estudis %}
+
+        <div class="well">
+            <h4>{{ grau.nom }}</h4>
+            <form id="f{{grau.codi}}">
+                <input type="hidden" name="idAlumne" id="idAlumne" value="{{alumne.idAlumne}}">
+                <input type="hidden" name="idGrau" id="idGrau" value='{{grau.codi}}'>
+                <input type="hidden" name="nomGrau" id="nomGrau" value='{{grau.nom}}'>
+                <div class='row'>
+                    <div class='col-md-6'>
+                        <div class="form-group">
+                            <label>Any de finalització:</label> 
+                            <input type="number" min="1970" max='2100' id="any" name="any" disabled='disabled' value='{{grau.pivot.any}}'>
+                        </div>
+                        <div class="form-group">
+                            <label>Nota final:</label> 
+                            <input type="number" min="5" max="10" id="nota" name="nota" value='{{grau.pivot.nota}}' disabled='disabled' >
+                        </div>
+                    </div>
+
+                    <div class='col-md-6'>
+                        <button class="btn btn-primary" type="button" name="bEditar" id="bEd{{grau.codi}}">Editar</button>
+                        <button class="btn btn-danger" type="button" name="bSuprimir" id="bSup{{grau.codi}}">Suprimir</button>
+                        <button class="btn btn-success" type="submit" name="bGuardar" id="bGuar{{grau.codi}}">Guardar</button>
+                        <button class="btn btn-default" type="reset"  name="bCancel" id="bCan{{grau.codi}}">Cancel·lar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endfor %}
+{% endif %}
+
 {{include('auxiliars/modals.html.twig')}}

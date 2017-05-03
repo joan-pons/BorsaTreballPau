@@ -1,0 +1,38 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Estudis {{ actor.nom }} {{actor.llinatges }}</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+    <script>
+    </script>
+
+
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">{{ actor.nom }} {{actor.llinatges }}</a>
+</div>
+
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Idiomes</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}                     
+
+{% block contingut %}
+
+    {{include('auxiliars/formIdiomes.html.twig')}}
+
+{% endblock %}  
+
+
+
+

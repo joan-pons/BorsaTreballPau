@@ -1,23 +1,24 @@
 {% extends "auxiliars/base.html.twig" %}
 
 {% block head %}
-    <title>Borsa de treball: Modificar Empresa</title>
-    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <title>Borsa de treball: Alumnes</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/borsa.css">
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <link href="../js/summernote/summernote.css" rel="stylesheet">
     <script src="../js/summernote/summernote.min.js"></script>
-
-
     <script>
         $(document).ready(function () {
+            var canviat = false;
+
             $('#textDescripcio').summernote({
                 height: 150,
-                placeholder: "Descripció de l'empresa"
+                placeholder: "Descripció de l'alumne"
             });
-
             $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
             $('#bmDacord').on('click', function () {
                 $('#mdResultat').modal('hide');
@@ -25,15 +26,16 @@
             $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
             $('#mEsperaTitol').html('Realitzant les modificacions');
             $('#mdEspera').on('shown.bs.modal', function (e) {
-                var empresa = {};
-                $.each($('#formEmpresa [name]'), function (i, obj) {
-                    empresa[obj.name] = obj.value;
+                var alumne = {};
+                $.each($('#formAlumne [name]'), function (i, obj) {
+                    alumne[obj.name] = obj.value;
                 });
-                empresa.descripcio = $('#textDescripcio').summernote('code');
+                alumne.descripcio = $('#textDescripcio').summernote('code');
+
                 $.ajax({
-                    method:'PUT',
-                    url:"/empresa/modificarDades/"+empresa.idEmpresa,
-                    data:empresa
+                    method: 'PUT',
+                    url: "/alumne/modificarDades/" + alumne.idAlumne,
+                    data: alumne
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')
                     $('#mrText').html("<p>Les dades s'han modificat correctament.</p>");
@@ -42,7 +44,7 @@
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
-                    $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
@@ -53,18 +55,42 @@
             });
 
 
-            $('#formEmpresa').submit(function (event) {
+            $('#formAlumne').submit(function (event) {
                 event.preventDefault();
+                canviat=false;
+                var errors = "";
+                if ($("#nom").val().trim().length < 1) {
+                    errors += "<p>El camp nom no pot ser buid.</p>";
+                }
+                if ($("#llinatges").val().trim().length < 1) {
+                    errors += "<p>El camp Llinatges no pot ser buid.</p>";
+                }
+                if ($("#email").val().trim().length < 1) {
+                    errors += "<p>El camp correu electrònic no pot ser buid.</p>";
+                }
 
-                $('#mdEspera').modal('show');
+                if (errors === "") {
+                    $('#mdEspera').modal('show');
+                } else {
+                    $('#mrTitol').html("Atenció!")
+                    $('#mrText').html(errors);
+                    $('#mdResultat').modal('show');
+                }
             });
 
+            $(window).on('beforeunload', function () {
+                if (canviat)
+                    return false;
+            });
+            $('#formAlumne :input').on('change', function () {
+                canviat = true;
+            });
         });
     </script>
 {% endblock %}
 
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">{{objEmpresa.nom}}</a>
+    <a class="navbar-brand" href="dashBoard">{{ alumne.nom}} {{ alumne.llinatges }}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -73,11 +99,10 @@
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
-
 {% endblock %}                     
 
 {% block contingut %}
 
-    {{include('auxiliars/formEmpresa.html.twig')}}
+    {{include('auxiliars/formAlumne.html.twig')}}
 
 {% endblock %}  

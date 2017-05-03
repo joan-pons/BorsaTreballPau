@@ -1,0 +1,33 @@
+<h3>Estudis <small>{{ etiquetes.subtitol }}</small></h3>
+
+<div class="well">
+    <div class="row">
+        <div class="col-md-6">
+
+            <div class="form-group">
+                <label for="sel1">Estudis oficials disponibles:</label>
+                <div class="input-group">
+                    <select class="form-control" id="graus" name="graus">
+                        <option value="">Escull uns estudis</option>
+                        {% for grau in estudis %}
+                            <option value="{{ grau.codi }}">{{ grau.codi }} {{ grau.nom }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="input-group-btn"><button type="button" class="btn btn-default btn-success" id="bAfegir">Afegir</button></span>
+                </div>
+            </div>
+        </div>
+    </div><!--row-->
+
+    <div class="form-group">
+        <p><label>Estudis {{ etiquetes.labelLlista }}:</label></p>
+        <ul>
+            {% for grau in professor.estudis %}
+                <li><p>{{ grau.nom }} &nbsp; <button type="button" class="btn btn-xs btn-danger" id="b{{ grau.codi }}"> &nbsp; <span class="glyphicon glyphicon-trash"></span> &nbsp; </button></p></li>
+                {% endfor %}
+        </ul>
+    </div>
+</div>
+        
+        
+{{include('auxiliars/modals.html.twig')}}

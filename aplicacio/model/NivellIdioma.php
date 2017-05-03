@@ -7,18 +7,19 @@
  */
 
 namespace Borsa;
+
 use \Illuminate\Database\Eloquent\Model as Model;
+
 /**
- * Description of Estudis
+ * Description of Professor
  *
  * @author joan
  */
-class Estudis extends Model{
+class NivellIdioma extends Model {
 
-    protected $table = 'Estudis';
-    protected $primaryKey = "Codi";
+    protected $table = 'NivellsIdioma';
+    protected $primaryKey = "idNivellIdioma";
     public $timestamps = false;
-    public $incrementing = false; //Si no, tracta la clau primaria com a integer
-    
-    
+
+
 }

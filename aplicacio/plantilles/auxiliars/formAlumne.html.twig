@@ -1,0 +1,88 @@
+<h2>Dades de l'alumne</h2>
+<div class='well'>
+    <form  id="formAlumne" action="/altaAlumne" method="POST">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="hidden" class="form-control" id="idAlumne" name="idAlumne" value="{{alumne.idAlumne}}">
+                        <div class="form-group required">
+                            <label class='control-label' for="Nom">Nom:</label>
+                            <input type="text" required="required" class="form-control " id="nom" name="nom" value="{{alumne.nom}}">
+                        </div>
+                        <div class="form-group required">
+                            <label class='control-label' for="Nom">Llinatges:</label>
+                            <input type="text" required="required" class="form-control " id="llinatges" name="llinatges" value="{{alumne.llinatges}}">
+                        </div>
+                        <div class="form-group required">
+                            <label for="email" class='control-label'>Correu electrònic:</label>
+                            <input type="email" required="required" class="form-control" id="email" name="email" value="{{alumne.email}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="Telefon">Teléfon:</label>
+                            <input type="text" class="form-control" id="telefon" name="telefon" value="{{alumne.telefon}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="url" class='control-label'>url:</label>
+                            <input type="text" class="form-control" id="url" name="url" value="{{alumne.url}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="Actiu">Estat a la borsa:</label>
+                            <div>
+                                <label class="radio-inline"><input type="radio" id="Actiu" name="actiu" value="true"  {% if alumne.Actiu==true %}checked="checked"{% endif %}> Actiu</label>
+                                <label class="radio-inline"><input type="radio" id="Inactiu" name="actiu" value="false" {% if alumne.Actiu==false %}checked="checked"{% endif %}> Inactiu</label>
+                            </div>
+                        </div>
+                    </div><!--col-->
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="adreca">Adreca:</label>
+                            <input type="text" class="form-control" id="adreca" name="adreca" value="{{alumne.adreca}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="codiPostal">Codi postal:</label>
+                            <input type="text" class="form-control" id="codiPostal" name="codiPostal" value="{{alumne.codiPostal}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="localitat">Localitat:</label>
+                            <input type="text" class="form-control" id="localitat" name="localitat" value="{{alumne.localitat}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="provincia">Provincia:</label>
+                            <input type="text" class="form-control" id="provincia" name="provincia" value="{{alumne.provincia}}">
+                        </div>
+                    </div><!--col-->
+                </div><!--row -->
+
+                <div class="row"> 
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="textOferta">Descripció de l'alumne: </label>
+                            <div id="textDescripcio">{{alumne.descripcio | raw}}</div>
+                        </div>
+                    </div><!--col -->
+                </div> <!--Row -->
+            </div> <!--Col8 -->
+            <div class="col-md-4">
+                          
+                <div class="row">
+                    <div class="form-group pull-right">
+                        <label for="bEnviar">&nbsp;</label>
+                        <div><button type="submit" id="bEnviar" class="btn btn-success">Guardar</button></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group pull-right">
+                        <label for="CodiPostal">&nbsp;</label>
+                        <div><button type="reset"  class="btn btn-default">Netejar </button></div>
+                    </div>
+                </div>
+            </div><!--col-->
+        </div><!--row-->
+
+
+    </form>
+</div><!--well-->
+
+ {{include('auxiliars/modals.html.twig')}}
