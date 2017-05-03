@@ -31,7 +31,7 @@
                     alumne[obj.name] = obj.value;
                 });
                 alumne.descripcio = $('#textDescripcio').summernote('code');
-
+                alumne.actiu=$('#Actiu').is(':checked');
                 $.ajax({
                     method: 'PUT',
                     url: "/alumne/modificarDades/" + alumne.idAlumne,

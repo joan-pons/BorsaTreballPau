@@ -177,4 +177,40 @@ public function modificarIdiomes(Request $request, Response $response, $args, \S
         }
     }
 
+public function modificarEstatLaboral(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+            $data = $request->getParsedBody();
+            $alumne = Alumne::find($args['idAlumne']);
+            if ($alumne != null) {
+//                $codiEstudis = filter_var($args['codiEstudis'], FILTER_SANITIZE_STRING);
+//                $alumne->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);
+                $rebudes=$data['estats'];
+                $dades=array();
+                foreach($rebudes as $estat){
+                   
+                    array_push($dades, $estat);
+                   
+                }
+                $alumne->estatsLaborals()->sync($dades);
+                return $response->withJSON($dades);
+            } else {
+                $missatge = array("missatge" => "No s'ha trobat l'alumne que es vol modificar.");
+                return $response->withJson($missatge, 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            switch ($ex->getCode()) {
+                case 23000:
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja tens registrats els estudis que vols afegir.");
+                    break;
+                case 'HY000':
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    break;
+                default:
+                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la teva llista.");
+                    break;
+            }
+            return $response->withJson($missatge, 422);
+        }
+    }
 }

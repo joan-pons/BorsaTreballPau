@@ -1,0 +1,70 @@
+
+<h3>Estat laboral {{ etiquetes.labelLlista }}:</h3>
+<form id="estats" action="#" method="GET">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="well">
+                {% for estat in estats %}
+                    {%set skill=0 %}
+                    {% for situacio in actor.estatsLaborals %}
+                        {% if estat.idEstatLaboral==situacio.idEstatLaboral %}
+                            {% set skill=estat.idEstatLaboral %}
+                        {%endif%}
+                    {% endfor %}
+                    <div class="form-check">
+                            <label class="form-check-label">{{ estat.nomEstatLaboral }}: &nbsp;<input class="form-check-input" type="checkbox" id="l{{ estat.idEstatLaboral }}" name="l{{ estat.idEstatLaboral }}" value="{{estat.idEstatLaboral}}" {% if estat.idEstatLaboral==skill %}checked="checked"{% endif %}></label>
+                    </div>
+                {% endfor %}
+            </div>
+
+        </div>
+        <div class="col-md-6">
+            <div class="well">
+                <button class="btn btn-success" type="submit" name="bGuardar" id="bGuardar">Guardar</button>
+                <button class="btn btn-default" type="reset"  name="bCancel" id="bCancel">Cancel·lar canvis</button>
+            </div>
+        </div>
+    </div>
+</form>
+{{include('auxiliars/modals.html.twig')}}
+<script>
+    var resultat = [];
+    $('#estats').on('submit', function (event) {
+        resultat = {};
+        resultat.estats = []
+        event.preventDefault();
+    {% for estat in estats %}
+            if (typeof $('input[name="l{{estat.idEstatLaboral}}"]') !== "undefined" && $('input[name="l{{estat.idEstatLaboral}}"]:checked').val() > 0) {
+                // alert('{{idioma.idioma}} ' + $('input[name="l{{idioma.idIdioma}}"]:checked').val());
+                resultat.estats.push({{estat.idEstatLaboral}});
+            }
+    {% endfor %}
+
+            // alert(JSON.stringify(resultat));
+            $('#mEsperaTitol').html("Realitzant la modificació.");
+            $('#mdEspera').on('shown.bs.modal', function (e) {
+                $.ajax({
+                    method: 'PUT',
+                    url: "estatLaboral/" + {{identificador}},
+                    data: resultat
+                }).done(function () {
+                    $('#mrTitol').html('Modificació correcta')
+                    $('#mrText').html("<p>La situació laboral s'ha modificat correctament.</p>");
+                    $('#bmDacord').on('click', function () {
+                        window.location = "dashBoard";
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+            });
+
+            $('#mdEspera').modal('show');
+        });
+</script>

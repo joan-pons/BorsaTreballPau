@@ -13,6 +13,7 @@ use Borsa\DaoAlumne as DaoAlumne;
 use Borsa\Idioma as Idioma;
 use Borsa\NivellIdioma as NivellIdioma;
 use Borsa\Alumne as Alumne;
+use Borsa\EstatLaboral as EstatLaboral;
 
 require 'vendor/autoload.php';
 
@@ -331,6 +332,25 @@ $app->group('/alumne', function() {
             return $response->withJSON('Errada: ', 500);
         }
     });
+    
+    
+    $this->get('/estatLaboral', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        if ($usuari != null) {
+            $alumne = $usuari->getEntitat();
+            $etiquetes = null;//array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat");
+            $estatsLaborals = EstatLaboral::orderBy('nomEstatLaboral', 'ASC')->get();
+            return $this->view->render($response, 'alumne/estatLaboral.html.twig', ['actor' => $alumne,  'estats' => $estatsLaborals, 'identificador'=>$alumne->idAlumne]);
+        } else {
+            return $response->withJSON('Errada: ', 500);
+        }
+    });
+    
+    $this->put('/estatLaboral/{idAlumne}', function ($request, $response, $args) {
+        return DaoAlumne::modificarEstatLaboral($request, $response, $args, $this);
+    });
+
 })->add(function ($request, $response, $next) {
     if (in_array(30, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);

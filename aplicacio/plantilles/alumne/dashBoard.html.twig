@@ -20,6 +20,9 @@
             $("#dIdiomes").click(function () {
                 $("#mIdiomes")[0].click();
             });
+            $("#dEstats").click(function () {
+                $("#mEstats")[0].click();
+            });
             $(".click a").on('click', function (event) {
                 event.stopPropagation();
             });
@@ -36,9 +39,11 @@
         <li><a href="canviarContrasenya">Canviar contrasenya</a></li>
         <li><a href="estudis" id="mEstudis">Estudis</a></li>
         <li><a href="idiomes" id="mIdiomes">Idiomes</a></li>
-        <li><a href="estatLaboral">Estat laboral</a></li>
-        <li><a href="formacio">Altra formació</a></li>
-        <li><a href="ofertes">Ofertes</a></li>
+        <li><a href="estatLaboral" id="mEstats">Estat laboral</a></li>
+        <!--<li><a href="formacio">Altra formació</a></li>-->
+        {% if alumne.actiu==1 %}
+            <li><a href="ofertes">Ofertes</a></li>
+            {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
@@ -59,6 +64,7 @@
                 <p><label>Codi postal:&nbsp;</label>{{alumne.codiPostal}}</p>
                 <p><label>Localitat:&nbsp;</label>{{alumne.localitat}}</p>
                 <p><label>Província:&nbsp;</label>{{alumne.provincia}}</p>
+                <p><label>Actiu: &nbsp;</label><span class="glyphicon {% if alumne.actiu %}glyphicon-ok{% else %}glyphicon-remove{% endif %}"></span></p>
             </div>
         </div><!--col-->
 
@@ -97,10 +103,11 @@
             {% if alumne.estatsLaborals is empty %}
                 <div class="well"><p> Encara no tens cap estat laboral registrat </p></div>
             {% else %}
-                <div class="well click" id="dIdiomes">
+                <div class="well click" id="dEstats">
                     <ul>
-                        <li>Estudiant</li>
-                        <li>Treballant</li>
+                        {% for estat in alumne.estatsLaborals %}
+                            <li>{{estat.nomEstatLaboral}}</li>
+                            {% endfor %}
                     </ul>
                 </div>
             {% endif %}
