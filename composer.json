@@ -8,16 +8,6 @@
         }
     ],
     "require": {
-        "slim/slim": "3.8.1",
-        "monolog/monolog": "1.22.1",
-        "slim/twig-view": "2.2.0",
-        "illuminate/database": "v5.4.17",
         "phpmailer/phpmailer": "v5.2.23"
-    },
-    "autoload": {
-        "psr-4": {
-            "Borsa\\": "model/",
-            "Correu\\": "mail/"
-        }
     }
 }

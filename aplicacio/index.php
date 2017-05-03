@@ -80,7 +80,19 @@ $container['view'] = function ($container) {
 
     return $view;
 };
+$container['mailer'] = function ($container) {
+    $mailer = new PHPMailer;
 
+    $mailer->Host = 'smtp.gmail.com';  // your email host, to test I use localhost and check emails using test mail server application (catches all  sent mails)
+    $mailer->SMTPAuth = true;                 // I set false for localhost
+    $mailer->SMTPSecure = 'ssl';              // set blank for localhost
+    $mailer->Port = 465;                           // 25 for local host
+    $mailer->Username = 'joan.pons.institut@gmail.com';    // I set sender email in my mailer call
+    $mailer->Password = 'tramutana30';
+    $mailer->isHTML(true);
+
+    return new \Correu\Mailer($container->view, $mailer);
+};
 
 // Index
 $app->get('/', function ($request, $response, $args) {
@@ -95,6 +107,14 @@ $app->get('/sortir', function ($request, $response, $args) {
 
 $app->get('/login', function ($request, $response, $args) {
     return Dao::entrada($request, $response, $args, $this);
+});
+
+$app->get('/mailing', function ($request, $response, $args) {
+    $this->mailer->send('/email/Validat.html', [], function($message) {
+        $message->to('ptj@iespaucasesnoves.cat');
+        $message->subject('Prova');
+    });
+    return $response->withJSON(array('Ok'));
 });
 
 //  //////////////////////////////////////////////////////////
@@ -235,7 +255,7 @@ $app->group('/alumne', function() {
             $alumne = $usuari->getEntitat();
             $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
 
-            return $this->view->render($response, 'alumne/dashBoard.html.twig', ['alumne' => $alumne, 'usuari' => $usuari, 'nivellsIdioma'=>$nivellsIdioma]);
+            return $this->view->render($response, 'alumne/dashBoard.html.twig', ['alumne' => $alumne, 'usuari' => $usuari, 'nivellsIdioma' => $nivellsIdioma]);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
@@ -312,7 +332,7 @@ $app->group('/alumne', function() {
             $etiquetes = array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que parles");
             $idiomes = Idioma::orderBy('idioma', 'ASC')->get();
             $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
-            return $this->view->render($response, 'alumne/idiomes.html.twig', ['actor' => $alumne, 'identificador'=>$alumne->idAlumne, 'etiquetes' => $etiquetes, 'idiomes' => $idiomes, 'nivellsIdioma' => $nivellsIdioma]);
+            return $this->view->render($response, 'alumne/idiomes.html.twig', ['actor' => $alumne, 'identificador' => $alumne->idAlumne, 'etiquetes' => $etiquetes, 'idiomes' => $idiomes, 'nivellsIdioma' => $nivellsIdioma]);
         } else {
             return $response->withJSON('Errada: ', 500);
         }
@@ -332,25 +352,24 @@ $app->group('/alumne', function() {
             return $response->withJSON('Errada: ', 500);
         }
     });
-    
-    
+
+
     $this->get('/estatLaboral', function ($request, $response, $args) {
         $this->dbEloquent;
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
             $alumne = $usuari->getEntitat();
-            $etiquetes = null;//array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat");
+            $etiquetes = null; //array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat");
             $estatsLaborals = EstatLaboral::orderBy('nomEstatLaboral', 'ASC')->get();
-            return $this->view->render($response, 'alumne/estatLaboral.html.twig', ['actor' => $alumne,  'estats' => $estatsLaborals, 'identificador'=>$alumne->idAlumne]);
+            return $this->view->render($response, 'alumne/estatLaboral.html.twig', ['actor' => $alumne, 'estats' => $estatsLaborals, 'identificador' => $alumne->idAlumne]);
         } else {
             return $response->withJSON('Errada: ', 500);
         }
     });
-    
+
     $this->put('/estatLaboral/{idAlumne}', function ($request, $response, $args) {
         return DaoAlumne::modificarEstatLaboral($request, $response, $args, $this);
     });
-
 })->add(function ($request, $response, $next) {
     if (in_array(30, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);

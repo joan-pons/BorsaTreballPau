@@ -45,6 +45,7 @@ class ComposerStaticInitb73eea40ffdd25d0d5b49b74aba90e34
         ),
         'C' => 
         array (
+            'Correu\\' => 7,
             'Carbon\\' => 7,
         ),
         'B' => 
@@ -110,6 +111,10 @@ class ComposerStaticInitb73eea40ffdd25d0d5b49b74aba90e34
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
         ),
+        'Correu\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/mail',
+        ),
         'Carbon\\' => 
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
@@ -144,12 +149,24 @@ class ComposerStaticInitb73eea40ffdd25d0d5b49b74aba90e34
         ),
     );
 
+    public static $classMap = array (
+        'EasyPeasyICS' => __DIR__ . '/..' . '/phpmailer/phpmailer/extras/EasyPeasyICS.php',
+        'PHPMailer' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmailer.php',
+        'PHPMailerOAuth' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmaileroauth.php',
+        'PHPMailerOAuthGoogle' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmaileroauthgoogle.php',
+        'POP3' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.pop3.php',
+        'SMTP' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.smtp.php',
+        'ntlm_sasl_client_class' => __DIR__ . '/..' . '/phpmailer/phpmailer/extras/ntlm_sasl_client.php',
+        'phpmailerException' => __DIR__ . '/..' . '/phpmailer/phpmailer/class.phpmailer.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInitb73eea40ffdd25d0d5b49b74aba90e34::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInitb73eea40ffdd25d0d5b49b74aba90e34::$prefixDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInitb73eea40ffdd25d0d5b49b74aba90e34::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitb73eea40ffdd25d0d5b49b74aba90e34::$classMap;
 
         }, null, ClassLoader::class);
     }

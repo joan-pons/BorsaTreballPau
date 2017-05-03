@@ -114,20 +114,24 @@
         </div><!--col-->
         <div class="col-md-4">
             <h3>Ofertes en marxa</h3>
-            {% if alumne.ofertes is empty %}
-                <div class="well"><p> No hi ha cap oferta en vigor. </p></div>
+            {% if alumne.actiu==1 %}
+                {% if alumne.ofertes is empty %}
+                    <div class="well"><p> No hi ha cap oferta en vigor. </p></div>
+                {% else %}
+                    <div class="well click">
+                        <p>Títol:</p>
+                        <p>Data de publicació:</p>
+                        <p>Data de finalització:</p>                      
+                    </div>
+                    <div class="well click">
+                        <p>Títol:</p>
+                        <p>Data de publicació:</p>
+                        <p>Data de finalització:</p>
+                    </div>
+                {% endif %}
             {% else %}
-                <div class="well click">
-                    <p>Títol:</p>
-                    <p>Data de publicació:</p>
-                    <p>Data de finalització:</p>                      
-                </div>
-                <div class="well click">
-                    <p>Títol:</p>
-                    <p>Data de publicació:</p>
-                    <p>Data de finalització:</p>
-                </div>
-            {% endif %}
+                <div class="well"><p> Has d'activar el teu usuari, a l'apartat <em>Actualitzar dades</em>, per poder veure les ofertes. </p></div>
+            {%endif%}
         </div><!--col-->
     </div><!--row-->
 {% endblock %}
