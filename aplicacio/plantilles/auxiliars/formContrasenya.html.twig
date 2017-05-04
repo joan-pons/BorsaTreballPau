@@ -19,7 +19,7 @@
                 </div>
             </div><!--col-->
         </div> <!--Row -->
-        
+
         <div class="row"> 
             <div class="col-md-4">
                 <div class="form-group">                           
@@ -29,8 +29,35 @@
                 </div>
             </div><!--col -->
         </div> <!--Row -->
-        
+
         <button type="submit" class="btn btn-success">Canviar</button>
         <button type="reset" class="btn btn-default">Netejar</button>
     </form>
 </div>
+<script src="../js/dirtyForms.js"></script>
+<script>
+
+    $('#fCanvi').submit(function (event) {
+        event.preventDefault();
+        var errors = "";
+        if ($("#nou").val() === $("#antic").val()) {
+            errors += "<p>La contrasenya nova no pot ser la mateixa que l'antiga.</p>";
+        }
+        if ($("#nou").val() !== $("#repetir").val()) {
+            errors += "<p>La contrasenya nova i la repetició no coincideixen.</p>";
+        }
+        if ($("#antic").val().length < 8 || $("#antic").val().length > 75) {
+            errors += "<p>La contrasenya antiga ha de tenir una longitud d'entre 8 i 75 caràcters.</p>";
+        }
+        if ($("#nou").val().length < 8 || $("#nou").val().length > 75) {
+            errors += "<p>La contrasenya nova ha de tenir una longitud d'entre 8 i 75 caràcters.</p>";
+        }
+        if (errors === "") {
+            $('#mdEspera').modal('show');
+        } else {
+            $('#mrTitol').html("Atenció!")
+            $('#mrText').html(errors);
+            $('#mdResultat').modal('show');
+        }
+    });
+</script>

@@ -77,7 +77,7 @@
                 })
             });
 
-            $("#bCancelar").on('click', function () {
+            $("#fCanviar").on('reset', function () {
                 $("#bModificar").prop('disabled', false);
                 $("#llista").prop('disabled', false);
                 $("#bGuardar").prop('disabled', 'disabled');
@@ -115,6 +115,7 @@
 
         });
     </script>
+    <script src="../../js/dirtyForms.js"></script>
 {% endblock %}
 
 {% block navegacio %}

@@ -13,8 +13,6 @@
     <script src="../js/summernote/summernote.min.js"></script>
     <script>
         $(document).ready(function () {
-            var canviat = false;
-
             $('#textDescripcio').summernote({
                 height: 150,
                 placeholder: "Descripció de l'alumne"
@@ -31,7 +29,7 @@
                     alumne[obj.name] = obj.value;
                 });
                 alumne.descripcio = $('#textDescripcio').summernote('code');
-                alumne.actiu=$('#Actiu').is(':checked');
+                alumne.actiu = $('#Actiu').is(':checked');
                 $.ajax({
                     method: 'PUT',
                     url: "/alumne/modificarDades/" + alumne.idAlumne,
@@ -57,7 +55,7 @@
 
             $('#formAlumne').submit(function (event) {
                 event.preventDefault();
-                canviat=false;
+                canviat = false;
                 var errors = "";
                 if ($("#nom").val().trim().length < 1) {
                     errors += "<p>El camp nom no pot ser buid.</p>";
@@ -78,15 +76,16 @@
                 }
             });
 
-            $(window).on('beforeunload', function () {
-                if (canviat)
-                    return false;
+            $('#formAlumne').on('reset', function () {
+                $('#textDescripcio').summernote('code', '');
             });
-            $('#formAlumne :input').on('change', function () {
-                canviat = true;
+
+            $(".summernote").on("summernote.change", function (e) {   // callback as jquery custom event 
+                dirty=true;
             });
         });
     </script>
+    <script src="../../js/dirtyForms.js"></script>
 {% endblock %}
 
 {% block navegacio %}
@@ -95,6 +94,11 @@
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
         <li class="active"><a href="#">Actualitzar dades</a></li>
+        <li><a href="canviarContrasenya">Canviar contrasenya</a></li>
+        <li><a href="estudis" id="mEstudis">Estudis</a></li>
+        <li><a href="idiomes" id="mIdiomes">Idiomes</a></li>
+        <li><a href="estatLaboral" id="mEstats">Estat laboral</a></li>
+        <!--<li><a href="formacio">Altra formació</a></li>-->
     </ul>
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>

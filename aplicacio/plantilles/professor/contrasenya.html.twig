@@ -22,10 +22,10 @@
                 $.each($('#fCanvi [name]'), function (i, obj) {
                     contrasenya[obj.name] = obj.value;
                 });
-                
+
                 $.ajax({
                     method: 'PUT',
-                    url: "/professor/canviarContrasenya/"+contrasenya.idUsuari,
+                    url: "/professor/canviarContrasenya/" + contrasenya.idUsuari,
                     data: contrasenya
                 }).done(function () {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-check"></span>&nbsp; Actualització correcte');
@@ -35,7 +35,7 @@
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
-                    $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
@@ -44,32 +44,6 @@
                     $('#mdResultat').modal('show');
                 });
             });
-
-
-            $('#fCanvi').submit(function (event) {
-                event.preventDefault();
-                var errors="";
-                if($("#nou").val() === $("#antic").val()){
-                    errors+="<p>La contrasenya nova no pot ser la mateixa que l'antiga.</p>";
-                }
-                if($("#nou").val() !== $("#repetir").val()){
-                    errors+="<p>La contrasenya nova i la repetició no coincideixen.</p>";
-                }
-                if($("#antic").val().length<8 || $("#antic").val().length>75){
-                    errors+="<p>La contrasenya antiga ha de tenir una longitud d'entre 8 i 75 caràcters.</p>";
-                }
-                if($("#nou").val().length<8 || $("#nou").val().length>75){
-                    errors+="<p>La contrasenya nova ha de tenir una longitud d'entre 8 i 75 caràcters.</p>";
-                }
-                if (errors==="") {
-                    $('#mdEspera').modal('show');
-                } else {
-                    $('#mrTitol').html("Atenció!")
-                    $('#mrText').html(errors);
-                    $('#mdResultat').modal('show');
-                }
-            });
-
         });
     </script>
 {% endblock %}
@@ -79,6 +53,7 @@
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
+        <li><a href="modificarDades">Actualitzar dades</a></li>
         <li class="active"><a href="#">Canviar contrasenya</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">

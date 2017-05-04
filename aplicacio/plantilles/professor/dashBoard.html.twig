@@ -38,7 +38,9 @@
         <li><a href="canviarContrasenya" id="mContrasenya">Canviar contrasenya</a></li>
             {% if professor.actiu %}
             <li><a href="estudis" id="mEstudis">Estudis</a></li>
-            <li><a href="ofertes" >Ofertes</a></li>
+                {% if not professor.estudis is empty %}
+                <li><a href="ofertes" >Ofertes</a></li>
+                {% endif %}
                 {% if usuari.teRol(40) %}
                 <li><a href="/administrador/usuaris" >Usuaris</a></li>
                 <li><a href="/administrador/empreses" >Empreses</a></li>
@@ -53,7 +55,7 @@
 {% block contingut %}
     <div class="row">
         <div class="col-md-4">
-            <h3>Dades de la professora / del professor</h3>
+            <h3>Dades personals</h3>
             <div class="well click" id="dProfessor">
                 <p><label>Nom: &nbsp;</label>{{ professor.nom }}</p>
                 <p><label>Llinatges: &nbsp;</label>{{ professor.llinatges }}</p>

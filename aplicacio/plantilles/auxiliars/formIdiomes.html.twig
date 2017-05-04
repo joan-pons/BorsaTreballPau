@@ -35,7 +35,7 @@
     var resultat = [];
     $('#llengues').on('submit', function (event) {
         resultat = {};
-        resultat.nivells=[]
+        resultat.nivells = []
         event.preventDefault();
     {% for idioma in idiomes %}
             if (typeof $('input[name="l{{idioma.idIdioma}}"]') !== "undefined" && $('input[name="l{{idioma.idIdioma}}"]:checked').val() > 1) {
@@ -43,8 +43,8 @@
                 resultat.nivells.push({idIdioma: '{{idioma.idIdioma}}', NIvellsIdioma_idNIvellsIdioma: $('input[name="l{{idioma.idIdioma}}"]:checked').val()});
             }
     {% endfor %}
-    
-   // alert(JSON.stringify(resultat));
+
+            // alert(JSON.stringify(resultat));
             $('#mEsperaTitol').html("Realitzant la modificació.");
             $('#mdEspera').on('shown.bs.modal', function (e) {
                 $.ajax({
@@ -72,3 +72,5 @@
             $('#mdEspera').modal('show');
         });
 </script>
+
+<script src="../../js/dirtyForms.js"></script>

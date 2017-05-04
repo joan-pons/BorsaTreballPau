@@ -40,32 +40,6 @@
             });
 
 
-            $('#formProfessor').submit(function (event) {
-                event.preventDefault();
-
-                var errors = "";
-                if ($("#nom").val().trim().length < 1) {
-                    errors += "<p>El camp nom no pot ser buid.</p>";
-                }
-                if ($("#llinatges").val().trim().length < 1) {
-                    errors += "<p>El camp Llinatges no pot ser buid.</p>";
-                }
-                if ($("#email").val().trim().length < 1) {
-                    errors += "<p>El camp correu electrònic no pot ser buid.</p>";
-                }
-                if ($("#email").val().indexOf('@iespaucasesnoves.cat')==-1) {
-                    errors += "<p>El correu electrònic ha de ser del domini <em>@iespaucasesnoves.cat</em></p>";
-                }
-
-                if (errors === "") {
-                    $('#mdEspera').modal('show');
-                } else {
-                    $('#mrTitol').html("Atenció!")
-                    $('#mrText').html(errors);
-                    $('#mdResultat').modal('show');
-                }
-            });
-
         });
     </script>
 {% endblock %}

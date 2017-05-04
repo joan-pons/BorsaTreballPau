@@ -45,19 +45,19 @@
                 $(this).closest('form')[0].reset();
                 var id = event.target.id.replace("bCan", "");
                 if ($("#val" + id).is(':checked')) {
-                    $("#act" + id).prop('disabled',false);
+                    $("#act" + id).prop('disabled', false);
                 } else {
-                    $("#act" + id).prop('disabled','disabled');
+                    $("#act" + id).prop('disabled', 'disabled');
                 }
             });
-            
-            
+
+
             $("form").on('submit', function (event) {
                 event.preventDefault();
-                var f = event.target.id.replace('f','');
+                var f = event.target.id.replace('f', '');
                 dades = {};
-                dades['idEmpresa'] = $('#idE'+f).val();
-                dades['activa'] = $('#act'+f).is(':checked');
+                dades['idEmpresa'] = $('#idE' + f).val();
+                dades['activa'] = $('#act' + f).is(':checked');
                 dades['validada'] = $('#val' + f).is(':checked');
                 $('#mdEspera').modal('show');
             });
@@ -65,14 +65,15 @@
             $('[name="validat"').on('change', function (event) {
                 var id = event.target.id.replace("val", "");
                 if ($("#" + event.target.id).is(':checked')) {
-                     $("#act" + id).prop('disabled',false);
+                    $("#act" + id).prop('disabled', false);
                 } else {
-                    $("#act" + id).prop('disabled','disabled');
-                     $("#act" + id).prop('checked',false);
+                    $("#act" + id).prop('disabled', 'disabled');
+                    $("#act" + id).prop('checked', false);
                 }
             });
         });
     </script>
+    <script src="../../js/dirtyForms.js"></script>
 {% endblock %}
 
 {% block navegacio %}

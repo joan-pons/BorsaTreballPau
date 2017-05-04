@@ -441,7 +441,7 @@ $app->group('/professor', function() {
         $this->dbEloquent;
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
-            $prof = $usuari->getEntitat();
+            $professor = $usuari->getEntitat();
             return $this->view->render($response, 'professor/contrasenya.html.twig', ['professor' => $professor, "tipusUsuari" => 10, "usuari" => $usuari]);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
@@ -457,7 +457,7 @@ $app->group('/professor', function() {
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
             $professor = $usuari->getEntitat();
-            $etiquetes = array("subtitol" => "", "labelLlista" => "dels que és responsable");
+            $etiquetes = array("subtitol" => "dels que haurà de validar ofertes", "labelLlista" => "dels que és responsable");
             $estudis = Estudis::orderBy('Nom', 'ASC')->get();
             return $this->view->render($response, 'professor/professorEstudis.html.twig', ['professor' => $professor, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
         } else {
