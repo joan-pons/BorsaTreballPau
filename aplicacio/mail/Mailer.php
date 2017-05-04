@@ -19,7 +19,7 @@ class Mailer {
 
         call_user_func($callback, $message);
 
-        $this->mailer->send();
+        return $this->mailer->send();
     }
 
 }

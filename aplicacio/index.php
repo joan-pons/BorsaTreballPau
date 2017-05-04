@@ -88,9 +88,10 @@ $container['mailer'] = function ($container) {
     $mailer->SMTPSecure = 'ssl';              // set blank for localhost
     $mailer->Port = 465;                           // 25 for local host
     $mailer->Username = 'joan.pons.institut@gmail.com';    // I set sender email in my mailer call
-    $mailer->Password = 'tramutana30';
+    $mailer->Password = 'xxx';
     $mailer->isHTML(true);
-
+    $mailer->SMTPDebug = 2;
+    $mailer->FromName="Borsa de treball de l'IES Pau Casesnoves";
     return new \Correu\Mailer($container->view, $mailer);
 };
 
@@ -110,11 +111,15 @@ $app->get('/login', function ($request, $response, $args) {
 });
 
 $app->get('/mailing', function ($request, $response, $args) {
-    $this->mailer->send('/email/Validat.html', [], function($message) {
-        $message->to('ptj@iespaucasesnoves.cat');
-        $message->subject('Prova');
-    });
-    return $response->withJSON(array('Ok'));
+    if ($this->mailer->send('/email/Validat.html', [], function($message) {
+                $message->from("borsa.no-reply@iespaucasesnoves.cat");
+                $message->to('ptj@iespaucasesnoves.cat');
+                $message->subject('Prova');
+            })) {
+        return $response->withJSON(array('Ok'));
+    } else {
+        return $response->withJSON(array('Ok'), 422);
+    }
 });
 
 //  //////////////////////////////////////////////////////////
