@@ -1,0 +1,42 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Oferta</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+    <script src="../js/bootbox.min.js"></script>
+    <link href="../js/summernote/summernote.css" rel="stylesheet">
+    <script src="../js/summernote/summernote.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+{% endblock %}
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">{{empresa.nom}}</a>                    
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Afegir oferta</a></li>
+        <li class="disabled"><a href="#">Estudis</a></li>
+        <li class="disabled"><a href="#">Idiomes</a></li>
+        <li class="disabled"><a href="#">Situació laboral</a></li>
+        <li class="disabled"><a href="#">Persones de contacte</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}
+{% block contingut %}
+
+    {{include('auxiliars/formOferta.html.twig')}}
+{% endblock %}

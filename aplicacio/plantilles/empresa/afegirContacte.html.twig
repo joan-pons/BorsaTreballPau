@@ -52,9 +52,10 @@
             });
         });
     </script>
+<script src="../js/dirtyForms.js"></script>
 {% endblock %}
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">Empresa</a>
+    <a class="navbar-brand" href="dashBoard">{{objEmpresa.nom}}</a>
 </div>
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
@@ -62,7 +63,6 @@
         <li class="active"><a href="#"><span class="glyphicon glyphicon-plus"></span> Afegir</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">
-        <li><a href="dashBoard">{{ objEmpresa.nom }}</a></li>
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
 

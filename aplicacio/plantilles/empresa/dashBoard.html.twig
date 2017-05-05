@@ -13,11 +13,11 @@
                 $("#mActualitza")[0].click();
             });
             $('#contactes > .click').on('click', function (event) {
-                var id=event.currentTarget.id;
-                window.location.href = "contactes#"+id;
+                var id = event.currentTarget.id;
+                window.location.href = "contactes#" + id;
             });
-            $(".click a").on('click',function(event){
-              event.stopPropagation();  
+            $(".click a").on('click', function (event) {
+                event.stopPropagation();
             });
         });
     </script>
@@ -30,8 +30,10 @@
     <ul class="nav navbar-nav">
         <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
         <li><a href="canviarContrasenya" id="mActualitza">Canviar contrasenya</a></li>
-        <li><a href="contactes" id="mContactes">Contactes</a></li>
-        <li><a href="ofertes" >Ofertes</a></li>
+            {% if empresa.activa %}
+            <li><a href="contactes" id="mContactes">Contactes</a></li>
+            <li><a href="ofertes" >Ofertes</a></li>
+            {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
@@ -54,6 +56,7 @@
                 <p><label>Província: &nbsp;</label>{{ empresa.provincia }}</p>
             </div>
         </div><!--col-->
+        {% if empresa.activa %}
         <div class="col-md-4" id="contactes">
             <h3>Contactes</h3>
             {% if empresa.contactes is empty %}
@@ -85,6 +88,7 @@
                 <p>Alumnes avisats: </p>
             </div>
         </div><!--col-->
+        {% endif %}
     </div><!--row-->
 {% endblock %}  
 

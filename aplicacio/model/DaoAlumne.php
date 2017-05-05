@@ -56,7 +56,7 @@ class DaoAlumne extends Dao {
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();
-            $alumne = Alumne::find($data['idAlumne']);
+            $alumne = Alumne::find($data['identificador']);
             if ($alumne != null) {
                 $codiEstudis = filter_var($data['codiEstudis'], FILTER_SANITIZE_STRING);
               //  $alumne->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);

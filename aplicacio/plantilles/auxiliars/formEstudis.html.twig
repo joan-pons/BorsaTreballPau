@@ -20,7 +20,7 @@
     </div><!--row-->
     <div class="row" id="dNou">
         <form id="nouEstudi">
-            <input type="hidden" name="idAlumne" id="idAlumne" value="{{alumne.idAlumne}}">
+            <input type="hidden" name="idAlumne" id="idAlumne" value="{{identificador}}">
             <input type="hidden" name="idGrau" id="idGrau">
 
             <div class='col-md-4'>
@@ -43,17 +43,17 @@
 </div>
 
 <h3>Estudis {{ etiquetes.labelLlista }}:</h3>
-{%if alumne.estudis is empty %}
+{%if entitat.estudis is empty %}
     <div class="well">
         <p>Encara no hi ha cap estudis registrats.</p>
     </div>
 {% else %}
-    {% for grau in alumne.estudis %}
+    {% for grau in entitat.estudis %}
 
         <div class="well">
             <h4>{{ grau.nom }}</h4>
             <form id="f{{grau.codi}}">
-                <input type="hidden" name="idAlumne" id="idAlumne" value="{{alumne.idAlumne}}">
+                <input type="hidden" name="idAlumne" id="idAlumne" value="{{identificador}}">
                 <input type="hidden" name="idGrau" id="idGrau" value='{{grau.codi}}'>
                 <input type="hidden" name="nomGrau" id="nomGrau" value='{{grau.nom}}'>
                 <div class='row'>
@@ -81,3 +81,195 @@
 {% endif %}
 
 {{include('auxiliars/modals.html.twig')}}
+
+<script>
+    $(document).ready(function () {
+        var idAlumne
+        ={{identificador }} ;
+                var estudisElegits;
+
+        $('#dNou').hide();
+        $('#anyNou').attr('max', new Date().getFullYear());
+        $('#anyNou').attr('value', new Date().getFullYear());
+
+        $('form [name="bGuardar"]').hide();
+        $('form [name="bCancel"]').hide();
+
+        $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+        $('#bmDacord').on('click', function () {
+            $('#mdResultat').modal('hide');
+        });
+        $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+
+        $('#bAfegir').on('click', function () {
+            if ($('#graus').val() !== "") {
+                $('#dNou').show("fast");
+                $('#bAfegir').prop('disabled', 'disabled');
+                $('#nouEstudi #idGrau').val($('#graus').val());
+
+                $('form [name="bEditar"]').prop('disabled', 'disabled');
+                $('form [name="bSuprimir"]').prop('disabled', 'disabled');
+            }
+        });
+
+        $('#nouEstudi').on('reset', function () {
+            $('#bAfegir').prop('disabled', false);
+            $('#dNou').hide("fast");
+            $('form [name="bEditar"]').prop('disabled', false);
+            $('form [name="bSuprimir"]').prop('disabled', false);
+        });
+
+        $('#nouEstudi').on('submit', function (event) {
+            event.preventDefault();
+            $('#mEsperaTitol').html('Afegint els estudis');
+            var val = $('#graus').val();
+            if (val != "") {
+                $('#mdEspera').on('shown.bs.modal', function (e) {
+
+                    estudisElegits = {codiEstudis: val, identificador: idAlumne, any: $('#anyNou').val(), nota: $('#notaNou').val()};
+                    $.ajax({
+                        method: 'POST',
+                        url: "estudis",
+                        data: estudisElegits
+                    }).done(function () {
+                        $('#mrTitol').html('Actualització correcte');
+                        $('#mrText').html("<p>{{etiquetes.correcte}}</p>");
+                        $('#bmDacord').on('click', function () {
+                            window.location.href = "estudis?idOferta=" + idAlumne;
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
+                    });
+                });
+                $('#mdEspera').modal('show');
+            }
+
+        });
+
+        //Suprimir
+        $('form [name="bSuprimir"]').on('click', function (event) {
+            var ident = event.currentTarget.id.replace('bSup', '');
+            var form = 'f' + ident;
+            estudisElegits = {codiEstudis: $('#' + form + ' [name="idGrau"]').val(), idAlumne: $('#' + form + ' [name="idAlumne"]').val(), nomEstudis: $('#' + form + ' [name="nomGrau"]').val()};
+            $('#mcTitol').html("Confirmi l'eliminació.");
+            $('#mcText').html("<p>Els estudis <em>" + $('#' + form + ' [name="nomGrau"]').val() + "</em> s'eliminaran de la seva llista.</p>");
+
+            $('#bcDacord').on('click', function () {
+                $('#mdConfirm').modal('hide');
+                $('#mdEspera').modal('show');
+                $('#mEsperaTitol').html("Realitzant l'eliminació.");
+                $('#mdEspera').modal('show');
+            });
+
+            $('#mdEspera').on('shown.bs.modal', function (e) {
+                $.ajax({
+                    method: 'DELETE',
+                    url: "estudis/" + estudisElegits.idAlumne + "/" + estudisElegits.codiEstudis,
+                    data: estudisElegits
+                }).done(function () {
+                    $('#mrTitol').html('Eliminació correcta')
+                    $('#mrText').html("<p>Els estudis <em>" + estudisElegits.nomEstudis + "</em> s'han esborrat correctament.</p>");
+                    $('#bmDacord').on('click', function () {
+                        /* $("#bGuar" + contacte.idContacte).hide('fast');
+                         $("#bCan" + contacte.idContacte).hide('fast');
+                         $(".btn-primary").show('fast');
+                         $(".btn-danger").show('fast');
+                         */
+                        $('#mdResultat').modal('hide');
+                        location.reload();
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'eliminació');
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+            });
+
+            $('#mdConfirm').modal('show');
+
+        });
+        //bCancel
+        $('#bcCancelar').on('click', function () {
+            $('#mdConfirm').modal('hide');
+        });
+
+        //bEditar
+        $('form [name="bEditar"]').on('click', function (event) {
+            var ident = event.currentTarget.id.replace('bEd', '');
+            var form = 'f' + ident;
+            $("#" + form + " input").prop('disabled', false);
+            $("form .btn-primary").hide('fast');
+            $("form .btn-danger").hide('fast');
+            $("#bGuar" + ident).show('fast');
+            $("#bCan" + ident).show('fast');
+            $("#bAfegir").prop('disabled', 'disabled');
+        });
+
+        //Cancel·lar
+        $('form [name="bCancel"]').on('click', function (event) {
+            var ident = event.currentTarget.id.replace('bCan', '');
+            var form = 'f' + ident;
+            $("#" + form + " input").prop('disabled', 'disabled');
+            $("form .btn-primary").show('fast');
+            $("form .btn-danger").show('fast');
+            $("#bGuar" + ident).hide('fast');
+            $("#bCan" + ident).hide('fast');
+            $("#bAfegir").prop('disabled', false);
+            form.reset();
+        });
+
+        //Modificar
+        $('form').not('#nouEstudi').submit(function (event) {
+            event.preventDefault();
+            estudisElegits = {};
+            $.each($('#' + event.target.id + ' [name]'), function (i, obj) {
+                estudisElegits[obj.name] = obj.value;
+            });
+
+            $('#mEsperaTitol').html("Realitzant la modificació.");
+            $('#mdEspera').on('shown.bs.modal', function (e) {
+                $.ajax({
+                    method: 'PUT',
+                    url: "estudis/" + estudisElegits.idAlumne + "/" + estudisElegits.idGrau,
+                    data: estudisElegits
+                }).done(function () {
+                    $('#mrTitol').html('Modificació correcta')
+                    $('#mrText').html("<p>Les dades dels estudis  s'han modificat correctament.</p>");
+                    $('#bmDacord').on('click', function () {
+                        $("#bGuar" + estudisElegits.idGrau).hide('fast');
+                        $("#bCan" + estudisElegits.idGrau).hide('fast');
+                        $(".btn-primary").show('fast');
+                        $(".btn-danger").show('fast');
+                        $("#bAfegir").prop('disabled', false);
+                        $('#mdResultat').modal('hide');
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+            });
+
+            $('#mdEspera').modal('show');
+        });
+
+
+    });
+</script>

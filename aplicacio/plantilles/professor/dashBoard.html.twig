@@ -114,7 +114,7 @@
                             {% for empresa in empreses %}
                                 <div class="well click" id='emp{{ empresa.idEmpresa}}'>
                                     <p><label>Empresa: &nbsp;</label>{{ empresa.nom }}</p>
-                                    <p><label>Data de la sol·licitud: &nbsp;</label>{{ empresa.dataAlta }}</p>
+                                    <p><label>Data de la sol·licitud: &nbsp;</label>{{ empresa.dataAlta | date('d/m/Y') }}</p>
                                 </div>
                             {% endfor %}
                         {% endif %}

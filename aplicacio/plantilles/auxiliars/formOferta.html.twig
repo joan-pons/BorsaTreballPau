@@ -1,0 +1,180 @@
+<h2>Oferta</h2>
+
+<div class='well' id="cont5">
+    <form id="fOferta">
+        <input type="hidden" name="idEmpresa" value="{{empresa.idEmpresa}}">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Nom">idOferta:</label>
+                    <input type="text" class="form-control" id="idOferta" name="idOferta" readonly="readonly" value="{{oferta.idOferta}}">
+                </div>
+            </div><!--col-->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="Llinatges">&nbsp;</label>
+                    <div>
+                        <button class="btn btn-success" type="submit" id="bEditar">Guardar</button>
+                        <button class="btn btn-default" type="reset" id="bSuprimir">Cancel·lar</button>
+                    </div>
+                </div>
+            </div><!--col-->
+        </div><!--row-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group required">
+                    <label for="Titol" class='control-label'>Titol:</label>
+                    <input type="text" class="form-control" id="titol" name="titol" value="{{oferta.titol}}" required="required">
+                </div>
+            </div><!--col-->
+
+        </div><!--row-->
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="dPublicacio">Data de publicació:</label>
+                    <input type="date" class="form-control" id="dPublicacio" name="dPublicacio" readonly="readonly" title="S'assignarà automàticament en publicar l'oferta" data-toggle="tooltip" value="{{ oferta.dataPublicacio}}">
+                </div>
+            </div><!--col-->
+            <div class="col-md-6">
+                <div class="form-group required">
+                    <label for="dFinal" class='control-label'>Data finalització:</label>
+                    <input type="date" class="form-control" id="dFinal" name="dFinal" readonly="readonly" value="{{oferta.dataFinal}}" required="required">
+                </div>
+            </div><!--col-->
+        </div><!--row-->
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="tContracte">Tipus de contracte:</label>
+                    <input type="text" class="form-control" id="tContracte" name="tContracte" value="{{oferta.tipusContracte}}">
+                </div>
+            </div><!--col-->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="localitat">Localitat:</label>
+                    <input type="text" class="form-control" id="localitat" name="localitat" value="{{oferta.localitat}}">
+                </div>
+            </div><!--col-->
+        </div><!--row-->
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="horari">Horari:</label>
+                    <input type="text" class="form-control" id="horari" name="horari"  value="{{oferta.horari}}">
+                </div>
+            </div><!--col-->
+        </div><!--row-->
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="textOferta">Descripció de l'oferta:</label>
+                    <div id="textOferta">
+                        <h1>Programador junior</h1>
+                        <p>Necessitam incorporar de forma <strong>immediata</strong> tres programadors junior amb coneixements de Java</p>
+                        <p>Sou a negociar amb els interessats, mínim 12.000€</p>
+                    </div>
+                </div>
+            </div><!--col-->
+        </div>           
+    </form>
+</div><!--well-->
+
+{{include('auxiliars/modals.html.twig')}}
+
+<script src="../../js/dirtyForms.js"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#dFinal').removeAttr("readonly");
+        $('#textOferta').summernote({
+            height: 150,
+            placeholder: "Text de l'oferta"
+        });
+
+        $('#fOferta').on('submit', function (event) {
+            event.preventDefault();
+            var errors = "";
+            /*f ($("#nom").val().trim().length < 1) {
+             errors += "<p>El camp nom no pot ser buid.</p>";
+             }
+             if ($("#llinatges").val().trim().length < 1) {
+             errors += "<p>El camp Llinatges no pot ser buid.</p>";
+             }
+             if ($("#email").val().trim().length < 1) {
+             errors += "<p>El camp correu electrònic no pot ser buid.</p>";
+             }
+             */
+            if (errors === "") {
+                $('#mdEspera').modal('show');
+            } else {
+                $('#mrTitol').html("Atenció!")
+                $('#mrText').html(errors);
+                $('#mdResultat').modal('show');
+            }
+        });
+
+        $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+        $('#bmDacord').on('click', function () {
+            $('#mdResultat').modal('hide');
+        });
+        $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+        $('#mEsperaTitol').html('Realitzant les modificacions');
+        $('#mdEspera').on('shown.bs.modal', function (e) {
+            var oferta = {};
+            $.each($('#fOferta [name]'), function (i, obj) {
+                oferta[obj.name] = obj.value;
+            });
+            oferta.descripcio = 'Hola';//$('#textDescripcio').summernote('code');
+
+            alert(JSON.stringify(oferta));
+    {% if oferta is empty %}
+                $.ajax({
+                    method: 'POST',
+                    url: "afegirOferta",
+                    data: oferta
+                }).done(function (ofertaRebuda) {
+                    $('#mrTitol').html('Alta correcta')
+                    $('#mrText').html("<p>L'oferta s'ha donat d'alta correctament.</p>");
+                    $('#bmDacord').on('click', function () {
+                        window.location.href = "modificarOferta/" + ofertaRebuda.idOferta;
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'alta');
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+    {%else%}
+                $.ajax({
+                    method: 'PUT',
+                    url: "../modificarOferta/"+oferta.idOferta,
+                    data: oferta
+                }).done(function (ofertaRebuda) {
+                    $('#mrTitol').html('Modificació correcta')
+                    $('#mrText').html("<p>L'oferta s'ha modificat correctament.</p>");
+                    $('#bmDacord').on('click', function () {
+                        window.location.href = "../modificarOferta/" + ofertaRebuda.idOferta;
+                    });
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'alta');
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                }).always(function () {
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+    {%endif%}
+            });
+        });
+</script>

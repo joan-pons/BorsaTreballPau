@@ -9,8 +9,6 @@
 namespace Borsa;
 
 use \Illuminate\Database\Eloquent\Model as Model;
-use Borsa\Contacte as Contacte;
-use Borsa\DaoEmpresa as DaoEmpresa;
 
 /**
  * Description of Estudis
@@ -25,6 +23,10 @@ class Empresa extends Model {
 
     public function contactes() {
         return $this->hasMany('Borsa\Contacte', 'Empreses_idEmpresa', 'idEmpresa');
+    }
+
+    public function ofertes() {
+        return $this->hasMany('Borsa\Oferta', 'Empreses_idEmpresa', 'idEmpresa')->orderby('dataFinal','DES');
     }
 
 }

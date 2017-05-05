@@ -143,6 +143,7 @@
 
         });
     </script>
+<script src="../js/dirtyForms.js"></script>
 {% endblock %}
 
 {% block navegacio %}
@@ -160,7 +161,7 @@
 {% block contingut %}
 
     <h2>Contactes </h2>
-    {% if empresa.contactes(empresa) is empty %}
+    {% if empresa.contactes is empty %}
         <div class='well'>
             <p> L'empresa encara no té definida cap persona de contacte.</p>                 
         </div>

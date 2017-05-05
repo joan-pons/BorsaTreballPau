@@ -26,8 +26,8 @@
                         <div class="form-group">
                             <label for="Actiu">Estat:</label>
                             <div>
-                                <label class="radio-inline"><input type="radio" id="Actiu" name="actiu" value="true"  {% if objEmpresa.Activa==true %}checked="checked"{% endif %}> Activa</label>
-                                <label class="radio-inline"><input type="radio" id="Inactiu" name="actiu" value="false" {% if objEmpresa.Activa==false %}checked="checked"{% endif %}> Inactiva</label>
+                                <label class="radio-inline"><input type="radio" id="Actiu" name="actiu" value="true"  {% if objEmpresa.activa==true %}checked="checked"{% endif %}> Activa</label>
+                                <label class="radio-inline"><input type="radio" id="Inactiu" name="actiu" value="false" {% if objEmpresa.activa==false %}checked="checked"{% endif %}> Inactiva</label>
                             </div>
                         </div>
                     </div><!--col-->
@@ -88,3 +88,6 @@
 </div><!--well-->
 
  {{include('auxiliars/modals.html.twig')}}
+ 
+ 
+<script src="../../js/dirtyForms.js"></script>

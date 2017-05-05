@@ -29,11 +29,12 @@
                 $.each($('#formEmpresa [name]'), function (i, obj) {
                     empresa[obj.name] = obj.value;
                 });
+                empresa['actiu'] = $('#Actiu').is(':checked');
                 empresa.descripcio = $('#textDescripcio').summernote('code');
                 $.ajax({
-                    method:'PUT',
-                    url:"/empresa/modificarDades/"+empresa.idEmpresa,
-                    data:empresa
+                    method: 'PUT',
+                    url: "/empresa/modificarDades/" + empresa.idEmpresa,
+                    data: empresa
                 }).done(function () {
                     $('#mrTitol').html('Actualització correcte')
                     $('#mrText').html("<p>Les dades s'han modificat correctament.</p>");
@@ -42,7 +43,7 @@
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
-                    $('#mrText').html("<p>"+jqXHR.responseJSON.missatge+"</p>");
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
@@ -69,6 +70,8 @@
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
         <li class="active"><a href="#">Actualitzar dades</a></li>
+        <li><a href="canviarContrasenya" id="mActualitza">Canviar contrasenya</a></li>
+
     </ul>
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>

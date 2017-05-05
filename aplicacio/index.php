@@ -14,6 +14,7 @@ use Borsa\Idioma as Idioma;
 use Borsa\NivellIdioma as NivellIdioma;
 use Borsa\Alumne as Alumne;
 use Borsa\EstatLaboral as EstatLaboral;
+use Borsa\Oferta as Oferta;
 
 require 'vendor/autoload.php';
 
@@ -88,13 +89,22 @@ $container['mailer'] = function ($container) {
     $mailer->SMTPSecure = 'ssl';              // set blank for localhost
     $mailer->Port = 465;                           // 25 for local host
     $mailer->Username = 'joan.pons.institut@gmail.com';    // I set sender email in my mailer call
-    $mailer->Password = 'xxx';
+
+    require('password.php');
+
     $mailer->isHTML(true);
     $mailer->SMTPDebug = 2;
-    $mailer->FromName="Borsa de treball de l'IES Pau Casesnoves";
+    $mailer->FromName = "Borsa de treball de l'IES Pau Casesnoves";
     return new \Correu\Mailer($container->view, $mailer);
 };
 
+$container['notFoundHandler'] = function ($c) {
+    return function ($request, $response) use ($c) {
+        return $c['view']->render($response->withStatus(404), 'auxiliars/noTrobat.html.twig', [
+                    "myMagic" => "Let's roll"
+        ]);
+    };
+};
 // Index
 $app->get('/', function ($request, $response, $args) {
     return $this->view->render($response, 'index.html.twig');
@@ -229,6 +239,77 @@ $app->group('/empresa', function() {
         return DaoEmpresa::canviarContrasenya($request, $response, $args, $this);
     });
 
+    //Ofertes
+    $this->get('/ofertes', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        if ($usuari != null) {
+            $empresa = $usuari->getEntitat();
+            return $this->view->render($response, 'empresa/ofertes.html.twig', ['empresa' => $empresa]);
+        } else {
+            return $response->withJSON('Errada: ' . $_SESSION);
+        }
+    });
+
+    $this->get('/afegirOferta', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        if ($usuari != null) {
+            $empresa = $usuari->getEntitat();
+            return $this->view->render($response, 'empresa/ofertaAfegir.html.twig', ['empresa' => $empresa]);
+        } else {
+            return $response->withJSON('Errada: ' . $_SESSION);
+        }
+    });
+
+    $this->post('/afegirOferta', function(Request $request, Response $response, $args) {
+        return DaoEmpresa::altaOferta($request, $response, $this);
+    });
+
+
+    $this->get('/modificarOferta/{idOferta}', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        $oferta = Oferta::find($args['idOferta']);
+        if ($usuari != null && $oferta != null) {
+            $empresa = $usuari->getEntitat();
+            return $this->view->render($response, 'empresa/ofertaDades.html.twig', ['empresa' => $empresa, 'oferta' => $oferta]);
+        } else {
+            return $response->withJSON('Errada: ' . $_SESSION);
+        }
+    });
+
+    $this->put('/modificarOferta/{idOferta}', function(Request $request, Response $response, $args) {
+        return DaoEmpresa::modificarOferta($request, $response, $args, $this);
+    });
+
+    $this->get('/estudis', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        $oferta = Oferta::find($request->getQueryParam('idOferta'));
+        if ($usuari != null && $oferta != null) {
+            $empresa = $usuari->getEntitat();
+            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes", "labelLlista" => "que ha seleccionat", 'correcte'=>"L'oferta filtrarà els alumnes per aquests estudis.");
+            $estudis = Estudis::orderBy('nom', 'ASC')->get();
+            return $this->view->render($response, 'empresa/estudisOferta.html.twig', ['empresa' => $empresa, 'identificador' => $oferta->idOferta, 'entitat' => $oferta, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
+           // return $response->withJSON($oferta);
+        } else {
+            return $response->withJSON('Errada: ' . $_SESSION);
+        }
+    });
+
+    $this->post('/estudis', function($request, $response, $args) {
+        return DaoEmpresa::afegirEstudisOferta($request, $response, $this);
+    });
+
+    $this->delete('/estudis/{idOferta}/{codiEstudis}', function ($request, $response, $args) {
+        return DaoEmpresa::esborrarEstudis($request, $response, $args, $this);
+    });
+
+    $this->put('/estudis/{idOferta}/{codiEstudis}', function ($request, $response, $args) {
+        return DaoEmpresa::modificarEstudis($request, $response, $args, $this);
+    });
+
     $this->get('/{id}', function(Request $request, Response $response, $args) {
         $this->dbEloquent;
         return $response->withJSON(Empresa::find($args['id']));
@@ -298,9 +379,9 @@ $app->group('/alumne', function() {
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
             $alumne = $usuari->getEntitat();
-            $etiquetes = array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat");
+            $etiquetes = array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat", 'correcte'=>"A partir d'ara rebràs notificacions de les ofertes relacionades amb aquests estudis.");
             $estudis = Estudis::orderBy('nom', 'ASC')->get();
-            return $this->view->render($response, 'alumne/alumneEstudis.html.twig', ['alumne' => $alumne, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
+            return $this->view->render($response, 'alumne/alumneEstudis.html.twig', ['entitat' => $alumne, 'identificador'=>$alumne->idAlumne, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
         } else {
             return $response->withJSON('Errada: ', 500);
         }

@@ -1,0 +1,34 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Ofertes</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+    </script>
+{% endblock %}
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">{{empresa.nom}}</a>                    
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li><a href="ofertes"><span class="glyphicon glyphicon-list"></span> Ofertes</a></li>
+        <li ><a href="modificarOferta/{{entitat.idOferta}}">Actualitzar dades</a></li>
+        <li class='active'><a href='#'>Estudis</a></li>
+        <li><a href="idiomes">Idiomes</a></li>
+        <li><a href="estatLaboral">Situació laboral</a></li>
+        <li><a href="contactesOferta">Persones de contacte</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}
+{% block contingut %}
+    <p>Dades oferta: {{entitat.idOferta}} {{entitat.titol}}</p>
+    {{include('auxiliars/formEstudis.html.twig')}}
+{% endblock %}

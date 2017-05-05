@@ -1,0 +1,106 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Ofertes</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".btn-primary").click(function (event) {
+                var id=$(event.target).closest('form').attr('id').replace('of','');
+                window.location='modificarOferta/'+id;
+            });
+            
+        });
+    </script>
+{% endblock %}
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">{{empresa.nom}}</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#"><span class="glyphicon glyphicon-list"></span> Llista d'ofertes</a></li>
+        <li><a href="afegirOferta"><span class="glyphicon glyphicon-plus"></span> Afegir oferta
+            </a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}
+{% block contingut %}
+    <h2>Ofertes</h2>
+    {% for oferta in empresa.ofertes %}
+        <div class='well'>
+            <form id="of{{oferta.idOferta}}">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <p><label>idOferta:</label> {{oferta.idOferta}}</p>
+                            <p><label>Títol:</label> {{oferta.titol}}</p>
+                            <p><label>Data de publicació:</label> {{oferta.dataPublicacio}}</p>
+                            <p><label>Data finalització:</label> {{oferta.dataFinal | date('d / m / Y')}}</p>
+                            <p><label>Localitat:</label> {{oferta.localitat}}</p>
+                            <p><label>Tipus de contracte:</label> {{oferta.tipusContracte}}</p>
+                            <p><label>Horari:</label> {{oferta.horari}}</p>
+                        </div>
+                    </div><!--col-->
+                    <div class="col-md-4">
+                        <div class="form-group"{%if not oferta.dataPublicacio is empty %} data-toggle="tooltip" title="Les ofertes publicades no es poden modificar ni esborrar."{%endif%}>
+                            <label>&nbsp;</label>
+                            <div>
+                                <button {%if not oferta.dataPublicacio is empty %} disabled='disabled' {%endif%} type='button' class="btn btn-success" type="button">Publicar</button>
+                                <button {%if not oferta.dataPublicacio is empty %} disabled='disabled' {%endif%} type='button' class="btn btn-primary" type="button">Editar</button>
+                                <button {%if not oferta.dataPublicacio is empty %} disabled='disabled' {%endif%} type='button' class="btn btn-danger"  type="button">Suprimir</button>
+                            </div>
+                        </div>
+                    </div><!--col-->
+                </div><!--row-->
+             
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="textOferta">Estudis als que va dirigida:</label>
+                            <div >
+                                <p>Tècnic superiror en Desenvolupament d'aplicacions web</p>
+                                <p>Tècnic superiror en Desenvolupament d'aplicacions multiplataforma</p>
+                            </div>
+                        </div>
+                    </div><!--col-->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="textOferta">Idiomes requerits:</label>
+                            <div id="textOferta">
+                                <p>Català Molt bé</p>
+                                <p>Castellà: Molt bé</p>
+                                <p>Anglès: Regular</p>
+                            </div>
+                        </div>
+                    </div><!--col-->
+                </div> <!--row-->          
+
+
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="textOferta">Descripció de l'oferta:</label>
+                            <div id="textOferta" class="well">
+                                <h1>Programador junior</h1>
+                                <p>Necessitam incorporar de forma <strong>immediata</strong> tres programadors junior amb coneixements de Java</p>
+                                <p>Sou a negociar amb els interessats, mínim 12.000€</p>
+                            </div>
+                        </div>
+                    </div><!--col-->
+                </div>           
+            </form>
+        </div><!--well-->
+
+    {% endfor %}
+
+    {{include('auxiliars/modals.html.twig')}}
+{% endblock %}
