@@ -22,15 +22,15 @@
         <li><a href="../ofertes"><span class="glyphicon glyphicon-list"></span> Ofertes</a></li>
         <li class="active"><a href="#">Actualitzar dades</a></li>
         <li><a href="../estudis?idOferta={{oferta.idOferta}}">Estudis</a></li>
-        <li><a href="../idiomes">Idiomes</a></li>
-        <li><a href="../estatLaboral">Situació laboral</a></li>
-        <li><a href="../contactesOferta">Persones de contacte</a></li>
+        <li><a href="../idiomes?idOferta={{oferta.idOferta}}">Idiomes</a></li>
+        <li><a href="../estatLaboral?idOferta={{oferta.idOferta}}">Situació laboral</a></li>
+        <li><a href="../contactesOferta?idOferta={{oferta.idOferta}}">Persones de contacte</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
 {% endblock %}
 {% block contingut %}
-
+    <h4>Dades oferta: Codi: {{oferta.idOferta}} Titol: {{oferta.titol}}</h4>
     {{include('auxiliars/formOferta.html.twig')}}
 {% endblock %}

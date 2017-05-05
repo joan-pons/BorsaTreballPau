@@ -37,6 +37,6 @@ class Alumne extends Model {
     }
     
     public function idiomes() {
-        return $this->belongsToMany('Borsa\Idioma', 'Alumne_has_Idiomes', 'Alumne_idAlu', 'Idiomes_idIdiomes')->withPivot('NIvellsIdioma_idNIvellsIdioma');
+        return $this->belongsToMany('Borsa\Idioma', 'Alumne_has_Idiomes', 'Alumne_idAlu', 'Idiomes_idIdiomes')->withPivot('NivellsIdioma_idNivellIdioma');
     }
 }

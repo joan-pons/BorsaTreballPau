@@ -345,8 +345,7 @@ class DaoEmpresa extends Dao {
             return $response->withJson($missatge, 422);
         }
     }
-    
-    
+
     public function modificarEstudis(Request $request, Response $response, $args, \Slim\Container $container) {
         try {
             $container->dbEloquent;
@@ -370,6 +369,42 @@ class DaoEmpresa extends Dao {
                     break;
                 default:
                     $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la llista de l'oferta.");
+                    break;
+            }
+            return $response->withJson($missatge, 422);
+        }
+    }
+
+    public function modificarIdiomes(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+            $data = $request->getParsedBody();
+            $oferta = Oferta::find($args['idOferta']);
+            if ($oferta != null) {
+//                $codiEstudis = filter_var($args['codiEstudis'], FILTER_SANITIZE_STRING);
+//                $alumne->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);
+                $rebudes = $data['nivells'];
+                $dades = array();
+                foreach ($rebudes as $nivell) {
+
+                    $dades[$nivell['idIdioma']] = array('NivellsIdioma_idNivellIdioma' => $nivell['NivellsIdioma_idNivellIdioma']);
+                }
+                $oferta->idiomes()->sync($dades);
+                return $response->withJSON($dades);
+            } else {
+                $missatge = array("missatge" => "No s'ha trobat l'oferta que es vol modificar.");
+                return $response->withJson($missatge, 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            switch ($ex->getCode()) {
+                case 23000:
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja tens registrats els estudis que vols afegir.", 'info'=>$ex->getcode().' '.$ex->getMessage());
+                    break;
+                case 'HY000':
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
+                    break;
+                default:
+                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la llista de l'oferta.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);

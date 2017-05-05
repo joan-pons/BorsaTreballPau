@@ -25,4 +25,7 @@ class Oferta extends Model {
         return $this->belongsToMany('Borsa\Estudis', 'Ofertes_has_Estudis', 'Ofertes_idOferta', 'Estudis_codi')->withPivot(['any','nota']);
     }
 
+     public function idiomes() {
+        return $this->belongsToMany('Borsa\Idioma', 'Ofertes_has_Idiomes', 'Ofertes_idOferta', 'Idiomes_idIdioma')->withPivot('NivellsIdioma_idNivellIdioma');
+    }
 }

@@ -59,7 +59,7 @@ class DaoAlumne extends Dao {
             $alumne = Alumne::find($data['identificador']);
             if ($alumne != null) {
                 $codiEstudis = filter_var($data['codiEstudis'], FILTER_SANITIZE_STRING);
-              //  $alumne->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);
+                //  $alumne->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);
                 $alumne->estudis()->attach($codiEstudis, array('any' => $data['any'], 'nota' => $data['nota']));
                 return $response->withJSON($alumne);
             } else {
@@ -110,7 +110,6 @@ class DaoAlumne extends Dao {
         }
     }
 
-
     public function modificarEstudis(Request $request, Response $response, $args, \Slim\Container $container) {
         try {
             $container->dbEloquent;
@@ -140,7 +139,7 @@ class DaoAlumne extends Dao {
         }
     }
 
-public function modificarIdiomes(Request $request, Response $response, $args, \Slim\Container $container) {
+    public function modificarIdiomes(Request $request, Response $response, $args, \Slim\Container $container) {
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();
@@ -148,12 +147,11 @@ public function modificarIdiomes(Request $request, Response $response, $args, \S
             if ($alumne != null) {
 //                $codiEstudis = filter_var($args['codiEstudis'], FILTER_SANITIZE_STRING);
 //                $alumne->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);
-                $rebudes=$data['nivells'];
-                $dades=array();
-                foreach($rebudes as $nivell){
-                   
-                    $dades[$nivell['idIdioma']]=array('NIvellsIdioma_idNIvellsIdioma'=>$nivell['NIvellsIdioma_idNIvellsIdioma']);
-                   
+                $rebudes = $data['nivells'];
+                $dades = array();
+                foreach ($rebudes as $nivell) {
+
+                    $dades[$nivell['idIdioma']] = array('NivellsIdioma_idNivellIdioma' => $nivell['NivellsIdioma_idNivellIdioma']);
                 }
                 $alumne->idiomes()->sync($dades);
                 return $response->withJSON($dades);
@@ -164,20 +162,20 @@ public function modificarIdiomes(Request $request, Response $response, $args, \S
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja tens registrats els estudis que vols afegir.");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja tens registrats els estudis que vols afegir.", 'info'=>$ex->getCode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getCode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la teva llista.");
+                    $missatge = array("missatge" => "Els idiomes no s'han pogut modificar correctament a la teva llista.", 'info'=>$ex->getCode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);
         }
     }
 
-public function modificarEstatLaboral(Request $request, Response $response, $args, \Slim\Container $container) {
+    public function modificarEstatLaboral(Request $request, Response $response, $args, \Slim\Container $container) {
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();
@@ -185,12 +183,11 @@ public function modificarEstatLaboral(Request $request, Response $response, $arg
             if ($alumne != null) {
 //                $codiEstudis = filter_var($args['codiEstudis'], FILTER_SANITIZE_STRING);
 //                $alumne->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);
-                $rebudes=$data['estats'];
-                $dades=array();
-                foreach($rebudes as $estat){
-                   
+                $rebudes = $data['estats'];
+                $dades = array();
+                foreach ($rebudes as $estat) {
+
                     array_push($dades, $estat);
-                   
                 }
                 $alumne->estatsLaborals()->sync($dades);
                 return $response->withJSON($dades);
@@ -213,4 +210,5 @@ public function modificarEstatLaboral(Request $request, Response $response, $arg
             return $response->withJson($missatge, 422);
         }
     }
+
 }

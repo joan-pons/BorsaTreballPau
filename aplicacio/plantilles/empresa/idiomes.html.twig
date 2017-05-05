@@ -1,33 +1,44 @@
 {% extends "auxiliars/base.html.twig" %}
 
 {% block head %}
-    <title>Borsa de treball: Ofertes</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Borsa de treball: Estudis {{ etiquetes.nom }}</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/borsa.css">
-    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
+
     <script>
     </script>
+
+
 {% endblock %}
+
 {% block navegacio %}
-    <a class="navbar-brand" href="dashBoard">{{empresa.nom}}</a>                    
+    <a class="navbar-brand" href="dashBoard">{{ etiquetes.nom }}</a>
 </div>
+
 <div class="collapse navbar-collapse" id="myNavbar">
     <ul class="nav navbar-nav">
         <li><a href="ofertes"><span class="glyphicon glyphicon-list"></span> Ofertes</a></li>
         <li><a href="modificarOferta/{{identificador}}">Actualitzar dades</a></li>
-        <li class="active"><a href="#">Estudis</a></li>
-        <li><a href="idiomes?idOferta={{identificador}}">Idiomes</a></li>
+        <li><a href="estudis?idOferta={{identificador}}">Estudis</a></li>
+        <li class="active"><a href="#">Idiomes</a></li>
         <li><a href="estatLaboral?idOferta={{identificador}}">Situació laboral</a></li>
         <li><a href="contactesOferta?idOferta={{identificador}}">Persones de contacte</a></li>
+        <!--<li><a href="formacio">Altra formació</a></li>-->
     </ul>
     <ul class="nav navbar-nav navbar-right ">
         <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
-{% endblock %}
+{% endblock %}                     
+
 {% block contingut %}
-    {{include('auxiliars/formEstudis.html.twig')}}
-{% endblock %}
+
+    {{include('auxiliars/formIdiomes.html.twig')}}
+
+{% endblock %}  
+
+
+
+

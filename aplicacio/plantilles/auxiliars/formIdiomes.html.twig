@@ -7,7 +7,7 @@
                 {%set skill=0 %}
                 {% for llengua in actor.idiomes %}
                     {% if idioma.idIdioma==llengua.idIdioma %}
-                        {% set skill=llengua.pivot.NIvellsIdioma_idNIvellsIdioma %}
+                        {% set skill=llengua.pivot.NivellsIdioma_idNivellIdioma %}
                     {%endif%}
                 {% endfor %}
                 <div class="well">
@@ -40,7 +40,7 @@
     {% for idioma in idiomes %}
             if (typeof $('input[name="l{{idioma.idIdioma}}"]') !== "undefined" && $('input[name="l{{idioma.idIdioma}}"]:checked').val() > 1) {
                 // alert('{{idioma.idioma}} ' + $('input[name="l{{idioma.idIdioma}}"]:checked').val());
-                resultat.nivells.push({idIdioma: '{{idioma.idIdioma}}', NIvellsIdioma_idNIvellsIdioma: $('input[name="l{{idioma.idIdioma}}"]:checked').val()});
+                resultat.nivells.push({idIdioma: '{{idioma.idIdioma}}', NivellsIdioma_idNivellIdioma: $('input[name="l{{idioma.idIdioma}}"]:checked').val()});
             }
     {% endfor %}
 
@@ -55,7 +55,11 @@
                     $('#mrTitol').html('Modificació correcta')
                     $('#mrText').html("<p>Els idiomes s'han modificat correctament.</p>");
                     $('#bmDacord').on('click', function () {
+    {%if actor.idOferta is empty %}
                         window.location = "dashBoard";
+                        {%else%}
+                            window.location='idiomes?idOferta={{actor.idOferta}}';
+    {%endif%}
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')

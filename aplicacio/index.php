@@ -289,7 +289,7 @@ $app->group('/empresa', function() {
         $oferta = Oferta::find($request->getQueryParam('idOferta'));
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
-            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes", "labelLlista" => "que ha seleccionat", 'correcte'=>"L'oferta filtrarà els alumnes per aquests estudis.");
+            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes per a l'oferta ".$oferta->idOferta.' '.$oferta->titol, "labelLlista" => "que ha seleccionat", 'correcte'=>"L'oferta filtrarà els alumnes per aquests estudis.");
             $estudis = Estudis::orderBy('nom', 'ASC')->get();
             return $this->view->render($response, 'empresa/estudisOferta.html.twig', ['empresa' => $empresa, 'identificador' => $oferta->idOferta, 'entitat' => $oferta, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
            // return $response->withJSON($oferta);
@@ -310,10 +310,32 @@ $app->group('/empresa', function() {
         return DaoEmpresa::modificarEstudis($request, $response, $args, $this);
     });
 
+     $this->get('/idiomes', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        $oferta = Oferta::find($request->getQueryParam('idOferta'));
+        if ($usuari != null && $oferta != null) {
+            $empresa = $usuari->getEntitat();
+            $etiquetes = array("nom" =>$empresa->nom, "labelLlista" => "demanats, nivell mínim");
+            $idiomes = Idioma::orderBy('idioma', 'ASC')->get();
+            $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
+            return $this->view->render($response, 'empresa/idiomes.html.twig', ['actor' => $oferta, 'identificador' => $oferta->idOferta,'etiquetes' => $etiquetes, 'idiomes' => $idiomes, 'nivellsIdioma' => $nivellsIdioma]);
+         //   return $response->withJSON($oferta->idiomes);
+        } else {
+            return $response->withJSON('Errada: ', 500);
+        }
+    });
+    
+    $this->put('/idiomes/{idOferta}', function ($request, $response, $args) {
+        return DaoEmpresa::modificarIdiomes($request, $response, $args, $this);
+    });
+    
     $this->get('/{id}', function(Request $request, Response $response, $args) {
         $this->dbEloquent;
         return $response->withJSON(Empresa::find($args['id']));
     });
+    
+    
 })->add(function ($request, $response, $next) {
     if (in_array(20, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
