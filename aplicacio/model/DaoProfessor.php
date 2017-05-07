@@ -28,13 +28,13 @@ class DaoProfessor extends Dao {
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat.");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "Les dades del professor no s'han pogut modificar correctament.");
+                    $missatge = array("missatge" => "Les dades del professor no s'han pogut modificar correctament.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);
@@ -60,13 +60,13 @@ class DaoProfessor extends Dao {
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat.");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "Les dades del professor no s'han pogut modificar correctament.");
+                    $missatge = array("missatge" => "Les dades del professor no s'han pogut modificar correctament.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);
@@ -90,13 +90,13 @@ class DaoProfessor extends Dao {
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja és responsable dels estudis que vol afegir.");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja és responsable dels estudis que vol afegir.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la seva llista.");
+                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la seva llista.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);
@@ -118,13 +118,13 @@ class DaoProfessor extends Dao {
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "El contacte no s'ha pogut eliminar, possiblement per tenir ofertes associades.");
+                    $missatge = array("missatge" => "El contacte no s'ha pogut eliminar, possiblement per tenir ofertes associades.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);
@@ -148,13 +148,13 @@ class DaoProfessor extends Dao {
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "El professor no s'ha pogut modificar.");
+                    $missatge = array("missatge" => "El professor no s'ha pogut modificar.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);
@@ -175,13 +175,13 @@ class DaoProfessor extends Dao {
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat per un altre contacte.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "El professor no s'ha pogut modificar.");
+                    $missatge = array("missatge" => "El professor no s'ha pogut modificar.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);
@@ -206,13 +206,13 @@ class DaoProfessor extends Dao {
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja és administrador");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja és administrador", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la seva llista.");
+                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la seva llista.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);
@@ -238,13 +238,13 @@ class DaoProfessor extends Dao {
         } catch (\Illuminate\Database\QueryException $ex) {
             switch ($ex->getCode()) {
                 case 23000:
-                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja és administrador");
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que ja és administrador", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 case 'HY000':
-                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.");
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la seva llista.");
+                    $missatge = array("missatge" => "Els estudis no s'han pogut afegir correctament a la seva llista.", 'info'=>$ex->getcode().' '.$ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);

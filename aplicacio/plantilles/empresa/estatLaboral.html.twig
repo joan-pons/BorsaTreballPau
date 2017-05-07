@@ -1,0 +1,44 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Estat laboral {{ empresa.nom }}</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+    <script>
+    </script>
+
+
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">{{ empresa.nom }}</a>
+</div>
+
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li><a href="ofertes"><span class="glyphicon glyphicon-list"></span> Ofertes</a></li>
+        <li><a href="modificarOferta/{{identificador}}">Actualitzar dades</a></li>
+        <li><a href="estudis?idOferta={{identificador}}">Estudis</a></li>
+        <li><a href="idiomes?idOferta={{identificador}}">Idiomes</a></li>
+        <li class="active"><a href="#">Situació laboral</a></li>
+        <li><a href="contactesOferta?idOferta={{identificador}}">Persones de contacte</a></li>
+        <!--<li><a href="formacio">Altra formació</a></li>-->
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}                     
+
+{% block contingut %}
+
+    {{include('auxiliars/formEstatLaboral.html.twig')}}
+
+{% endblock %}  
+
+
+
+

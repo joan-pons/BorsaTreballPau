@@ -51,7 +51,11 @@
                     $('#mrTitol').html('Modificació correcta')
                     $('#mrText').html("<p>La situació laboral s'ha modificat correctament.</p>");
                     $('#bmDacord').on('click', function () {
+    {%if actor.idOferta is empty %}
                         window.location = "dashBoard";
+                        {%else%}
+                            window.location='estatLaboral?idOferta={{actor.idOferta}}';
+    {%endif%}
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')

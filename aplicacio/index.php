@@ -239,7 +239,7 @@ $app->group('/empresa', function() {
         return DaoEmpresa::canviarContrasenya($request, $response, $args, $this);
     });
 
-    //Ofertes
+//Ofertes
     $this->get('/ofertes', function(Request $request, Response $response, $args) {
         $this->dbEloquent;
         $usuari = Usuari::find($_SESSION["idUsuari"]);
@@ -289,10 +289,10 @@ $app->group('/empresa', function() {
         $oferta = Oferta::find($request->getQueryParam('idOferta'));
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
-            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes per a l'oferta ".$oferta->idOferta.' '.$oferta->titol, "labelLlista" => "que ha seleccionat", 'correcte'=>"L'oferta filtrarà els alumnes per aquests estudis.");
+            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes per a l'oferta " . $oferta->idOferta . ' ' . $oferta->titol, "labelLlista" => "que ha seleccionat", 'correcte' => "L'oferta filtrarà els alumnes per aquests estudis.");
             $estudis = Estudis::orderBy('nom', 'ASC')->get();
             return $this->view->render($response, 'empresa/estudisOferta.html.twig', ['empresa' => $empresa, 'identificador' => $oferta->idOferta, 'entitat' => $oferta, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
-           // return $response->withJSON($oferta);
+// return $response->withJSON($oferta);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
@@ -310,32 +310,73 @@ $app->group('/empresa', function() {
         return DaoEmpresa::modificarEstudis($request, $response, $args, $this);
     });
 
-     $this->get('/idiomes', function ($request, $response, $args) {
+    $this->get('/idiomes', function ($request, $response, $args) {
         $this->dbEloquent;
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         $oferta = Oferta::find($request->getQueryParam('idOferta'));
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
-            $etiquetes = array("nom" =>$empresa->nom, "labelLlista" => "demanats, nivell mínim");
+            $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "demanats, nivell mínim");
             $idiomes = Idioma::orderBy('idioma', 'ASC')->get();
             $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
-            return $this->view->render($response, 'empresa/idiomes.html.twig', ['actor' => $oferta, 'identificador' => $oferta->idOferta,'etiquetes' => $etiquetes, 'idiomes' => $idiomes, 'nivellsIdioma' => $nivellsIdioma]);
-         //   return $response->withJSON($oferta->idiomes);
+            return $this->view->render($response, 'empresa/idiomes.html.twig', ['actor' => $oferta, 'identificador' => $oferta->idOferta, 'etiquetes' => $etiquetes, 'idiomes' => $idiomes, 'nivellsIdioma' => $nivellsIdioma]);
+//   return $response->withJSON($oferta->idiomes);
         } else {
             return $response->withJSON('Errada: ', 500);
         }
     });
-    
+
     $this->put('/idiomes/{idOferta}', function ($request, $response, $args) {
         return DaoEmpresa::modificarIdiomes($request, $response, $args, $this);
     });
-    
+
+    $this->get('/estatLaboral', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        $oferta = Oferta::find($request->getQueryParam('idOferta'));
+        if ($usuari != null && $oferta != null) {
+            $empresa = $usuari->getEntitat();
+            $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "en els que vol que es trobin els candidats");
+            $estats = EstatLaboral::orderBy('nomEstatLaboral', 'ASC')->get();
+            return $this->view->render($response, 'empresa/estatLaboral.html.twig', ['empresa' => $empresa, 'actor' => $oferta, 'identificador' => $oferta->idOferta, 'etiquetes' => $etiquetes, 'estats' => $estats]);
+            //return $response->withJSON($oferta->estatsLaborals);
+        } else {
+            return $response->withJSON('Errada: ', 500);
+        }
+    });
+
+    $this->put('/estatLaboral/{idOferta}', function ($request, $response, $args) {
+        return DaoEmpresa::modificarEstatLaboral($request, $response, $args, $this);
+    });
+
+
+    $this->get('/contactesOferta', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        $oferta = Oferta::find($request->getQueryParam('idOferta'));
+        if ($usuari != null && $oferta != null) {
+            $empresa = $usuari->getEntitat();
+            $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "en els que vol que es trobin els candidats");
+            return $this->view->render($response, 'empresa/contactesOferta.html.twig', ['empresa' => $empresa, 'oferta' => $oferta, 'etiquetes' => $etiquetes]);
+            //return $response->withJSON($oferta->estatsLaborals);
+        } else {
+            return $response->withJSON('Errada: ', 500);
+        }
+    });
+    $this->post('/contactesOferta', function($request, $response, $args) {
+        return DaoEmpresa::afegirContOf($request, $response, $this);
+        
+    });
+
+    $this->delete('/contactesOferta/{idOferta}/{idContacte}', function ($request, $response, $args) {
+        return DaoEmpresa::esborrarContacteOferta($request, $response, $args, $this);
+    });
+
+
     $this->get('/{id}', function(Request $request, Response $response, $args) {
         $this->dbEloquent;
         return $response->withJSON(Empresa::find($args['id']));
     });
-    
-    
 })->add(function ($request, $response, $next) {
     if (in_array(20, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
@@ -401,9 +442,9 @@ $app->group('/alumne', function() {
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
             $alumne = $usuari->getEntitat();
-            $etiquetes = array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat", 'correcte'=>"A partir d'ara rebràs notificacions de les ofertes relacionades amb aquests estudis.");
+            $etiquetes = array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat", 'correcte' => "A partir d'ara rebràs notificacions de les ofertes relacionades amb aquests estudis.");
             $estudis = Estudis::orderBy('nom', 'ASC')->get();
-            return $this->view->render($response, 'alumne/alumneEstudis.html.twig', ['entitat' => $alumne, 'identificador'=>$alumne->idAlumne, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
+            return $this->view->render($response, 'alumne/alumneEstudis.html.twig', ['entitat' => $alumne, 'identificador' => $alumne->idAlumne, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
         } else {
             return $response->withJSON('Errada: ', 500);
         }
