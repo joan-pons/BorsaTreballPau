@@ -365,13 +365,35 @@ $app->group('/empresa', function() {
     });
     $this->post('/contactesOferta', function($request, $response, $args) {
         return DaoEmpresa::afegirContOf($request, $response, $this);
-        
     });
 
     $this->delete('/contactesOferta/{idOferta}/{idContacte}', function ($request, $response, $args) {
         return DaoEmpresa::esborrarContacteOferta($request, $response, $args, $this);
     });
 
+
+    $this->delete('/oferta/{idOferta}', function ($request, $response, $args) {
+        return DaoEmpresa::esborrarOferta($request, $response, $args, $this);
+    });
+
+    $this->get('/ofertaCompleta/{idOferta}', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        $oferta = Oferta::find($args['idOferta']);
+        if ($usuari != null && $oferta != null) {
+            $empresa = $usuari->getEntitat();
+            $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
+            $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "en els que vol que es trobin els candidats");
+            return $this->view->render($response, 'auxiliars/ofertaCompleta.html.twig', ['empresa' => $empresa, 'oferta' => $oferta, 'etiquetes' => $etiquetes, 'nivells' => $nivellsIdioma]);
+            //return $response->withJSON($oferta->estatsLaborals);
+        } else {
+            return $response->withJSON('Errada: ', 500);
+        }
+    });
+
+    $this->put('/publicarOferta/{idOferta}', function ($request, $response, $args) {
+        return DaoEmpresa::publicarOferta($request, $response, $args, $this);
+    });
 
     $this->get('/{id}', function(Request $request, Response $response, $args) {
         $this->dbEloquent;
@@ -552,14 +574,22 @@ $app->group('/professor', function() {
         $this->dbEloquent;
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
-            $prof = $usuari->getEntitat();
+            $professor = $usuari->getEntitat();
+            $ofertes = array();
+            foreach ($professor->estudis as $estudis) {
+                foreach ($estudis->ofertes as $oferta) {
+                    if ($oferta->dataPublicacio != null) {
+                        $ofertes[$oferta->idOferta] = $oferta;
+                    }
+                }
+            }
             $empreses = null;
             $companys = null;
             if ($usuari->teRol(40)) {
                 $empreses = Empresa::where('Validada', 0)->orderBy('DataAlta', 'ASC')->orderBy('Nom', 'ASC')->get();
                 $companys = Professor::where('Validat', 0)->orderBy('Email', 'ASC')->get();
             }
-            return $this->view->render($response, 'professor/dashBoard.html.twig', ['professor' => $prof, 'usuari' => $usuari, 'empreses' => $empreses, 'companys' => $companys]);
+            return $this->view->render($response, 'professor/dashBoard.html.twig', ['professor' => $professor, 'usuari' => $usuari, 'empreses' => $empreses, 'companys' => $companys, 'ofertes' => $ofertes]);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
@@ -617,22 +647,73 @@ $app->group('/professor', function() {
         return DaoProfessor::esborrarEstudis($request, $response, $args, $this);
     });
 
-    $this->get('/{id}', function(Request $request, Response $response, $args) {
-        $this->dbEloquent;
-        return $response->withJSON(Professor::find($args['id']));
-    });
-
     $this->get('/estudisProfessor/{id}', function(Request $request, Response $response, $args) {
         $this->dbEloquent;
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
             $prof = $usuari->getEntitat();
             $estudis = $prof->estudis;
-            return $response->withJSON(estudis);
+            return $response->withJSON($estudis);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
     });
+
+
+    $this->get('/ofertes', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        if ($usuari != null) {
+            $professor = $usuari->getEntitat();
+            $etiquetes = array("subtitol" => "dels que haurà de validar ofertes", "labelLlista" => "dels que és responsable");
+            $ofertes = array();
+            foreach ($professor->estudis as $estudis) {
+                foreach ($estudis->ofertes as $oferta) {
+                    if ($oferta->dataPublicacio != null) {
+                        $ofertes[$oferta->idOferta] = $oferta;
+                    }
+                }
+            }
+            return $this->view->render($response, 'professor/ofertesPendents.html.twig', ['professor' => $professor, "etiquetes" => $etiquetes, 'ofertes' => $ofertes]);
+        } else {
+            return $response->withJSON('Errada: ' . $_SESSION);
+        }
+    });
+
+    $this->put('/publicarOferta/{idOferta}', function ($request, $response, $args) {
+        return DaoProfessor::publicarOferta($request, $response, $args, $this);
+    });
+
+    $this->get('/{id}', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        return $response->withJSON(Professor::find($args['id']));
+    });
+
+//    $this->get('/ofertesProfessor/{idUsuari}', function(Request $request, Response $response, $args) {
+//        $this->dbEloquent;
+//        $usuari = Usuari::find($_SESSION["idUsuari"]);
+//        if ($usuari != null) {
+//            $professor = $usuari->getEntitat();
+//            $ofertes = array();
+//            foreach ($professor->estudis as $estudis) {
+//                foreach ($estudis->ofertes as $oferta) {
+//                    $ofertes[$oferta->idOferta] = $oferta;
+//                }
+//            }
+//        } else {
+//            return $response->withJSON('Errada: ' . $_SESSION);
+//        }
+//    });
+//
+//    $this->get('/ofertesEstudis/{codi}', function(Request $request, Response $response, $args) {
+//        $this->dbEloquent;
+//        $estudis = Estudis::find($args["codi"]);
+//        if ($estudis != null) {
+//            return $response->withJSON(array('estudis'=>$estudis,'Professors'=>$estudis->professors,'Ofertes'=>$estudis->ofertes));
+//        } else {
+//            return $response->withJSON('Errada: ' . $_SESSION);
+//        }
+//    });
 })->add(function ($request, $response, $next) {
     if (in_array(10, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);

@@ -10,9 +10,102 @@
 
     <script>
         $(document).ready(function () {
-            $(".btn-primary").click(function (event) {
+            $(".btn-info").click(function (event) {
                 var id = $(event.target).closest('form').attr('id').replace('of', '');
                 window.location = 'modificarOferta/' + id;
+            });
+
+            //bEsborrar
+            $(".btn-danger").click(function (event) {
+                var id = $(event.target).closest('form').attr('id').replace('of', '');
+                $('#mEsperaTitol').html('Esborrant l\'oferta');
+                var val = event.currentTarget.id.replace('b', '')
+                $('#mdEspera').on('shown.bs.modal', function (e) {
+                    $.ajax({
+                        method: 'DELETE',
+                        url: "oferta/" + id
+                    }).done(function () {
+                        $('#mrTitol').html('Eliminació correcte')
+                        $('#mrText').html("<p>Oferta eliminada correctament de la llista.</p>");
+                        $('#bmDacord').on('click', function () {
+                            window.location.href = "ofertes";
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'eliminació');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
+                    });
+                });
+                $('#mcTitol').html("Confirmi l'eliminació.");
+                $('#mcText').html("<p>L'oferta s'eliminarà de la seva llista.</p>");
+
+                $('#bcDacord').on('click', function () {
+                    $('#mdConfirm').modal('hide');
+                    $('#mdEspera').modal('show');
+                    $('#mEsperaTitol').html("Realitzant l'eliminació.");
+                    $('#mdEspera').modal('show');
+                });
+                $('#mdConfirm').modal('show');
+            });
+
+            //bPublicar
+            $(".btn-success").click(function (event) {
+                var id = $(event.target).closest('form').attr('id').replace('of', '');
+                $('#mEsperaTitol').html('Publicant l\'oferta');
+                var val = event.currentTarget.id.replace('b', '')
+                $('#mdEspera').on('shown.bs.modal', function (e) {
+                    $.ajax({
+                        method: 'PUT',
+                        url: "publicarOferta/" + id
+                    }).done(function () {
+                        $('#mrTitol').html('Publicació correcte')
+                        $('#mrText').html("<p>L'oferta s'ha publicat correctament.</p><p>Ara un professor l'ha de validar i en fer-ho, s'enviarà als alumnes seleccionats.</p>");
+                        $('#bmDacord').on('click', function () {
+                            window.location.href = "ofertes";
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'eliminació');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
+                    });
+                });
+                $('#mcTitol').html("Confirmi la publicació.");
+                $('#mcText').html("");
+
+                $.ajax({
+                    method: 'GET',
+                    url: "ofertaCompleta/" + id
+                }).done(function (text) {
+                    $('#mcText').html(text);
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mdConfirm').modal('hide');
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la publicació');
+                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                });
+
+                $('#bcDacord').on('click', function () {
+                    $('#mdConfirm').modal('hide');
+                    $('#mEsperaTitol').html("Publicant l'oferta.");
+                    $('#mdEspera').modal('show');
+                });
+                $('#mdConfirm').modal('show');
+            });
+
+            $('#bcCancelar').on('click', function () {
+                $('#mdConfirm').modal('hide');
             });
 
         });
@@ -52,8 +145,8 @@
                         <div class="form-group"{%if not oferta.dataPublicacio is empty %} data-toggle="tooltip" title="Les ofertes publicades no es poden modificar ni esborrar."{%endif%}>
                             <label>&nbsp;</label>
                             <div>
-                                <button {%if not oferta.dataPublicacio is empty %} disabled='disabled' {%endif%} type='button' class="btn btn-success" type="button">Publicar</button>
-                                <button {%if not oferta.dataPublicacio is empty %} disabled='disabled' {%endif%} type='button' class="btn btn-primary" type="button">Editar</button>
+                                <button {%if not oferta.dataPublicacio is empty or oferta.estudis is empty %} disabled='disabled' {%endif%} type='button' class="btn btn-success" type="button" {%if  oferta.estudis is empty %} data-toggle="tooltip" title="Per poder publicar una oferta ha de tenir associat al manco uns estudis."{%endif%}>Publicar</button>
+                                <button {%if not oferta.dataPublicacio is empty %} disabled='disabled' {%endif%} type='button' class="btn btn-info" type="button">Editar</button>
                                 <button {%if not oferta.dataPublicacio is empty %} disabled='disabled' {%endif%} type='button' class="btn btn-danger"  type="button">Suprimir</button>
                             </div>
                         </div>
@@ -63,7 +156,7 @@
 
                 <div class="row">
                     {% if not oferta.estudis is empty %}
-                        <div class="col-md-3">
+                        <div class="col-md-5">
                             <div class="form-group">
                                 <label for="textOferta">Estudis als que va dirigida:</label>
                                 <div >
@@ -76,18 +169,48 @@
                             </div>
                         </div><!--col-->
                     {%endif%}
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="textOferta">Idiomes requerits:</label>
-                            <div id="textOferta">
-                                <p>Català Molt bé</p>
-                                <p>Castellà: Molt bé</p>
-                                <p>Anglès: Regular</p>
+                    {% if not oferta.idiomes is empty %}
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="textOferta">Idiomes requerits:</label>
+                                <div id="textOferta">
+                                    <ul>
+                                        {%for idioma in oferta.idiomes %}
+                                            <li><p>{{idioma.idioma}}</p></li>
+                                                {%endfor%}
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div><!--col-->
-                </div> <!--row-->          
-
+                        </div><!--col-->
+                    {%endif%}
+                    {% if not oferta.estatsLaborals is empty %}
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="textOferta">Situació laboral:</label>
+                                <div id="textOferta">
+                                    <ul>
+                                        {%for estat in oferta.estatsLaborals %}
+                                            <li><p>{{estat.nomEstatLaboral}}</p></li>
+                                                {%endfor%}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    {%endif%}
+                    {% if not oferta.contactes is empty %}
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label for="textOferta">Contactes a l'empresa:</label>
+                                <div id="textOferta">
+                                    <ul>
+                                        {%for contacte in oferta.contactes %}
+                                            <li><p>{{contacte.nom}} {{contacte.llinatges}}</p><p>{{contacte.email}}</p></li>
+                                            {%endfor%}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><!--col-->
+                    {%endif%}                </div> <!--row-->          
 
 
                 <div class="row">

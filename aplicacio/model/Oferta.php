@@ -36,4 +36,8 @@ class Oferta extends Model {
     public function contactes(){
         return $this->belongsToMany("Borsa\Contacte", 'Ofertes_has_Contactes', 'Ofertes_idOferta', 'Contactes_idContacte');
     }
+    
+    public function empresa(){
+        return $this->belongsTo('Borsa\Empresa','Empreses_idEmpresa', 'idEmpresa');
+    }
 }

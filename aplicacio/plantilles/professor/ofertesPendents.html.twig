@@ -1,0 +1,129 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Validació d'ofertes</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //bValidar
+            $(".btn-success").click(function (event) {
+                
+                var id = $(event.target).closest('form').attr('id').replace('f', '');
+                var dades={idProfessor:{{professor.idProfessor}}};
+                $('#mdEspera').on('shown.bs.modal', function (e) {
+                    $.ajax({
+                        method: 'PUT',
+                        url: "publicarOferta/" + id,
+                        data: dades
+                    }).done(function () {
+                        $('#mrTitol').html('Validació correcte')
+                        $('#mrText').html("<p>L'oferta s'ha validat correctament.</p><p>S'ha enviat un correu a l'empresa i als alumnes seleccionats.</p>");
+                        $('#bmDacord').on('click', function () {
+                            window.location.href = "ofertes";
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la validació');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
+                    });
+                });
+                $('#mcTitol').html("Confirmi la validació.");
+                $('#mcText').html("<p>Si valida la publicació, immediatament s'enviaran correus electrònics als alumnes seleccionats i s'avisarà a l'empresa.</p>");
+
+                $('#bcDacord').on('click', function () {
+                    $('#mdConfirm').modal('hide');
+                    $('#mEsperaTitol').html("Validant l'oferta.");
+                    $('#mdEspera').modal('show');
+                });
+                $('#mdConfirm').modal('show');
+            });
+
+            $('#bcCancelar').on('click', function () {
+                $('#mdConfirm').modal('hide');
+            });
+            
+            //bRebutjar
+            $(".btn-danger").click(function (event) {
+                
+                var id = $(event.target).closest('form').attr('id').replace('f', '');
+                var dades={idProfessor:{{professor.idProfessor}}};
+                $('#mdEspera').on('shown.bs.modal', function (e) {
+                    dades['motius']=$("#motius").val();
+                    $.ajax({
+                        method: 'DELETE',
+                        url: "publicarOferta/" + id,
+                        data: dades
+                    }).done(function () {
+                        $('#mrTitol').html('Rebuig correcte')
+                        $('#mrText').html("<p>L'oferta s'ha rebutjat correctament.</p><p>S'ha enviat un correu a l'empresa amb els motius del rebuig.</p>");
+                        $('#bmDacord').on('click', function () {
+                            window.location.href = "ofertes";
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb el rebuig');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
+                    });
+                });
+                $('#mcTitol').html("Confirmi el rebuig.");
+                $('#mcText').html('<p>Si confirma la publicació immediatament s\'enviaran correus electrònics als alumnes seleccionats i s\'avisarà a l\'empresa.</p><p>Motius del rebuig:</p><p><textarea style="width:100%" id="motius"></textarea></p>');
+
+                $('#bcDacord').on('click', function () {
+                    $('#mdConfirm').modal('hide');
+                    $('#mEsperaTitol').html("Rebutjant l'oferta.");
+                    $('#mdEspera').modal('show');
+                });
+                $('#mdConfirm').modal('show');
+            });
+
+            $('#bcCancelar').on('click', function () {
+                $('#mdConfirm').modal('hide');
+            });
+ 
+        });
+    </script>
+{% endblock %}
+
+{% block navegacio %}
+    <a class="navbar-brand" href="/professor/dashBoard">{{ professor.nom }} {{professor.llinatges }}</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Validar ofertes pendents</a></li>
+        <li><a href="empreses">Activar / validar empresa</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+
+{% endblock %}                     
+
+{% block contingut %}
+    <h2>Validar / Rebutjar ofertes pendents</h2>
+    {% for oferta in ofertes %}
+        <div class="well" id="of{{oferta.idOferta}}">
+            {{include('auxiliars/ofertaCompleta.html.twig')}}
+            <div>
+                <form id="f{{oferta.idOferta}}"> 
+                    <button type='button' class="btn btn-success" type="button">Validar</button>
+                    <button type='button' class="btn btn-danger"  type="button">Rebutjar</button>
+                </form>
+            </div>
+        </div>
+    {% endfor %}
+    {{include('auxiliars/modals.html.twig')}}
+{% endblock %}  

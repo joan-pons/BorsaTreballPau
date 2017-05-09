@@ -893,7 +893,7 @@ COMMIT;
 START TRANSACTION;
 USE `borsa`;
 INSERT INTO `borsa`.`Ofertes_has_Contactes` (`Ofertes_idOferta`, `Contactes_idContacte`) VALUES (4, 3);
-INSERT INTO `borsa`.`Ofertes_has_Contactes` (`Ofertes_idOferta`, `Contactes_idContacte`) VALUES (4, 4);
+INSERT INTO `borsa`.`Ofertes_has_Contactes` (`Ofertes_idOferta`, `Contactes_idContacte`) VALUES (4, 2);
 
 COMMIT;
 

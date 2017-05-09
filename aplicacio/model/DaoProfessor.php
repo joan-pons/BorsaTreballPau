@@ -250,5 +250,36 @@ class DaoProfessor extends Dao {
             return $response->withJson($missatge, 422);
         }
     }
-
+ public function publicarOferta(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+            $data = $request->getParsedBody();
+            $oferta=Oferta::find($args['idOferta']);
+            $professor = Professor::find($data['idProfessor']);
+            if ($professor != null && $oferta!=null) {
+                $oferta->validada=true;
+                $oferta->professorValidada=$professor->idProfessor;
+                $oferta->save();
+                        
+                //enviar correu electronic
+                return $response->withJSON($oferta);
+            } else {
+                $missatge = array("missatge" => "No s'ha trobat el professor o l'oferta que es vol validar.");
+                return $response->withJson($missatge, 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            switch ($ex->getCode()) {
+                case 23000:
+                    $missatge = array("missatge" => "Dades duplicades. Segurament degut a que el correu electrònic ja està registrat.", 'info'=>$ex->getcode().' '.$ex->getMessage());
+                    break;
+                case 'HY000':
+                    $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info'=>$ex->getcode().' '.$ex->getMessage());
+                    break;
+                default:
+                    $missatge = array("missatge" => "L'oferta no s'ha pogut publicar correctament.", 'info'=>$ex->getcode().' '.$ex->getMessage());
+                    break;
+            }
+            return $response->withJson($missatge, 422);
+        }
+    }
 }

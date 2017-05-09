@@ -16,6 +16,10 @@
                 var id = event.currentTarget.id;
                 window.location.href = "contactes#" + id;
             });
+            $('#dOfertes > .click').on('click', function (event) {
+                var id = event.currentTarget.id;
+                window.location.href = "ofertes#" + id;
+            });
             $(".click a").on('click', function (event) {
                 event.stopPropagation();
             });
@@ -73,20 +77,22 @@
                 {% endfor %}
             {% endif %}
         </div><!--col-->
-        <div class="col-md-4">
+        <div class="col-md-4" id="dOfertes">
             <h3>Ofertes</h3>
-            <div class="well click">
-                <p>Títol:</p>
-                <p>Data de publicació:</p>
-                <p>Data de finalització:</p>
-                <p>Alumnes avisats: </p>
-            </div>
-            <div class="well click">
-                <p>Títol:</p>
-                <p>Data de publicació:</p>
-                <p>Data de finalització:</p>
-                <p>Alumnes avisats: </p>
-            </div>
+            {% if empresa.ofertes is empty %}
+                <div class='well'>
+                    <p> L'empresa encara no té definida cap oferta.</p>                 
+                </div>
+            {% else %}
+                {% for oferta in empresa.ofertes %}
+                    <div class="well click" id="of{{oferta.idOferta}}">
+                        <p><label>Títol: &nbsp;</label>{{oferta.titol }}</p>
+                        <p><label>Data publicació: &nbsp;</label>{{oferta.dataPublicacio }}</p>
+                        <p><label>Data final: &nbsp;</label>{{oferta.dataFinal }}</p>
+                        <p><label>Validada: &nbsp;</label><span class="glyphicon {% if oferta.validada %}glyphicon-ok{% else %}glyphicon-remove{% endif %}"></span></p>
+                    </div>
+                {% endfor %}
+            {% endif %}       
         </div><!--col-->
         {% endif %}
     </div><!--row-->

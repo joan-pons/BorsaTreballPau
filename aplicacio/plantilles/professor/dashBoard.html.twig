@@ -17,15 +17,21 @@
             $("#dEstudis").click(function () {
                 $("#mEstudis")[0].click();
             });
-            $('#professors > .click').on('click', function (event) {
+            $('#ofertes > .click').on('click', function (event) {
                 var id = event.currentTarget.id;
-                window.location.href = "/administrador/usuarisPendents#" + id;
+                window.location.href = "ofertes#" + id;
             });
-            $('#empreses > .click').on('click', function (event) {
-                var id = event.currentTarget.id;
-                window.location.href = "/administrador/empresesPendents#" + id;
+        {%if professor.usuari.teRol(40)%}
+                $('#professors > .click').on('click', function (event) {
+                    var id = event.currentTarget.id;
+                    window.location.href = "/administrador/usuarisPendents#" + id;
+                });
+                $('#empreses > .click').on('click', function (event) {
+                    var id = event.currentTarget.id;
+                    window.location.href = "/administrador/empresesPendents#" + id;
+                });
+        {%endif%}
             });
-        });
     </script>
 {% endblock %}
 
@@ -127,12 +133,14 @@
                             <p>No hi ha cap oferta pendent de validació.</p>
                         </div>
                     {% else %}
-                        {% for oferta in ofertes %}
-                            <div class="well click">
-                                <p>Oferta:</p>
-                                <p>Data de la sol·licitud:</p>
-                            </div>
-                        {% endfor %}
+                        <div id="ofertes">
+                            {% for oferta in ofertes %}
+                                <div class="well click" id="of{{ oferta.idOferta }}">
+                                    <p><label>Oferta: &nbsp;</label>{{ oferta.titol}}</p>
+                                    <p><label>Data de la sol·licitud: &nbsp;</label>{{ oferta.dataPublicacio | date('d / m / Y')}}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 {% endif %}
             </div><!--col-->

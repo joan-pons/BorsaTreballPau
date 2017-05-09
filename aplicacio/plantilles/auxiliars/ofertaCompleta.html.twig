@@ -1,0 +1,76 @@
+{# empty Twig template #}
+<style>
+    label {
+        font-weight: bold;
+    }
+</style>
+<h1>{{oferta.titol}}</h1>
+<h2>Empresa</h2>
+{{oferta.empresa.descripcio|raw}}
+<h2>Descripció de l'oferta</h2>
+<div class="well">
+    {{oferta.descripcio|raw}}
+    <p>&nbsp;</p>
+    <p><label>Data de publicació:</label> {{oferta.dataPublicacio}}</p>
+    <p><label>Vàlida fins a:</label> {{oferta.dataFinal | date('d / m / Y')}}</p>
+    <p><label>Localitat:</label> {{oferta.localitat}}</p>
+    <p><label>Tipus de contracte:</label> {{oferta.tipusContracte}}</p>
+    <p><label>Horari:</label> {{oferta.horari}}</p>
+</div>
+
+<h2> Estudis als que va dirigida l'oferta</h2>
+<div class="well">
+    <p>Es seleccionaran estudiants que hagin acabat <strong>qualsevol</strong> dels estudis demanats a l'oferta.</p>
+    <ul>
+        {%for grau in oferta.estudis %}
+            <li><p>{{grau.nom}}</p></li>
+                {%endfor%}
+    </ul>
+</div>
+
+{%if not oferta.idiomes is empty %}
+    <h2> Idiomes demanats</h2>
+    <div class="well">
+        <p>Es seleccionaran estudiants que, de tots els idiomes demanats, tenguin un nivell igual o superior al demanat a l'oferta.</p>
+
+        <ul>
+            {%for idioma in oferta.idiomes %}
+                <li><p>{{idioma.idioma}}: 
+                        {%for nivell in nivells%}
+                            {% if idioma.pivot.NivellsIdioma_idNivellIdioma == nivell.idNivellIdioma%}
+                                {{nivell.nivell}}
+                            {%endif%}
+                        {%endfor%}
+                    </p></li>
+                {%endfor%}
+        </ul>
+
+    </div>
+{%endif%}
+
+{%if not oferta.estatsLaborals is empty %}
+    <h2> Situació laboral demanada </h2>
+    <div class="well">
+        <p>Es seleccionaran estudiants que es trobin en la situació laboral demanada.</p>
+        <ul>
+            {%for estat in oferta.estatsLaborals %}
+                <li><p>{{estat.nomEstatLaboral}}</p></li>
+                    {%endfor%}
+        </ul>
+    </div>
+{%endif%}
+
+<h2> Contacte amb l'empresa</h2>
+<div class="well">
+    <p>Enviau les vostres dades {%if oferta.contactes|length>1 %}a un dels següents correus electrònics.{%else%}al següent correu electrònic{%endif%}</p>
+    <ul>
+        {%if oferta.contactes is empty%}
+            <li>{{oferta.empresa.nom}}: {{oferta.empresa.email}}</li>
+            {%else%}
+                {%for contacte in oferta.contactes %}
+                <li><p>{{contacte.nom}} {{contacte.llinatges}}: {{contacte.email}}</p></li>
+                {%endfor%}
+            {%endif%}
+    </ul>
+</div>
+

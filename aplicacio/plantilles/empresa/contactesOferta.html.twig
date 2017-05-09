@@ -10,71 +10,72 @@
 
     <script>
         $(document).ready(function () {
-
-        $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
-        $('#bmDacord').on('click', function () {
-        $('#mdResultat').modal('hide');
-        });
-        $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
-        $('#bAfegir').on('click', function () {
-        $('#mEsperaTitol').html('Afegint els estudis');
-        var val = $('#graus').val();
-        if (val != "") {
-        $('#mdEspera').on('shown.bs.modal', function (e) {
-        var contactesOferta = {idContacte: val, idOferta:{{ oferta.idOferta }} };
-        $.ajax({
-        method: 'POST',
-                url: "contactesOferta",
-                data: contactesOferta
-        }).done(function () {
-        $('#mrTitol').html('Actualització correcte')
-                $('#mrText').html("<p>La persona de contacte s'ha afegir correctament.</p>");
-        $('#bmDacord').on('click', function () {
-        window.location.href = "contactesOferta?idOferta={{ oferta.idOferta }}";
-        });
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
-        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
-        $('#bmDacord').on('click', function () {
-        $('#mdResultat').modal('hide');
-        });
-        }).always(function () {
-        $('#mdEspera').modal('hide');
-        $('#mdResultat').modal('show');
-        });
-        });
-        $('#mdEspera').modal('show');
-        }
-        });
-        //bEsborrar
-        $('.btn-danger').on('click', function (event) {
-        $('#mEsperaTitol').html('Esborrant els estudis');
-        var val = event.currentTarget.id.replace('b', '')
+            var id ={{ oferta.idOferta }} ;
+            //
+                    $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#bmDacord').on('click', function () {
+                $('#mdResultat').modal('hide');
+            });
+            $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+            $('#bAfegir').on('click', function () {
+                $('#mEsperaTitol').html('Afegint els estudis');
+                var val = $('#graus').val();
+                if (val != "") {
+                    $('#mdEspera').on('shown.bs.modal', function (e) {
+                        var contactesOferta = {idContacte: val, idOferta: id};
+                        $.ajax({
+                            method: 'POST',
+                            url: "contactesOferta",
+                            data: contactesOferta
+                        }).done(function () {
+                            $('#mrTitol').html('Actualització correcte')
+                            $('#mrText').html("<p>La persona de contacte s'ha afegir correctament.</p>");
+                            $('#bmDacord').on('click', function () {
+                                window.location.href = "contactesOferta?idOferta=id";
+                            });
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                            $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                            $('#bmDacord').on('click', function () {
+                                $('#mdResultat').modal('hide');
+                            });
+                        }).always(function () {
+                            $('#mdEspera').modal('hide');
+                            $('#mdResultat').modal('show');
+                        });
+                    });
+                    $('#mdEspera').modal('show');
+                }
+            });
+            //bEsborrar
+            $('.btn-danger').on('click', function (event) {
+                $('#mEsperaTitol').html('Esborrant els estudis');
+                var val = event.currentTarget.id.replace('b', '')
                 $('#mdEspera').on('shown.bs.modal', function (e) {
-        var contactesOferta = {idContacte: val, idOferta:{{ oferta.idOferta }} };
-        $.ajax({
-        method: 'DELETE',
-                url: "contactesOferta/"+{{ oferta.idOferta }}+"/" + val,
-                data: contactesOferta
-        }).done(function () {
-        $('#mrTitol').html('Eliminació correcte')
-                $('#mrText').html("<p>Contacte eliminat correctament de l'oferta.</p>");
-        $('#bmDacord').on('click', function () {
-        window.location.href = "contactesOferta?idOferta={{ oferta.idOferta }}";
-        });
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'eliminació');
-        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
-        $('#bmDacord').on('click', function () {
-        $('#mdResultat').modal('hide');
-        });
-        }).always(function () {
-        $('#mdEspera').modal('hide');
-        $('#mdResultat').modal('show');
-        });
-        });
-        $('#mdEspera').modal('show');
-        });
+                    var contactesOferta = {idContacte: val, idOferta: id};
+                    $.ajax({
+                        method: 'DELETE',
+                        url: "contactesOferta/" + id + "/" + val,
+                        data: contactesOferta
+                    }).done(function () {
+                        $('#mrTitol').html('Eliminació correcte')
+                        $('#mrText').html("<p>Contacte eliminat correctament de l'oferta.</p>");
+                        $('#bmDacord').on('click', function () {
+                            window.location.href = "contactesOferta?idOferta=id";
+                        });
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'eliminació');
+                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#bmDacord').on('click', function () {
+                            $('#mdResultat').modal('hide');
+                        });
+                    }).always(function () {
+                        $('#mdEspera').modal('hide');
+                        $('#mdResultat').modal('show');
+                    });
+                });
+                $('#mdEspera').modal('show');
+            });
         });
     </script>
 {% endblock %}
