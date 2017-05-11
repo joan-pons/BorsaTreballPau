@@ -1,0 +1,39 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Ofertes</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/borsa.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
+  
+{% endblock %}
+{% block navegacio %}
+    <a class="navbar-brand" href="dashBoard">{{actor.nom}} {{actor.llinatges}}</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <li><a href="modificarDades" id="mActualitza">Actualitzar dades</a></li>
+        <li><a href="canviarContrasenya">Canviar contrasenya</a></li>
+        <li><a href="estudis" id="mEstudis">Estudis</a></li>
+        <li><a href="idiomes" id="mIdiomes">Idiomes</a></li>
+        <li><a href="estatLaboral" id="mEstats">Estat laboral</a></li>
+        <!--<li><a href="formacio">Altra formació</a></li>-->
+        <li class='active'><a href="#">Ofertes</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}
+{% block contingut %}
+    <h2>Ofertes</h2>
+    {% for oferta in actor.ofertes %}
+        <div class="well" id="of{{oferta.idOferta}}">
+            {{include('auxiliars/ofertaCompleta.html.twig')}}
+        </div>
+    {% endfor %}
+
+    {{include('auxiliars/modals.html.twig')}}
+{% endblock %}

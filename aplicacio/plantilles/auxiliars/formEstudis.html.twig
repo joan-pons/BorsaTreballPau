@@ -151,7 +151,7 @@
                         });
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
-                        $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                        $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
                         $('#bmDacord').on('click', function () {
                             $('#mdResultat').modal('hide');
                         });
@@ -199,7 +199,7 @@
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'eliminació');
-                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
@@ -239,7 +239,6 @@
             $("#bGuar" + ident).hide('fast');
             $("#bCan" + ident).hide('fast');
             $("#bAfegir").prop('disabled', false);
-            form.reset();
         });
 
         //Modificar
@@ -250,6 +249,7 @@
                 estudisElegits[obj.name] = obj.value;
             });
 
+            $('#' + event.target.id + ' [name]').prop('disabled', 'disabled');
             $('#mEsperaTitol').html("Realitzant la modificació.");
             $('#mdEspera').on('shown.bs.modal', function (e) {
                 $.ajax({
@@ -266,10 +266,11 @@
                         $(".btn-danger").show('fast');
                         $("#bAfegir").prop('disabled', false);
                         $('#mdResultat').modal('hide');
+
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')
-                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });

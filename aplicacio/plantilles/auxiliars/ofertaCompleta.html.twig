@@ -1,12 +1,10 @@
 {# empty Twig template #}
-<style>
-    label {
-        font-weight: bold;
-    }
-</style>
+
 <h1>{{oferta.titol}}</h1>
-<h2>Empresa</h2>
-{{oferta.empresa.descripcio|raw}}
+<h2>Empresa: <a href="{%if not(oferta.empresa.url starts with 'http') %}{{'http://'}}{%endif%}{{oferta.empresa.url}}" target="_blank">{{oferta.empresa.nom}}</a></h2>
+<div class="well">
+    {{oferta.empresa.descripcio|raw}}
+</div>
 <h2>Descripció de l'oferta</h2>
 <div class="well">
     {{oferta.descripcio|raw}}
@@ -65,10 +63,10 @@
     <p>Enviau les vostres dades {%if oferta.contactes|length>1 %}a un dels següents correus electrònics.{%else%}al següent correu electrònic{%endif%}</p>
     <ul>
         {%if oferta.contactes is empty%}
-            <li>{{oferta.empresa.nom}}: {{oferta.empresa.email}}</li>
+            <li>{{oferta.empresa.nom}}: <a href="mailto:{{oferta.empresa.email}}">{{oferta.empresa.email}}</a></li>
             {%else%}
                 {%for contacte in oferta.contactes %}
-                <li><p>{{contacte.nom}} {{contacte.llinatges}}: {{contacte.email}}</p></li>
+                <li><p>{{contacte.nom}} {{contacte.llinatges}}: <a href="mailto:{{contacte.email}}">{{contacte.email}}</a></p></li>
                 {%endfor%}
             {%endif%}
     </ul>

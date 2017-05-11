@@ -30,4 +30,8 @@ class Message {
         $this->mailer->FromName = $fromName;
     }
 
+    public function altBody($altBody) { 
+        $this->mailer->AltBody = $altBody;
+    }
+
 }

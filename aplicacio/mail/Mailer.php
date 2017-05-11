@@ -17,6 +17,7 @@ class Mailer {
 
         $message->body($this->view->fetch($template, $data));
 
+        
         call_user_func($callback, $message);
 
         return $this->mailer->send();

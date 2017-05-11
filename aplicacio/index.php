@@ -90,7 +90,7 @@ $container['mailer'] = function ($container) {
     $mailer->Port = 465;                           // 25 for local host
     $mailer->Username = 'joan.pons.institut@gmail.com';    // I set sender email in my mailer call
 
-    require('password.php');
+    require('mail/password.php');
 
     $mailer->isHTML(true);
     $mailer->SMTPDebug = 2;
@@ -121,16 +121,31 @@ $app->get('/login', function ($request, $response, $args) {
 });
 
 $app->get('/mailing', function ($request, $response, $args) {
-    if ($this->mailer->send('/email/Validat.html', [], function($message) {
+    $this->dbEloquent;
+    $oferta = Oferta::find(4);
+    $nivells=$nivells = NIvellIdioma::all();
+    if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells'=>$nivells], function($message) {
                 $message->from("borsa.no-reply@iespaucasesnoves.cat");
-                $message->to('ptj@iespaucasesnoves.cat');
+                $message->to('joan.pons.tugores@gmail.com');
                 $message->subject('Prova');
             })) {
         return $response->withJSON(array('Ok'));
     } else {
-        return $response->withJSON(array('Ok'), 422);
+        return $response->withJSON(array('KO'), 422);
     }
 });
+
+$app->get('/provaMailOferta/{idOferta}', function(Request $request, Response $response, $args) {
+    $this->dbEloquent;
+    $oferta = Oferta::find($args['idOferta']);
+    if (oferta != null) {
+        
+        return $this->view->render($response, 'email/oferta.twig', ['oferta' => $oferta]);
+    } else {
+        return $response->withJSON('Errada: ' . $_SESSION);
+    }
+});
+
 
 //  //////////////////////////////////////////////////////////
 // //////////////////                       /////////////////
@@ -245,7 +260,8 @@ $app->group('/empresa', function() {
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
             $empresa = $usuari->getEntitat();
-            return $this->view->render($response, 'empresa/ofertes.html.twig', ['empresa' => $empresa]);
+            $nivells = NIvellIdioma::all();
+            return $this->view->render($response, 'empresa/ofertes.html.twig', ['empresa' => $empresa, 'nivells' => $nivells]);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
@@ -541,6 +557,18 @@ $app->group('/alumne', function() {
     $this->put('/estatLaboral/{idAlumne}', function ($request, $response, $args) {
         return DaoAlumne::modificarEstatLaboral($request, $response, $args, $this);
     });
+
+    $this->get('/ofertes', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        if ($usuari != null) {
+            $alumne = $usuari->getEntitat();
+            $etiquetes = null; //array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat");
+            return $this->view->render($response, 'alumne/ofertes.html.twig', ['actor' => $alumne]);
+        } else {
+            return $response->withJSON('Errada: ', 500);
+        }
+    });
 })->add(function ($request, $response, $next) {
     if (in_array(30, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
@@ -682,6 +710,10 @@ $app->group('/professor', function() {
 
     $this->put('/publicarOferta/{idOferta}', function ($request, $response, $args) {
         return DaoProfessor::publicarOferta($request, $response, $args, $this);
+    });
+
+    $this->delete('/publicarOferta/{idOferta}', function ($request, $response, $args) {
+        return DaoProfessor::rebutjarOferta($request, $response, $args, $this);
     });
 
     $this->get('/{id}', function(Request $request, Response $response, $args) {

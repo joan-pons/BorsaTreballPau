@@ -6,7 +6,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Borsa\Empresa as Empresa;
 use Borsa\Oferta as Oferta;
-
+use Illuminate\Database\Capsule\Manager as DB;
 /**
  * Description of DaoEmpresa
  *
@@ -182,6 +182,7 @@ class DaoEmpresa extends Dao {
     }
 
     public function activar(Request $request, Response $response, $args, \Slim\Container $container) {
+        //TODO: Canviar validació empresa amb validar/rebutjar i motiu de rebuig
         try {
             $container->dbEloquent;
             $empresa = Empresa::find($args['idEmpresa']);
@@ -537,8 +538,10 @@ class DaoEmpresa extends Dao {
             $oferta = Oferta::find(filter_var($args['idOferta'], FILTER_SANITIZE_NUMBER_INT));
             if ($oferta != null) {
                 $oferta->dataPublicacio=date("Y/m/d");
+                $professors=DB::select('select p.* from Ofertes_has_Estudis o inner join Estudis_has_Responsables e on o.Estudis_codi=e.Estudis_codi inner join Professors p on e.Professors_idProfessor=p.idProfessor where Ofertes_idOferta='.$oferta->idOferta);
+                //TODO  enviar correu electronic
                 $oferta->save();
-                return $response->withJSON($oferta);
+                return $response->withJSON($professors);
             } else {
                 return $response->withJson("No es troba cap oferta amb l'identificador demanat.", 422);
             }

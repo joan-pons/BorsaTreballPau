@@ -23,6 +23,10 @@
             $("#dEstats").click(function () {
                 $("#mEstats")[0].click();
             });
+             $('#dOfertes > .click').on('click', function (event) {
+                var id = event.currentTarget.id;
+                window.location.href = "ofertes#" + id;
+            });
             $(".click a").on('click', function (event) {
                 event.stopPropagation();
             });
@@ -90,7 +94,7 @@
                         {%for idioma in alumne.idiomes %}
                             {% set level='Gens' %}
                             {%for nivell in nivellsIdioma %}
-                                {% if nivell.idNivellIdioma==idioma.pivot.NIvellsIdioma_idNIvellsIdioma %}
+                                {% if nivell.idNivellIdioma==idioma.pivot.NivellsIdioma_idNivellIdioma %}
                                     {% set level=nivell.nivell%}
                                 {% endif %}
                             {% endfor %}
@@ -112,22 +116,19 @@
                 </div>
             {% endif %}
         </div><!--col-->
-        <div class="col-md-4">
+        <div class="col-md-4" id="dOfertes">
             <h3>Ofertes en marxa</h3>
             {% if alumne.actiu==1 %}
-                {% if alumne.ofertes is empty %}
+                {% if alumne.ofertesActives() is empty %}
                     <div class="well"><p> No hi ha cap oferta en vigor. </p></div>
                 {% else %}
-                    <div class="well click">
-                        <p>Títol:</p>
-                        <p>Data de publicació:</p>
-                        <p>Data de finalització:</p>                      
+                    {% for oferta in alumne.ofertesActives() %}
+                    <div class="well click" id="of{{oferta.idOferta}}">
+                        <p><label>Títol: &nbsp;</label>{{oferta.titol}}</p>
+                        <p><label>Data de publicació: &nbsp;</label>{{oferta.dataPublicacio|date('d / m / Y')}}</p>
+                        <p><label>Data de finalització: &nbsp;</label>{{oferta.dataFinal|date('d / m / Y')}}</p>                      
                     </div>
-                    <div class="well click">
-                        <p>Títol:</p>
-                        <p>Data de publicació:</p>
-                        <p>Data de finalització:</p>
-                    </div>
+                    {% endfor%}
                 {% endif %}
             {% else %}
                 <div class="well"><p> Has d'activar el teu usuari, a l'apartat <em>Actualitzar dades</em>, per poder veure les ofertes. </p></div>

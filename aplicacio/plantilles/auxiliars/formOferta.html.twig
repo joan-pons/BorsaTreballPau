@@ -93,7 +93,16 @@
         $('#dFinal').removeAttr("readonly");
         $('#textOferta').summernote({
             height: 150,
-            placeholder: "Text de l'oferta"
+            placeholder: "Text de l'oferta",
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']]
+            ]
         });
 
         $('#fOferta').on('submit', function (event) {
@@ -129,7 +138,7 @@
             $.each($('#fOferta [name]'), function (i, obj) {
                 oferta[obj.name] = obj.value;
             });
-            oferta.descripcio = 'Hola';//$('#textDescripcio').summernote('code');
+            oferta.descripcio = $('#textOferta').summernote('code');
 
             alert(JSON.stringify(oferta));
     {% if oferta is empty %}
@@ -145,7 +154,7 @@
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'alta');
-                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });
@@ -156,7 +165,7 @@
     {%else%}
                 $.ajax({
                     method: 'PUT',
-                    url: "../modificarOferta/"+oferta.idOferta,
+                    url: "../modificarOferta/" + oferta.idOferta,
                     data: oferta
                 }).done(function (ofertaRebuda) {
                     $('#mrTitol').html('Modificació correcta')
@@ -166,7 +175,7 @@
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'alta');
-                    $('#mrText').html("<p>" + jqXHR.responseJSON.missatge + "</p>");
+                    $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });

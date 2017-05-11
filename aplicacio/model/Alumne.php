@@ -33,10 +33,19 @@ class Alumne extends Model {
     }
 
     public function estudis() {
-        return $this->belongsToMany('Borsa\Estudis', 'Alumne_has_Estudis', 'Alumnes_idAlumne', 'Estudis_codi')->withPivot(['any','nota']);
+        return $this->belongsToMany('Borsa\Estudis', 'Alumne_has_Estudis', 'Alumnes_idAlumne', 'Estudis_codi')->withPivot(['any', 'nota']);
+    }
+
+    public function idiomes() {
+        return $this->belongsToMany('Borsa\Idioma', 'Alumne_has_Idiomes', 'Alumne_idAlumne', 'Idiomes_idIdiomes')->withPivot('NivellsIdioma_idNivellIdioma');
+    }
+
+    public function ofertes() {
+        return $this->belongsToMany('Borsa\Oferta', 'Ofertes_enviada_Alumnes', 'Alumnes_idAlumne', 'Ofertes_idOferta')->orderby('dataFinal','DES');
+    }
+
+    public function ofertesActives() {
+        return $this->belongsToMany('Borsa\Oferta', 'Ofertes_enviada_Alumnes', 'Alumnes_idAlumne', 'Ofertes_idOferta')->where('dataFinal','>=',date('Y-m-d'))->orderby('dataFinal','ASC')->get();
     }
     
-    public function idiomes() {
-        return $this->belongsToMany('Borsa\Idioma', 'Alumne_has_Idiomes', 'Alumne_idAlu', 'Idiomes_idIdiomes')->withPivot('NivellsIdioma_idNivellIdioma');
-    }
 }
