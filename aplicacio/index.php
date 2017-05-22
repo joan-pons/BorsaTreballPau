@@ -88,7 +88,7 @@ $container['mailer'] = function ($container) {
     $mailer->SMTPAuth = true;                 // I set false for localhost
     $mailer->SMTPSecure = 'ssl';              // set blank for localhost
     $mailer->Port = 465;                           // 25 for local host
-    $mailer->Username = 'joan.pons.institut@gmail.com';    // I set sender email in my mailer call
+    $mailer->Username = 'ptj@iespaucasesnoves.cat';    // I set sender email in my mailer call
 
     require('mail/password.php');
 
@@ -125,7 +125,7 @@ $app->get('/mailing', function ($request, $response, $args) {
     $oferta = Oferta::find(4);
     $nivells=$nivells = NIvellIdioma::all();
     if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells'=>$nivells], function($message) {
-                $message->from("borsa.no-reply@iespaucasesnoves.cat");
+                $message->from("no-reply@iespaucasesnoves.cat");
                 $message->to('joan.pons.tugores@gmail.com');
                 $message->subject('Prova');
             })) {
@@ -305,7 +305,7 @@ $app->group('/empresa', function() {
         $oferta = Oferta::find($request->getQueryParam('idOferta'));
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
-            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes per a l'oferta " . $oferta->idOferta . ' ' . $oferta->titol, "labelLlista" => "que ha seleccionat", 'correcte' => "L'oferta filtrarà els alumnes per aquests estudis.");
+            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes"/* per a l'oferta " . $oferta->idOferta . ' ' . $oferta->titol*/, "labelLlista" => "que ha seleccionat", 'correcte' => "L'oferta filtrarà els alumnes per aquests estudis.");
             $estudis = Estudis::orderBy('nom', 'ASC')->get();
             return $this->view->render($response, 'empresa/estudisOferta.html.twig', ['empresa' => $empresa, 'identificador' => $oferta->idOferta, 'entitat' => $oferta, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
 // return $response->withJSON($oferta);
@@ -372,7 +372,7 @@ $app->group('/empresa', function() {
         $oferta = Oferta::find($request->getQueryParam('idOferta'));
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
-            $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "en els que vol que es trobin els candidats");
+            $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "que rebran les respostes dels candidats");
             return $this->view->render($response, 'empresa/contactesOferta.html.twig', ['empresa' => $empresa, 'oferta' => $oferta, 'etiquetes' => $etiquetes]);
             //return $response->withJSON($oferta->estatsLaborals);
         } else {

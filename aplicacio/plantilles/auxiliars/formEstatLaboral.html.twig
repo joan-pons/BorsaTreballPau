@@ -1,5 +1,5 @@
 
-<h3>Estat laboral {{ etiquetes.labelLlista }}:</h3>
+<h3>Situació laboral {{ etiquetes.labelLlista }}:</h3>
 <form id="estats" action="#" method="GET">
     <div class="row">
         <div class="col-md-6">
@@ -20,6 +20,11 @@
         </div>
         <div class="col-md-6">
             <div class="well">
+                 <div class="well">
+                    <p>El sistema seleccionarà aquells alumnes que es trobin en qualsevol de les situacions laborals especificades.</p>
+                    <p>Per exemple, si l'oferta demana <em>Aturat</em> o <em>Estudiant</em> es seleccionaran els alumnes que tenguin marcat <em>Aturat</em>, els que tenguin marcat <em>Estudiant</em>, i els que els tenguin tots dos marcats. En aquest cas s'exclourien els que només tenguessin marcat <em>Treballant</em></p>
+                    <p>Si no se'n marca cap no es tendrà en compte la situació laboral.</p>
+                </div>
                 <button class="btn btn-success" type="submit" name="bGuardar" id="bGuardar">Guardar</button>
                 <button class="btn btn-default" type="reset"  name="bCancel" id="bCancel">Cancel·lar canvis</button>
             </div>

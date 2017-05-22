@@ -12,6 +12,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Borsa\Usuari as Usuari;
 
+use Illuminate\Database\Capsule\Manager as DB;
 /**
  * Description of Dao
  *
@@ -73,4 +74,43 @@ class Dao {
         }
     }
 
+    public function alumnesOferta($oferta, \Slim\Container $container) {
+        $container->dbEloquent;
+        //Allumnes per estudis, nota i any
+        $alumnes = DB::select('select distinct a.* from Ofertes_has_Estudis o inner join Alumne_has_Estudis e on o.Estudis_codi=e.Estudis_codi inner join Alumnes a on e.Alumnes_idAlumne=a.idAlumne where Ofertes_idOferta=' . $oferta->idOferta . ' and a.actiu=true and e.any>=IFNULL(o.any,1900) and e.nota>=IFNULL(o.nota,5)');
+        //Alumnes per Idiomes 
+        if ($oferta->idiomes->count() > 0) {
+            $alumnesIdiomes = array();
+            foreach ($alumnes as $alumne) {
+                $coincidencies = DB::select('select count(of.idiomes_idIdioma) as recompte from Ofertes_has_Idiomes of left join Alumne_has_Idiomes al  on of.idiomes_idIdioma=al.idiomes_idIdiomes where of.Ofertes_idOferta=' . $oferta->idOferta . ' and al.Alumne_idAlumne=' . $alumne->idAlumne . ' and al.NIvellsIdioma_idNivellIdioma>=of.NivellsIdioma_idNivellIdioma');
+                if ($coincidencies[0]->recompte == $oferta->idiomes->count()) {
+                    array_push($alumnesIdiomes, $alumne);
+                }
+            }
+            $alumnes = $alumnesIdiomes;
+        }
+
+        //TODO Filtrar alumnes per estat laboral
+        if ($oferta->estatsLaborals->count() > 0) {
+            $alumnesEstats = '(';
+            $separador = '';
+            foreach ($alumnes as $alumne) {
+                $alumnesEstats .= $separador . $alumne->idAlumne;
+                $separador = ', ';
+            }
+            $alumnesEstats .= ')';
+
+            $alumnes = DB::select('select distinct Alumnes_idAlumne as idAlumne from Ofertes_has_EstatLaboral of left join Alumne_has_EstatLaboral al on of.EstatLaboral_idEstatLaboral=al.EstatLaboral_idEstatLaboral where of.Ofertes_idOferta=' . $oferta->idOferta . ' and Alumnes_idAlumne in ' . $alumnesEstats);
+        }
+        //Actualitzar Oferta_enviada_alumnes
+        $alumnesDefinitiu = array();
+        foreach ($alumnes as $alumne) {
+            array_push($alumnesDefinitiu, $alumne->idAlumne);
+        }
+        return $alumnesDefinitiu;
+    }
+
+    public function comptarCandidats($oferta, \Slim\Container $container) {
+        return alumnesOferta($oferta, $container)->length;
+    }
 }

@@ -5,6 +5,7 @@ namespace Borsa;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Borsa\Professor as Professor;
+use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * Description of DaoProfessor
@@ -141,7 +142,7 @@ class DaoProfessor extends Dao {
                 $data = $request->getParsedBody();
                 $validat = filter_var($data['validat'], FILTER_SANITIZE_STRING) == 'true';
                 $professor->actiu = (filter_var($data['actiu'], FILTER_SANITIZE_STRING) == 'true' && $validat);
-                if($validat and !$professor->validat){
+                if ($validat and ! $professor->validat) {
                     //TODO enviar correu amb contrasenya
                 }
                 $professor->validat = $validat;
@@ -265,10 +266,11 @@ class DaoProfessor extends Dao {
             if ($professor != null && $oferta != null) {
                 $oferta->validada = true;
                 $oferta->professorValidada = $professor->idProfessor;
+                $alumnesDefinitiu=Dao::alumnesOferta($oferta,$container);
+                $oferta->alumnes()->sync($alumnesDefinitiu);
                 $oferta->save();
-
                 //TODO enviar correu electronic
-                return $response->withJSON($oferta);
+                return $response->withJSON($alumnesDefinitiu);
             } else {
                 $missatge = array("missatge" => "No s'ha trobat el professor o l'oferta que es vol validar.");
                 return $response->withJson($missatge, 422);

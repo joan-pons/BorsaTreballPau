@@ -15,7 +15,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 class DaoEmpresa extends Dao {
 
     public function altaEmpresa(Request $request, Response $response, \Slim\Container $container) {
-        //TO-DO: Filtrar descripció
+        //TODO: Filtrar descripció
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();
@@ -51,7 +51,7 @@ class DaoEmpresa extends Dao {
     }
 
     public function modificarEmpresa(Request $request, Response $response, $args, \Slim\Container $container) {
-        //TO-DO: Filtrar descripció
+        //TODO: Filtrar descripció
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();
@@ -182,7 +182,7 @@ class DaoEmpresa extends Dao {
     }
 
     public function activar(Request $request, Response $response, $args, \Slim\Container $container) {
-        //TODO: Canviar validació empresa amb validar/rebutjar i motiu de rebuig
+        //TODO Canviar validació empresa amb validar/rebutjar i motiu de rebuig
         try {
             $container->dbEloquent;
             $empresa = Empresa::find($args['idEmpresa']);
@@ -212,7 +212,7 @@ class DaoEmpresa extends Dao {
     }
 
     public function altaOferta(Request $request, Response $response, \Slim\Container $container) {
-        //TO-DO: Filtrar descripció
+        //TODO Filtrar descripció
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();
@@ -251,7 +251,7 @@ class DaoEmpresa extends Dao {
     }
 
     public function modificarOferta(Request $request, Response $response, $args, \Slim\Container $container) {
-        //TO-DO: Filtrar descripció
+        //TODO Filtrar descripció
         try {
             $container->dbEloquent;
             $data = $request->getParsedBody();

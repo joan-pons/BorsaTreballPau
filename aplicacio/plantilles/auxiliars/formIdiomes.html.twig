@@ -24,6 +24,11 @@
         </div>
         <div class="col-md-6">
             <div class="well">
+                <div class="well">
+                    <p>El sistema seleccionarà aquells alumnes que tenguin un nivell igual o superior al demanat per a cada un dels idiomes especificats a l'oferta.</p>
+                    <p>Per exemple, si l'oferta demana un nivell <em>Molt bé</em> de castellà i català i <em>Bé</em> d'anglés només es seleccionaran els alumnes amb un nivell <em>Molt bé</em> de castella i català i <em>Bé</em> o <em>Molt bé</em> d'anglés.</p>
+                    <p>Si no s'especifica cap nivell de cap idioma, no es tendran en compte els nivells d'idiomes per seleccionar els candidats.</p>
+                </div>
                 <button class="btn btn-success" type="submit" name="bGuardar" id="bGuardar">Guardar</button>
                 <button class="btn btn-default" type="reset"  name="bCancel" id="bCancel">Cancel·lar</button>
             </div>
@@ -57,13 +62,13 @@
                     $('#bmDacord').on('click', function () {
     {%if actor.idOferta is empty %}
                         window.location = "dashBoard";
-                        {%else%}
-                            window.location='idiomes?idOferta={{actor.idOferta}}';
+    {%else%}
+                        window.location = 'idiomes?idOferta={{actor.idOferta}}';
     {%endif%}
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')
-                    $('#mrText').html("<p>" + (typeof jqXHR.responseJSON==='undefined'?errorThrown:jqXHR.responseJSON.missatge) + "</p>");
+                    $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
                     $('#bmDacord').on('click', function () {
                         $('#mdResultat').modal('hide');
                     });

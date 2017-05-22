@@ -7,14 +7,14 @@
 {% endif %}
 <div class="well">
     <form id="fLogin" action="{{ action }}" method="GET">
-        <input type="hidden" name="tipus" value="{{tipus}}">
+        <input type="hidden" id="tipus" name="tipus" value="{{tipus}}">
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" class="form-control" id="email" name="email" value="info@intel.es">
+            <input type="email" class="form-control" id="email" name="email">
         </div>
         <div class="form-group">
             <label for="password">Contrasenya: </label>
-            <input type="password" class="form-control" id="password" name="password" value="12345678">
+            <input type="password" class="form-control" id="password" name="password">
         </div>
         <h5>Ha oblidat la contrasenya? <small><a href="#">Cliqui aquí</a></small></h5>
         <button type="submit" name="bEntrar" >Entrar</button>
@@ -22,37 +22,49 @@
 </div>
 {{include('auxiliars/modals.html.twig')}}
 <script>
-    var dadesLogin;
-    $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
-    $('#bmDacord').on('click', function () {
-        $('#mdResultat').modal('hide');
-    });
-    $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
-    $('#mEsperaTitol').html('Validant l\'usuari');
-    $('#mdEspera').on('shown.bs.modal', function (e) {
-        $.ajax({
-            method: 'GET',
-            url: "/login",
-            data: dadesLogin
-        }).done(function (usuari) {
-            $('#mdEspera').modal('hide');
-            window.location = '{{ action }}';
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la validació');
-            $('#mrText').html("<p>" + (typeof jqXHR.responseJSON==='undefined'?errorThrown:jqXHR.responseJSON.missatge) + "</p>");
-            $('#bmDacord').on('click', function () {
-                $('#mdResultat').modal('hide');
-            });
-            $('#mdEspera').modal('hide');
-            $('#mdResultat').modal('show');
+    $(document).ready(function () {
+        var dadesLogin;
+
+        $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
+        $('#bmDacord').on('click', function () {
+            $('#mdResultat').modal('hide');
         });
-    });
+        $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
+        $('#mEsperaTitol').html('Validant l\'usuari');
+        $('#mdEspera').on('shown.bs.modal', function (e) {
+            $.ajax({
+                method: 'GET',
+                url: "/login",
+                data: dadesLogin
+            }).done(function (usuari) {
+                $('#mdEspera').modal('hide');
+                window.location = '{{ action }}';
+            }).fail(function (jqXHR, textStatus, errorThrown) {
+                $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la validació');
+                $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
+                $('#bmDacord').on('click', function () {
+                    $('#mdResultat').modal('hide');
+                });
+                $('#mdEspera').modal('hide');
+                $('#mdResultat').modal('show');
+            });
+        });
 
 
-    $("#fLogin").on('submit', function (event) {
-        event.preventDefault();
-        dadesLogin = {tipus:{{tipus}} , nomUsuari: $("#email").val(), password: $("#password").val()};
-        $('#mdEspera').modal('show');
+        $("#fLogin").on('submit', function (event) {
+            event.preventDefault();
+            dadesLogin = {tipus:{{tipus}} , nomUsuari: $("#email").val(), password: $("#password").val()};
+            $('#mdEspera').modal('show');
+        });
+
+        if ($('#tipus').val() == '10') {
+            $('#email').val('cfb@iespaucasesnoves.cat');
+        } else if ($('#tipus').val() == '20') {
+            $('#email').val('info@intel.es');
+        } else if ($('#tipus').val() == '30') {
+            $('#email').val('rafel@iespaucasesnoves.cat');
+        }
+        $('#password').val('12345678');
     });
 </script>
 

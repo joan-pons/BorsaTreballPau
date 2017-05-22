@@ -33,7 +33,7 @@ class DaoAlumne extends Dao {
                 $alumne->save();
                 return $response->withJSON($alumne);
             } else {
-                $missatge = array("missatge" => "No s'ha trobat el professor que es vol modificar.");
+                $missatge = array("missatge" => "No s'ha trobat l'alumne que es vol modificar.");
                 return $response->withJson($missatge, 422);
             }
         } catch (\Illuminate\Database\QueryException $ex) {
