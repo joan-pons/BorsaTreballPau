@@ -84,7 +84,8 @@
 
                 $.ajax({
                     method: 'GET',
-                    url: "ofertaCompleta/" + id
+                    url: "ofertaCompleta/" + id,
+                    data: {recompte:1}
                 }).done(function (text) {
                     $('#mcText').html(text);
                 }).fail(function (jqXHR, textStatus, errorThrown) {

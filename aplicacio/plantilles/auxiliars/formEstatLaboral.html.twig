@@ -12,7 +12,7 @@
                         {%endif%}
                     {% endfor %}
                     <div class="form-check">
-                            <label class="form-check-label">{{ estat.nomEstatLaboral }}: &nbsp;<input class="form-check-input" type="checkbox" id="l{{ estat.idEstatLaboral }}" name="l{{ estat.idEstatLaboral }}" value="{{estat.idEstatLaboral}}" {% if estat.idEstatLaboral==skill %}checked="checked"{% endif %}></label>
+                        <label class="form-check-label">{{ estat.nomEstatLaboral }}: &nbsp;<input class="form-check-input" type="checkbox" id="l{{ estat.idEstatLaboral }}" name="l{{ estat.idEstatLaboral }}" value="{{estat.idEstatLaboral}}" {% if estat.idEstatLaboral==skill %}checked="checked"{% endif %}></label>
                     </div>
                 {% endfor %}
             </div>
@@ -20,7 +20,7 @@
         </div>
         <div class="col-md-6">
             <div class="well">
-                 <div class="well">
+                <div class="well">
                     <p>El sistema seleccionarà aquells alumnes que es trobin en qualsevol de les situacions laborals especificades.</p>
                     <p>Per exemple, si l'oferta demana <em>Aturat</em> o <em>Estudiant</em> es seleccionaran els alumnes que tenguin marcat <em>Aturat</em>, els que tenguin marcat <em>Estudiant</em>, i els que els tenguin tots dos marcats. En aquest cas s'exclourien els que només tenguessin marcat <em>Treballant</em></p>
                     <p>Si no se'n marca cap no es tendrà en compte la situació laboral.</p>
@@ -52,14 +52,18 @@
                     method: 'PUT',
                     url: "estatLaboral/" + {{identificador}},
                     data: resultat
-                }).done(function () {
+                }).done(function (dades) {
                     $('#mrTitol').html('Modificació correcta')
-                    $('#mrText').html("<p>La situació laboral s'ha modificat correctament.</p>");
+                    if (dades.quantitat >= 0) {
+                        $('#mrText').html("<p>La situació laboral s'ha modificat correctament.</p><p>Amb aquestes condicions l'oferta s'enviaria a " + dades.quantitat + " alumnes.</p>");
+                    } else {
+                        $('#mrText').html("<p>La situació laboral s'ha modificat correctament.</p>");
+                    }
                     $('#bmDacord').on('click', function () {
     {%if actor.idOferta is empty %}
                         window.location = "dashBoard";
-                        {%else%}
-                            window.location='estatLaboral?idOferta={{actor.idOferta}}';
+    {%else%}
+                                            window.location = 'estatLaboral?idOferta={{actor.idOferta}}';
     {%endif%}
                     });
                 }).fail(function (jqXHR, textStatus, errorThrown) {

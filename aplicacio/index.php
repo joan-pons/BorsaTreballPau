@@ -396,11 +396,12 @@ $app->group('/empresa', function() {
         $this->dbEloquent;
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         $oferta = Oferta::find($args['idOferta']);
+        $recompte = $request->getQueryParam('recompte');
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
             $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
             $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "en els que vol que es trobin els candidats");
-            return $this->view->render($response, 'auxiliars/ofertaCompleta.html.twig', ['empresa' => $empresa, 'oferta' => $oferta, 'etiquetes' => $etiquetes, 'nivells' => $nivellsIdioma]);
+            return $this->view->render($response, 'auxiliars/ofertaCompleta.html.twig', ['empresa' => $empresa, 'oferta' => $oferta, 'etiquetes' => $etiquetes, 'nivells' => $nivellsIdioma, 'recompte'=>$recompte]);
             //return $response->withJSON($oferta->estatsLaborals);
         } else {
             return $response->withJSON('Errada: ', 500);

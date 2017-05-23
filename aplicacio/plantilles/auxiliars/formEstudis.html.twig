@@ -143,9 +143,13 @@
                         method: 'POST',
                         url: "estudis",
                         data: estudisElegits
-                    }).done(function () {
+                    }).done(function (dades) {
                         $('#mrTitol').html('Actualització correcte');
-                        $('#mrText').html("<p>{{etiquetes.correcte}}</p>");
+                        if (dades.quantitat>=0) {
+                            $('#mrText').html("<p>{{etiquetes.correcte}}</p><p>Amb aquestes condicions l'oferta s'enviaria a " + dades.quantitat + " alumnes.</p>");
+                        } else {
+                            $('#mrText').html("<p>{{etiquetes.correcte}}</p>");
+                        }
                         $('#bmDacord').on('click', function () {
                             window.location.href = "estudis?idOferta=" + idAlumne;
                         });
@@ -185,9 +189,13 @@
                     method: 'DELETE',
                     url: "estudis/" + estudisElegits.idAlumne + "/" + estudisElegits.codiEstudis,
                     data: estudisElegits
-                }).done(function () {
+                }).done(function (dades) {
                     $('#mrTitol').html('Eliminació correcta')
-                    $('#mrText').html("<p>Els estudis <em>" + estudisElegits.nomEstudis + "</em> s'han esborrat correctament.</p>");
+                    if (dades.quantitat>=0) {
+                        $('#mrText').html("<p>Els estudis <em>" + estudisElegits.nomEstudis + "</em> s'han esborrat correctament.</p><p>Amb aquestes condicions l'oferta s'enviaria a " + dades.quantitat + " alumnes.</p>");
+                    } else {
+                        $('#mrText').html("<p>Els estudis <em>" + estudisElegits.nomEstudis + "</em> s'han esborrat correctament.</p>");
+                    }
                     $('#bmDacord').on('click', function () {
                         /* $("#bGuar" + contacte.idContacte).hide('fast');
                          $("#bCan" + contacte.idContacte).hide('fast');
@@ -256,9 +264,13 @@
                     method: 'PUT',
                     url: "estudis/" + estudisElegits.idAlumne + "/" + estudisElegits.idGrau,
                     data: estudisElegits
-                }).done(function () {
-                    $('#mrTitol').html('Modificació correcta')
-                    $('#mrText').html("<p>Les dades dels estudis  s'han modificat correctament.</p>");
+                }).done(function (dades) {
+                    $('#mrTitol').html('Modificació correcta');
+                    if (dades.quantitat>=0) {
+                        $('#mrText').html("<p>Les dades dels estudis <em>" + estudisElegits.nomEstudis + "</em> s'han modificat correctament.</p><p>Amb aquestes condicions l'oferta s'enviaria a " + dades.quantitat + " alumnes.</p>");
+                    } else {
+                        $('#mrText').html("<p>Les dades dels estudis s'han modificat correctament.</p>");
+                    }
                     $('#bmDacord').on('click', function () {
                         $("#bGuar" + estudisElegits.idGrau).hide('fast');
                         $("#bCan" + estudisElegits.idGrau).hide('fast');

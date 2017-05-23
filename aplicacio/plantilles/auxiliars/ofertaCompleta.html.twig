@@ -67,8 +67,15 @@
             {%else%}
                 {%for contacte in oferta.contactes %}
                 <li><p>{{contacte.nom}} {{contacte.llinatges}}: <a href="mailto:{{contacte.email}}">{{contacte.email}}</a></p></li>
-                {%endfor%}
-            {%endif%}
+                    {%endfor%}
+                {%endif%}
     </ul>
 </div>
 
+{%if not recompte is empty %}
+<h2> Nombre de candidats</h2>
+<div class="well">
+    <p>L'oferta s'enviarà a {{recompte}} candidats.</p>
+</div>
+    
+{% endif %}

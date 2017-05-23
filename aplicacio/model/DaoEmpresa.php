@@ -298,7 +298,7 @@ class DaoEmpresa extends Dao {
                 $codiEstudis = filter_var($data['codiEstudis'], FILTER_SANITIZE_STRING);
                 //  $alumne->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);
                 $oferta->estudis()->attach($codiEstudis, array('any' => $data['any'], 'nota' => $data['nota']));
-                return $response->withJSON($oferta);
+                return $response->withJSON(array('quantitat'=>Dao::comptarCandidats($oferta, $container)));
             } else {
                 $missatge = array("missatge" => "No s'ha trobat l'oferta que es vol modificar.");
                 return $response->withJson($missatge, 422);
@@ -327,7 +327,7 @@ class DaoEmpresa extends Dao {
             $estudis = $args['codiEstudis'];
             if ($oferta != null) {
                 $oferta->estudis()->detach($estudis);
-                return $response->withJSON($oferta);
+                return $response->withJSON(array('quantitat'=>Dao::comptarCandidats($oferta, $container)));
             } else {
                 return $response->withJson("No es troba cap estudis amb l'identificador demanat.", 422);
             }
@@ -355,7 +355,7 @@ class DaoEmpresa extends Dao {
             if ($oferta != null) {
                 $codiEstudis = filter_var($args['codiEstudis'], FILTER_SANITIZE_STRING);
                 $oferta->estudis()->sync(array($codiEstudis => array('any' => $data['any'], 'nota' => $data['nota'])), false);
-                return $response->withJSON($oferta);
+                return $response->withJSON(array('quantitat'=>Dao::comptarCandidats($oferta, $container)));
             } else {
                 $missatge = array("missatge" => "No s'ha trobat l'alumne que es vol modificar.");
                 return $response->withJson($missatge, 422);
@@ -391,7 +391,7 @@ class DaoEmpresa extends Dao {
                     $dades[$nivell['idIdioma']] = array('NivellsIdioma_idNivellIdioma' => $nivell['NivellsIdioma_idNivellIdioma']);
                 }
                 $oferta->idiomes()->sync($dades);
-                return $response->withJSON($dades);
+                return $response->withJSON(array('quantitat'=>Dao::comptarCandidats($oferta, $container)));
             } else {
                 $missatge = array("missatge" => "No s'ha trobat l'oferta que es vol modificar.");
                 return $response->withJson($missatge, 422);
@@ -426,7 +426,7 @@ class DaoEmpresa extends Dao {
                     array_push($dades, $estat);
                 }
                 $oferta->estatsLaborals()->sync($dades);
-                return $response->withJSON($dades);
+                return $response->withJSON(array('quantitat'=>Dao::comptarCandidats($oferta, $container)));
             } else {
                 $missatge = array("missatge" => "No s'ha trobat l'oferta que es vol modificar.");
                 return $response->withJson($missatge, 422);

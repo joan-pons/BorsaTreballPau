@@ -56,9 +56,13 @@
                     method: 'PUT',
                     url: "idiomes/" + {{identificador}},
                     data: resultat
-                }).done(function () {
-                    $('#mrTitol').html('Modificació correcta')
-                    $('#mrText').html("<p>Els idiomes s'han modificat correctament.</p>");
+                }).done(function (dades) {
+                    $('#mrTitol').html('Modificació correcta');
+                    if (dades.quantitat>=0) {
+                         $('#mrText').html("<p>Els idiomes s'han modificat correctament.</p><p>Amb aquestes condicions l'oferta s'enviaria a " + dades.quantitat + " alumnes.</p>");
+                    } else {
+                        $('#mrText').html("<p>Els idiomes s'han modificat correctament.</p>");
+                    }
                     $('#bmDacord').on('click', function () {
     {%if actor.idOferta is empty %}
                         window.location = "dashBoard";
