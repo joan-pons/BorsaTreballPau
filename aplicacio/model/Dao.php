@@ -11,6 +11,7 @@ namespace Borsa;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Borsa\Usuari as Usuari;
+use Borsa\Ajuda as Ajuda;
 
 use Illuminate\Database\Capsule\Manager as DB;
 /**
@@ -114,4 +115,22 @@ class Dao {
     public function comptarCandidats($oferta, \Slim\Container $container) {
         return count(Dao::alumnesOferta($oferta, $container));
     }
+    
+    public function ajuda(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+            $ajuda = Ajuda::find($args['idAjuda']);
+            if ($ajuda != null) {
+                
+                    return $response->withJson(array("missatge" =>$ajuda->missatge), 200);
+                
+            } else {
+                return $response->withJson(array("missatge" => "No es troba l'ajuda demanada."), 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            
+            return $response->withJson(array("missatge" => "No es troba l'ajuda demanada."), 422);
+        }
+    }
+    
 }

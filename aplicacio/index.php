@@ -100,9 +100,7 @@ $container['mailer'] = function ($container) {
 
 $container['notFoundHandler'] = function ($c) {
     return function ($request, $response) use ($c) {
-        return $c['view']->render($response->withStatus(404), 'auxiliars/noTrobat.html.twig', [
-                    "myMagic" => "Let's roll"
-        ]);
+        return $c['view']->render($response->withStatus(404), 'auxiliars/noTrobat.html.twig');
     };
 };
 // Index
@@ -120,11 +118,15 @@ $app->get('/login', function ($request, $response, $args) {
     return Dao::entrada($request, $response, $args, $this);
 });
 
+$app->get('/ajuda/{idAjuda}', function ($request, $response, $args) {
+    return Dao::ajuda($request, $response, $args, $this);
+});
+
 $app->get('/mailing', function ($request, $response, $args) {
     $this->dbEloquent;
     $oferta = Oferta::find(4);
-    $nivells=$nivells = NIvellIdioma::all();
-    if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells'=>$nivells], function($message) {
+    $nivells = $nivells = NIvellIdioma::all();
+    if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells' => $nivells], function($message) {
                 $message->from("no-reply@iespaucasesnoves.cat");
                 $message->to('joan.pons.tugores@gmail.com');
                 $message->subject('Prova');
@@ -139,7 +141,7 @@ $app->get('/provaMailOferta/{idOferta}', function(Request $request, Response $re
     $this->dbEloquent;
     $oferta = Oferta::find($args['idOferta']);
     if (oferta != null) {
-        
+
         return $this->view->render($response, 'email/oferta.twig', ['oferta' => $oferta]);
     } else {
         return $response->withJSON('Errada: ' . $_SESSION);
@@ -291,7 +293,7 @@ $app->group('/empresa', function() {
             $empresa = $usuari->getEntitat();
             return $this->view->render($response, 'empresa/ofertaDades.html.twig', ['empresa' => $empresa, 'oferta' => $oferta]);
         } else {
-            return $response->withJSON('Errada: ' . $_SESSION);
+            return $response->withJSON('Errada: ', 404);
         }
     });
 
@@ -305,7 +307,7 @@ $app->group('/empresa', function() {
         $oferta = Oferta::find($request->getQueryParam('idOferta'));
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
-            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes"/* per a l'oferta " . $oferta->idOferta . ' ' . $oferta->titol*/, "labelLlista" => "que ha seleccionat", 'correcte' => "L'oferta filtrarà els alumnes per aquests estudis.");
+            $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes"/* per a l'oferta " . $oferta->idOferta . ' ' . $oferta->titol */, "labelLlista" => "que ha seleccionat", 'correcte' => "L'oferta filtrarà els alumnes per aquests estudis.");
             $estudis = Estudis::orderBy('nom', 'ASC')->get();
             return $this->view->render($response, 'empresa/estudisOferta.html.twig', ['empresa' => $empresa, 'identificador' => $oferta->idOferta, 'entitat' => $oferta, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
 // return $response->withJSON($oferta);
@@ -401,7 +403,7 @@ $app->group('/empresa', function() {
             $empresa = $usuari->getEntitat();
             $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
             $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "en els que vol que es trobin els candidats");
-            return $this->view->render($response, 'auxiliars/ofertaCompleta.html.twig', ['empresa' => $empresa, 'oferta' => $oferta, 'etiquetes' => $etiquetes, 'nivells' => $nivellsIdioma, 'recompte'=>$recompte]);
+            return $this->view->render($response, 'auxiliars/ofertaCompleta.html.twig', ['empresa' => $empresa, 'oferta' => $oferta, 'etiquetes' => $etiquetes, 'nivells' => $nivellsIdioma, 'recompte' => $recompte]);
             //return $response->withJSON($oferta->estatsLaborals);
         } else {
             return $response->withJSON('Errada: ', 500);
@@ -412,11 +414,11 @@ $app->group('/empresa', function() {
         return DaoEmpresa::publicarOferta($request, $response, $args, $this);
     });
 
-    $this->get('/{id}', function(Request $request, Response $response, $args) {
-        $this->dbEloquent;
-        return $response->withJSON(Empresa::find($args['id']));
-    });
-})->add(function ($request, $response, $next) {
+//    $this->get('/{id}', function(Request $request, Response $response, $args) {
+//        $this->dbEloquent;
+//        return $response->withJSON(Empresa::find($args['id']));
+//    });
+})->add(function ($request, $response, $next) use ($c) {
     if (in_array(20, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
     } else {
@@ -717,11 +719,10 @@ $app->group('/professor', function() {
         return DaoProfessor::rebutjarOferta($request, $response, $args, $this);
     });
 
-    $this->get('/{id}', function(Request $request, Response $response, $args) {
-        $this->dbEloquent;
-        return $response->withJSON(Professor::find($args['id']));
-    });
-
+//    $this->get('/{id}', function(Request $request, Response $response, $args) {
+//        $this->dbEloquent;
+//        return $response->withJSON(Professor::find($args['id']));
+//    });
 //    $this->get('/ofertesProfessor/{idUsuari}', function(Request $request, Response $response, $args) {
 //        $this->dbEloquent;
 //        $usuari = Usuari::find($_SESSION["idUsuari"]);
@@ -776,6 +777,11 @@ $app->group('/administrador', function() {
         }
     });
 
+    $this->get('/usuaris/{id}', function(Request $request, Response $response, $args) {
+        $this->dbEloquent;
+        return $response->withJSON(Professor::find($args['id']));
+    });
+
     $this->put('/usuaris/{idProfessor}', function ($request, $response, $args) {
         return DaoProfessor::activar($request, $response, $args, $this);
     });
@@ -828,7 +834,15 @@ $app->group('/administrador', function() {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
     });
-
+    $this->get('/empresa/{idEmpresa}', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $empresa = Empresa::find($args['idEmpresa']);
+        if ($empresa != null) {
+            return $response->withJSON($empresa,200);
+        } else {
+            return $response->withJSON('Errada: ' . $_SESSION);
+        }
+    });
     $this->get('/empresesPendents', function ($request, $response, $args) {
         $this->dbEloquent;
         $usuari = Usuari::find($_SESSION['idUsuari']);

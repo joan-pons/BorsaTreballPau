@@ -24,7 +24,8 @@ p{
     text-align: justify;
 }
 .img-dreta{
-    margin-left:1em;   
+    margin-left:1em; 
+    margin-bottom: 1em;
 }
 .form-group.required .control-label:after { 
     content:"  *";

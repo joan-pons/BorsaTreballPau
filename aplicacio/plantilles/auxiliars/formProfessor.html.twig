@@ -1,4 +1,4 @@
-<h2>Dades de la professora / del professor</h2>
+<h2>Dades personals</h2>
 <div class='well'>
     <form  id="formProfessor" action="/altaProfessor" method="POST">
         <input type="hidden" name="idProfessor" value="{{professor.idProfessor}}">
@@ -19,7 +19,7 @@
                     <input type="email" required="required" class="form-control" id="email" name="email" value="{{professor.email}}"  maxlength="75" data-toggle="tooltip" title="Ha de ser un email del domini del pau, 123@iespaucasesnoves.cat">
                 </div>
                 <div class="form-group">
-                    <label for="telefon">Teléfon:</label>
+                    <label for="telefon">Telèfon:</label>
                     <input type="text" class="form-control" id="telefon" name="telefon" value="{{professor.telefon}}"  maxlength="9">
                 </div>
             </div> <!--Col8 -->

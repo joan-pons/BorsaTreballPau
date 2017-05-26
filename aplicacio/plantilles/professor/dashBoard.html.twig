@@ -31,6 +31,7 @@
                     window.location.href = "/administrador/empresesPendents#" + id;
                 });
         {%endif%}
+
             });
     </script>
 {% endblock %}
@@ -54,8 +55,7 @@
             {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right ">
-        <!--<li><a href="#">{{ professor.nom }} {{ professor.llinatges }}</a></li>-->
-        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+       <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
     </ul>
 {% endblock %}          
 {% block contingut %}
@@ -146,5 +146,8 @@
             </div><!--col-->
         {% endif %}
     </div><!--row-->
-{% endblock %}  
+    {{include('auxiliars/modals.html.twig')}}
+
+{% endblock %}                     
+
 

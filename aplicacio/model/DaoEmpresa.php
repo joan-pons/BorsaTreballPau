@@ -282,7 +282,7 @@ class DaoEmpresa extends Dao {
                     $missatge = array("missatge" => "Algunes de les dades obligatòries han arribat sense valor.", 'info' => $ex->getCode() . " " . $ex->getMessage());
                     break;
                 default:
-                    $missatge = array("missatge" => "L'oferta no s'ha pogut donar d'alta correctament. ", 'info' => $ex->getCode() . " " . $ex->getMessage());
+                    $missatge = array("missatge" => "L'oferta no s'ha pogut modificar correctament. ", 'info' => $ex->getCode() . " " . $ex->getMessage());
                     break;
             }
             return $response->withJson($missatge, 422);

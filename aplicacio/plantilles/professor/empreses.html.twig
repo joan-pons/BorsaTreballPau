@@ -55,7 +55,7 @@
 
                 $.ajax({
                     method: 'GET',
-                    url: "/empresa/" + $("#llista").val()
+                    url: "empresa/" + $("#llista").val()
                 }).done(function (empresa) {
 
                     $("#bModificar").prop('disabled', 'disabled');
@@ -201,7 +201,7 @@
                     <p><label>Validada: &nbsp;<input id="validat" name="validat" type="checkbox" {%if company.validat %} checked {% endif %} disabled="disabled"></label></p>
                     <p><label data-toggle="tooltip" title="No es pot activar si no està validat">Activa: &nbsp;<input id="actiu" name="actiu" type="checkbox" {%if company.actiu %} checked {% endif %} disabled="disabled"></label></p>
                     <button class="btn btn-success" type="submit" id="bGuardar" disabled="disabled">Guardar</button>
-                    <button class="btn btn-default" type="reset" id="bCancelar" disabled="disabled">Cancelar</button>
+                    <button class="btn btn-default" type="reset" id="bCancelar" disabled="disabled">Cancel·lar</button>
                 </div>
             </div>
         </div>

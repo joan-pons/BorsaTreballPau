@@ -23,36 +23,33 @@
 {{include('auxiliars/modals.html.twig')}}
 <script>
     $(document).ready(function () {
-        var dadesLogin;
 
-        $('#mdResultat').modal({backdrop: 'static', keyboard: false, show: false});
-        $('#bmDacord').on('click', function () {
-            $('#mdResultat').modal('hide');
-        });
-        $('#mdEspera').modal({backdrop: 'static', keyboard: false, show: false});
-        $('#mEsperaTitol').html('Validant l\'usuari');
-        $('#mdEspera').on('shown.bs.modal', function (e) {
-            $.ajax({
-                method: 'GET',
-                url: "/login",
-                data: dadesLogin
-            }).done(function (usuari) {
-                $('#mdEspera').modal('hide');
-                window.location = '{{ action }}';
-            }).fail(function (jqXHR, textStatus, errorThrown) {
-                $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la validació');
-                $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
-                $('#bmDacord').on('click', function () {
-                    $('#mdResultat').modal('hide');
-                });
-                $('#mdEspera').modal('hide');
-                $('#mdResultat').modal('show');
-            });
-        });
 
 
         $("#fLogin").on('submit', function (event) {
             event.preventDefault();
+            var dadesLogin;
+
+            $('#mEsperaTitol').html('Validant l\'usuari');
+            $('#mdEspera').on('shown.bs.modal', function (e) {
+                $.ajax({
+                    method: 'GET',
+                    url: "/login",
+                    data: dadesLogin
+                }).done(function () {
+                    $('#mdEspera').modal('hide');
+                    window.location = '{{ action }}';
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la validació');
+                    $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    });
+                    $('#mdEspera').modal('hide');
+                    $('#mdResultat').modal('show');
+                });
+            });
+
             dadesLogin = {tipus:{{tipus}} , nomUsuari: $("#email").val(), password: $("#password").val()};
             $('#mdEspera').modal('show');
         });
