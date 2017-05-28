@@ -40,12 +40,10 @@
         event.preventDefault();
     {% for estat in estats %}
             if (typeof $('input[name="l{{estat.idEstatLaboral}}"]') !== "undefined" && $('input[name="l{{estat.idEstatLaboral}}"]:checked').val() > 0) {
-                // alert('{{idioma.idioma}} ' + $('input[name="l{{idioma.idIdioma}}"]:checked').val());
                 resultat.estats.push({{estat.idEstatLaboral}});
             }
     {% endfor %}
 
-            // alert(JSON.stringify(resultat));
             $('#mEsperaTitol').html("Realitzant la modificació.");
             $('#mdEspera').on('shown.bs.modal', function (e) {
                 $.ajax({

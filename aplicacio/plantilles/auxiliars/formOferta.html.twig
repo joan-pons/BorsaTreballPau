@@ -74,9 +74,7 @@
                 <div class="form-group">
                     <label for="textOferta">Descripció de l'oferta:</label>
                     <div id="textOferta">
-                        <h1>Programador junior</h1>
-                        <p>Necessitam incorporar de forma <strong>immediata</strong> tres programadors junior amb coneixements de Java</p>
-                        <p>Sou a negociar amb els interessats, mínim 12.000€</p>
+                        
                     </div>
                 </div>
             </div><!--col-->
@@ -139,8 +137,6 @@
                 oferta[obj.name] = obj.value;
             });
             oferta.descripcio = $('#textOferta').summernote('code');
-
-            alert(JSON.stringify(oferta));
     {% if oferta is empty %}
                 $.ajax({
                     method: 'POST',

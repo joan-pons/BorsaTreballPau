@@ -73,8 +73,11 @@
                     }
 
                 }).fail(function (jqXHR, textStatus, errorThrown) {
-                    alert("Error");
-                })
+                    $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'actualització');
+                    $('#mrText').html("<p>" + (typeof jqXHR.responseJSON==='undefined'?errorThrown:jqXHR.responseJSON.missatge) + "</p>");
+                    $('#bmDacord').on('click', function () {
+                        $('#mdResultat').modal('hide');
+                    })
             });
 
             $("#fCanviar").on('reset', function () {

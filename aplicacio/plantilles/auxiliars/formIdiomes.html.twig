@@ -44,12 +44,10 @@
         event.preventDefault();
     {% for idioma in idiomes %}
             if (typeof $('input[name="l{{idioma.idIdioma}}"]') !== "undefined" && $('input[name="l{{idioma.idIdioma}}"]:checked').val() > 1) {
-                // alert('{{idioma.idioma}} ' + $('input[name="l{{idioma.idIdioma}}"]:checked').val());
                 resultat.nivells.push({idIdioma: '{{idioma.idIdioma}}', NivellsIdioma_idNivellIdioma: $('input[name="l{{idioma.idIdioma}}"]:checked').val()});
             }
     {% endfor %}
 
-            // alert(JSON.stringify(resultat));
             $('#mEsperaTitol').html("Realitzant la modificació.");
             $('#mdEspera').on('shown.bs.modal', function (e) {
                 $.ajax({
