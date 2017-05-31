@@ -23,7 +23,7 @@
             $("#dEstats").click(function () {
                 $("#mEstats")[0].click();
             });
-             $('#dOfertes > .click').on('click', function (event) {
+            $('#dOfertes > .click').on('click', function (event) {
                 var id = event.currentTarget.id;
                 window.location.href = "ofertes#" + id;
             });
@@ -47,6 +47,7 @@
         <!--<li><a href="formacio">Altra formació</a></li>-->
         {% if alumne.actiu==1 %}
             <li><a href="ofertes">Ofertes</a></li>
+            <li><a href="empreses">Empreses</a></li>
             {% endif %}
     </ul>
     <ul class="nav navbar-nav navbar-right ">
@@ -123,11 +124,11 @@
                     <div class="well"><p> No hi ha cap oferta en vigor. </p></div>
                 {% else %}
                     {% for oferta in alumne.ofertesActives() %}
-                    <div class="well click" id="of{{oferta.idOferta}}">
-                        <p><label>Títol: &nbsp;</label>{{oferta.titol}}</p>
-                        <p><label>Data de publicació: &nbsp;</label>{{oferta.dataPublicacio|date('d / m / Y')}}</p>
-                        <p><label>Data de finalització: &nbsp;</label>{{oferta.dataFinal|date('d / m / Y')}}</p>                      
-                    </div>
+                        <div class="well click" id="of{{oferta.idOferta}}">
+                            <p><label>Títol: &nbsp;</label>{{oferta.titol}}</p>
+                            <p><label>Data de publicació: &nbsp;</label>{{oferta.dataPublicacio|date('d / m / Y')}}</p>
+                            <p><label>Data de finalització: &nbsp;</label>{{oferta.dataFinal|date('d / m / Y')}}</p>                      
+                        </div>
                     {% endfor%}
                 {% endif %}
             {% else %}

@@ -14,7 +14,7 @@
 
             $('form [name="bGuardar"]').hide();
             $('form [name="bCancel"]').hide();
-            
+
             $('form [name="bEditar"]').on('click', function (event) {
                 var ident = event.currentTarget.id.replace('bEd', '');
                 var form = 'f' + ident;
@@ -57,6 +57,8 @@
                 $("#bCan" + ident).hide('fast');
                 $("form .btn-primary").show('fast');
                 $("form .btn-danger").show('fast');
+                $("#f" + ident + " input").prop('readonly', 'readonly');
+
             });
 
 
@@ -72,23 +74,23 @@
                 $('#mdEspera').on('shown.bs.modal', function (e) {
                     $.ajax({
                         method: 'DELETE',
-                        url: "/empresa/esborrarContacte/"+contacte.idContacte,
+                        url: "/empresa/esborrarContacte/" + contacte.idContacte,
                         data: contacte
                     }).done(function () {
                         $('#mrTitol').html('Eliminació correcta')
                         $('#mrText').html("<p>La persona de contacte s'ha esborrat correctament.</p>");
                         $('#bmDacord').on('click', function () {
-                           /* $("#bGuar" + contacte.idContacte).hide('fast');
-                            $("#bCan" + contacte.idContacte).hide('fast');
-                            $(".btn-primary").show('fast');
-                            $(".btn-danger").show('fast');
-                            */
-                           $('#mdResultat').modal('hide');
-                           location.reload();
+                            /* $("#bGuar" + contacte.idContacte).hide('fast');
+                             $("#bCan" + contacte.idContacte).hide('fast');
+                             $(".btn-primary").show('fast');
+                             $(".btn-danger").show('fast');
+                             */
+                            $('#mdResultat').modal('hide');
+                            location.reload();
                         });
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb l\'eliminació');
-                        $('#mrText').html("<p>"+(typeof jqXHR.responseJSON==='undefined'?errorThrown:jqXHR.responseJSON.missatge)+"</p>");
+                        $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
                         $('#bmDacord').on('click', function () {
                             $('#mdResultat').modal('hide');
                         });
@@ -113,7 +115,7 @@
                 $('#mdEspera').on('shown.bs.modal', function (e) {
                     $.ajax({
                         method: 'PUT',
-                        url: "/empresa/modificarContacte/"+contacte.idContacte,
+                        url: "/empresa/modificarContacte/" + contacte.idContacte,
                         data: contacte
                     }).done(function () {
                         $('#mrTitol').html('Modificació correcta')
@@ -123,11 +125,12 @@
                             $("#bCan" + contacte.idContacte).hide('fast');
                             $(".btn-primary").show('fast');
                             $(".btn-danger").show('fast');
+                            $("#f" + contacte.idContacte + " input").prop('readonly', 'readonly');
                             $('#mdResultat').modal('hide');
                         });
                     }).fail(function (jqXHR, textStatus, errorThrown) {
                         $('#mrTitol').html('<span class="glyphicon glyphicon-alert"></span>&nbsp; Problemes amb la modificació')
-                        $('#mrText').html("<p>"+(typeof jqXHR.responseJSON==='undefined'?errorThrown:jqXHR.responseJSON.missatge)+"</p>");
+                        $('#mrText').html("<p>" + (typeof jqXHR.responseJSON === 'undefined' ? errorThrown : jqXHR.responseJSON.missatge) + "</p>");
                         $('#bmDacord').on('click', function () {
                             $('#mdResultat').modal('hide');
                         });
@@ -143,7 +146,7 @@
 
         });
     </script>
-<script src="../js/dirtyForms.js"></script>
+    <script src="../js/dirtyForms.js"></script>
 {% endblock %}
 
 {% block navegacio %}

@@ -1,0 +1,15 @@
+{% extends "/email/baseEmail.twig" %}
+
+{% block contingut %}
+    <h1>Validació correcte</h1>
+    <p>La seva sol·licitud d'alta a la borsa de treball de l'IES Pau Casesnoves s'ha valorat positivament.</p>
+    <p>A partir d'ara podrà començar a utilitzar-la</p>
+    <h2>Instruccions d'accés</h2>
+    <p>Per entrar a l'aplicació, al formulari d'entrada ha de posar les següents dades:</p>
+    <ul>
+        <li><p><label>Nom d'usuari:</label> {{usuari}}</p></li>
+        <li><p><label>Contrasenya:</label> {{contrasenya}}</p></li>
+    </ul>
+    <p> Una vegada hagi entrat a la barra de navegació trobarà una opció per canviar la contrasenya. Es recomanable que ho faci com més aviat millor.</p>
+    <p>L'equip de la borsa de treball</p>
+{%endblock%}

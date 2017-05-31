@@ -74,7 +74,7 @@
                 <div class="form-group">
                     <label for="textOferta">Descripció de l'oferta:</label>
                     <div id="textOferta">
-                        
+                        {{oferta.descripcio|raw}}
                     </div>
                 </div>
             </div><!--col-->
@@ -98,7 +98,7 @@
                 ['font', ['strikethrough', 'superscript', 'subscript']],
                 ['fontsize', ['fontsize']],
                 ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
+                ['para', ['style','ul', 'ol', 'paragraph']],
                 ['height', ['height']]
             ]
         });

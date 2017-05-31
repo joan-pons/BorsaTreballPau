@@ -1,0 +1,15 @@
+{% extends "/email/baseEmail.twig" %}
+
+{% block contingut %}
+    <h1>{{oferta.titol}} <small>(Codi: {{oferta.idOferta}})</small></h1>
+    {%if validada==true%}        
+        <h2>L'oferta s'ha validat.</h2>
+        <p>Ja s'ha enviat un correu electrònic als alumnes seleccionats amb les dades de l'oferta tal i com va poder veure en publicar-la.</p>
+    {%else%}
+        <h2>L'oferta no s'ha pogut validar</h2>
+        <p>Els responsables de validar les ofertes per els estudis als que va dirigida han rebutjat l'oferta per els següents motius:</p>
+        <p><strong>{{motius}}.</strong></p>
+        <p>Pot modificar l'oferta per a tornar-la publicar, o bé la pot eliminar de la base de dades.</p>
+    {%endif%}
+    <p>Moltes gràcies per utilitzar la borsa de treball de l'IES Pau Casesnoves</p>
+{%endblock%}

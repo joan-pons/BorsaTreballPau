@@ -1,24 +1,9 @@
-<html>
-    <head>
-        <meta charset="utf-8">
-        <style>
-            label {
-                font-weight: bold;
-            }
-            .well{
-                border-radius: 8px;
-                border-color: #ddd;
-                border-style: solid;
-                border-width: 1px;
-                background-color: #eee;
+{% extends "/email/baseEmail.twig" %}
 
-                margin: .5em;
-                padding: .5em;
-            }
-        </style>
-    </head>
-    <body>
-        <p><img src="https://aulavirtual.iespaucasesnoves.cat/pluginfile.php/1/theme_clean/logo/1458641851/BO75pxx%2Btext.png"></p>
+{% block contingut %}
+    <p>Des de la borsa de treball de l'IES Pau Casesnoves et feim arribar aquesta oferta de treball.</p>
+    <p>Si t'interessa envia un correu electrònic amb les teves dades a l'adreça que apareix a l'apartat <em>Contacte amb l'empresa</em><p>
+    <p>Si no vols rebre més correus electrònics de la borsa de treball, per favor entra a l'aplicació web i marca el teu estat com a inactiu.</p>
+    <hr>
         {{include('auxiliars/ofertaCompleta.html.twig')}}
-    </body>
-</html>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends "auxiliars/base.html.twig" %}
+
+{% block head %}
+    <title>Borsa de treball: Ofertes</title>
+    <link rel="shortcut icon" type="image/ico" href="{%if not codiEstudis is empty%}../{%endif%}../imatges/logoPau2.ico"/>
+    <link rel="stylesheet" href="{%if not codiEstudis is empty%}../{%endif%}../css/bootstrap.min.css">
+    <link rel="stylesheet" href="{%if not codiEstudis is empty%}../{%endif%}../css/borsa.css">
+    <script src="{%if not codiEstudis is empty%}../{%endif%}../js/jquery.min.js"></script>
+    <script src="{%if not codiEstudis is empty%}../{%endif%}../js/bootstrap.min.js"></script>
+
+
+{% endblock %}
+{% block navegacio %}
+    <a class="navbar-brand" href="{%if not codiEstudis is empty%}../{%endif%}dashBoard">{{actor.nom}} {{actor.llinatges}}</a>
+</div>
+<div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav">
+        <!--<li><a href="formacio">Altra formació</a></li>-->
+        <li class='active'><a href="#">Empreses</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right ">
+        <li><a href="/sortir"><span class="glyphicon glyphicon-log-out"></span> Sortir</a></li>
+    </ul>
+{% endblock %}
+{% block contingut %}
+    <h2>Empreses</h2>
+    <div class="well">
+        <div class="row">
+            <div class="col-md-8">
+                <div class='row'>
+                    <div class="form-group">
+                        <label for="sel1">Escull uns estudis per veure les empreses que han publicat ofertes demanant aquests estudis:</label>
+                        <div class="input-group">
+                            <select class="form-control" id="graus" name="graus">
+                                <option value="">Escull uns estudis</option>
+                                {% for grau in actor.estudis %}
+                                    <option value="{{ grau.codi }}" {%if grau.codi==codiEstudis%}selected='selected'{%endif%}>{{ grau.codi }} {{ grau.nom }}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="input-group-btn"><button type="button" class="btn btn-default" id="bVeure">Veure</button></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h3>Empreses trobades</h3>
+    {%if not empreses is empty%}
+        {% for empresa in empreses %}
+            <div class="well" id='emp{{ empresa.idEmpresa}}'>
+                <div class='row'>
+                    <div class='col-md-6'>
+                        <p><label>Nom: &nbsp;</label> {{ empresa.nom }}</p>
+                        <p><label>Correu electrònic: &nbsp;</label><a href="mailto:{{empresa.email}}">{{empresa.email}}</a></p>
+                        <p><label>Telèfon: &nbsp;</label>{{ empresatTelefon }}</p>
+                        <p><label>url: &nbsp;</label><a href="{%if not(empresa.url starts with 'http') %}{{'http://'}}{%endif%}{{empresa.url}}" target="_blank">{{empresa.url}}</a></p>
+                        <p><label>Adreça: &nbsp;</label>{{ empresa.adreca }}</p>
+                        <p><label>Codi postal: &nbsp;</label>{{ empresa.codiPostal }}</p>
+                        <p><label>Localitat: &nbsp;</label>{{ empresa.localitat }}</p>
+                        <p><label>Província: &nbsp;</label>{{ empresa.provincia }}</p>
+                    </div>
+                    <div class='col-md-6'>
+                        <p><label>Descripció: &nbsp;</label></p>
+                        <div id='descripcio' class='well'>{{ empresa.descripcio | raw }}</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {%else%}
+        <div class='well'>
+            <p>No s'han trobat empreses que hagin publicat ofertes per aquests estudis.</p>
+        </div>
+    {%endif%}
+    {{include('auxiliars/modals.html.twig')}}
+    <script>
+        $(document).ready(function () {
+            $('#bVeure').on('click',function(){
+                window.location='{%if not codiEstudis is empty%}../{%endif%}empreses/'+$('#graus').val();
+            });
+        });
+    </script>
+{% endblock %}

@@ -26,7 +26,7 @@ class Empresa extends Model {
     }
 
     public function ofertes() {
-        return $this->hasMany('Borsa\Oferta', 'Empreses_idEmpresa', 'idEmpresa')->orderby('dataFinal','DES');
+        return $this->hasMany('Borsa\Oferta', 'Empreses_idEmpresa', 'idEmpresa')->orderBy('dataPublicacio','ASC')->orderby('dataFinal','ASC');
     }
 
 }

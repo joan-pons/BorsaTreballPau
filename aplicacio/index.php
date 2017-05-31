@@ -16,6 +16,7 @@ use Borsa\Alumne as Alumne;
 use Borsa\EstatLaboral as EstatLaboral;
 use Borsa\Oferta as Oferta;
 
+use Illuminate\Database\Capsule\Manager as DB;
 require 'vendor/autoload.php';
 
 
@@ -41,18 +42,6 @@ $app = new \Slim\App(["settings" => $config]);
 //Contenidor de dependències
 $container = $app->getContainer();
 
-//$container['logger'] = function($c) {
-////$c és el contenidor, de manera que podem utilitzar altres dependències
-////Inicialitzam el contenidor. La funció només s'executa una vegada.
-////L'objecte creat i tornat és el que s'assigna al contenidor.
-//    $logger = new \Monolog\Logger('my_logger');
-//    $file_handler = new \Monolog\Handler\StreamHandler("../logs/app.log");
-//    $logger->pushHandler($file_handler);
-//    return $logger;
-//};
-//
-
-
 $container['db'] = function ($c) {
     $db = $c['settings']['db'];
     $pdo = new PDO("mysql:host=" . $db['host'] . ";dbname=" . $db['dbname'], $db['user'], $db['pass']);
@@ -73,9 +62,8 @@ $container['dbEloquent'] = function ($container) {
 };
 
 $container['view'] = function ($container) {
-    $view = new \Slim\Views\Twig('plantilles'/* , ['cache' => 'path/to/cache'] */);
+    $view = new \Slim\Views\Twig('plantilles');
 
-// Instantiate and add Slim specific extension
     $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
     $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
 
@@ -125,11 +113,17 @@ $app->get('/ajuda/{idAjuda}', function ($request, $response, $args) {
 $app->get('/mailing', function ($request, $response, $args) {
     $this->dbEloquent;
     $oferta = Oferta::find(4);
-    $nivells = $nivells = NIvellIdioma::all();
-    if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells' => $nivells], function($message) {
+    $nivells = $nivells = NivellIdioma::all();
+//      if ($this->mailer->send('/email/validarUsuari.html.twig', [], function($message) {
+  //    if ($this->mailer->send('/email/validarEmpresa.html.twig',[], function($message) {
+  //    if ($this->mailer->send('/email/instruccionsValidat.html.twig',['usuari'=>'ptj@iespaucasesnoves.cat', 'contrasenya'=>'8acd34df'], function($message) {
+  //    if ($this->mailer->send('/email/validarOferta.html.twig',[], function($message) {
+                $motius = "L'oferta no és adequada per als estudis als que va dirigida";
+   // if ($this->mailer->send('/email/ofertaResultat.html.twig',['validada'=>false, 'oferta'=>$oferta, 'motius'=>$motius], function($message) {
+     if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells' => $nivells], function($message) {
                 $message->from("no-reply@iespaucasesnoves.cat");
                 $message->to('joan.pons.tugores@gmail.com');
-                $message->subject('Prova');
+                $message->subject('Oferta de treball rebutjada.');
             })) {
         return $response->withJSON(array('Ok'));
     } else {
@@ -308,9 +302,8 @@ $app->group('/empresa', function() {
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
             $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes"/* per a l'oferta " . $oferta->idOferta . ' ' . $oferta->titol */, "labelLlista" => "que ha seleccionat", 'correcte' => "L'oferta filtrarà els alumnes per aquests estudis.");
-            $estudis = Estudis::orderBy('nom', 'ASC')->get();
+            $estudis = Estudis::orderBy('codi', 'ASC')->get();
             return $this->view->render($response, 'empresa/estudisOferta.html.twig', ['empresa' => $empresa, 'identificador' => $oferta->idOferta, 'entitat' => $oferta, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
-// return $response->withJSON($oferta);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
@@ -335,10 +328,9 @@ $app->group('/empresa', function() {
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
             $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "demanats, nivell mínim");
-            $idiomes = Idioma::orderBy('idioma', 'ASC')->get();
+            $idiomes = Idioma::all();//orderBy('idioma', 'ASC')->get();
             $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
             return $this->view->render($response, 'empresa/idiomes.html.twig', ['actor' => $oferta, 'identificador' => $oferta->idOferta, 'etiquetes' => $etiquetes, 'idiomes' => $idiomes, 'nivellsIdioma' => $nivellsIdioma]);
-//   return $response->withJSON($oferta->idiomes);
         } else {
             return $response->withJSON('Errada: ', 500);
         }
@@ -357,7 +349,6 @@ $app->group('/empresa', function() {
             $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "en els que vol que es trobin els candidats");
             $estats = EstatLaboral::orderBy('nomEstatLaboral', 'ASC')->get();
             return $this->view->render($response, 'empresa/estatLaboral.html.twig', ['empresa' => $empresa, 'actor' => $oferta, 'identificador' => $oferta->idOferta, 'etiquetes' => $etiquetes, 'estats' => $estats]);
-            //return $response->withJSON($oferta->estatsLaborals);
         } else {
             return $response->withJSON('Errada: ', 500);
         }
@@ -414,10 +405,6 @@ $app->group('/empresa', function() {
         return DaoEmpresa::publicarOferta($request, $response, $args, $this);
     });
 
-//    $this->get('/{id}', function(Request $request, Response $response, $args) {
-//        $this->dbEloquent;
-//        return $response->withJSON(Empresa::find($args['id']));
-//    });
 })->add(function ($request, $response, $next) use ($c) {
     if (in_array(20, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
@@ -572,6 +559,21 @@ $app->group('/alumne', function() {
             return $response->withJSON('Errada: ', 500);
         }
     });
+
+
+    $this->get('/empreses[/{codiEstudis}]', function ($request, $response, $args) {
+        $this->dbEloquent;
+        $usuari = Usuari::find($_SESSION["idUsuari"]);
+        if ($usuari != null) {
+            $alumne = $usuari->getEntitat();
+            if($args['codiEstudis']!=null){
+            $empreses = DB::select('SELECT distinct em.* from Ofertes_has_Estudis oe inner join Ofertes on oe.Ofertes_idOferta=idOferta inner join Empreses em on em.idEmpresa=Ofertes.Empreses_idEmpresa where  em.activa=1 and Ofertes.validada=1 and oe.Estudis_codi=\''.$args['codiEstudis'].'\'');
+            }
+            return $this->view->render($response, 'alumne/empreses.html.twig', ['actor' => $alumne,'codiEstudis'=>$args['codiEstudis'], 'empreses'=>$empreses]);
+        } else {
+            return $response->withJSON('Errada: ', 500);
+        }
+    });
 })->add(function ($request, $response, $next) {
     if (in_array(30, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
@@ -719,35 +721,6 @@ $app->group('/professor', function() {
         return DaoProfessor::rebutjarOferta($request, $response, $args, $this);
     });
 
-//    $this->get('/{id}', function(Request $request, Response $response, $args) {
-//        $this->dbEloquent;
-//        return $response->withJSON(Professor::find($args['id']));
-//    });
-//    $this->get('/ofertesProfessor/{idUsuari}', function(Request $request, Response $response, $args) {
-//        $this->dbEloquent;
-//        $usuari = Usuari::find($_SESSION["idUsuari"]);
-//        if ($usuari != null) {
-//            $professor = $usuari->getEntitat();
-//            $ofertes = array();
-//            foreach ($professor->estudis as $estudis) {
-//                foreach ($estudis->ofertes as $oferta) {
-//                    $ofertes[$oferta->idOferta] = $oferta;
-//                }
-//            }
-//        } else {
-//            return $response->withJSON('Errada: ' . $_SESSION);
-//        }
-//    });
-//
-//    $this->get('/ofertesEstudis/{codi}', function(Request $request, Response $response, $args) {
-//        $this->dbEloquent;
-//        $estudis = Estudis::find($args["codi"]);
-//        if ($estudis != null) {
-//            return $response->withJSON(array('estudis'=>$estudis,'Professors'=>$estudis->professors,'Ofertes'=>$estudis->ofertes));
-//        } else {
-//            return $response->withJSON('Errada: ' . $_SESSION);
-//        }
-//    });
 })->add(function ($request, $response, $next) {
     if (in_array(10, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
@@ -838,7 +811,7 @@ $app->group('/administrador', function() {
         $this->dbEloquent;
         $empresa = Empresa::find($args['idEmpresa']);
         if ($empresa != null) {
-            return $response->withJSON($empresa,200);
+            return $response->withJSON($empresa, 200);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
@@ -880,7 +853,6 @@ $app->get('/estudis', function(Request $request, Response $response) {
 
 //Usuaris
 $app->get('/usuari/{id}', function(Request $request, Response $response, $args) {
-//return recuperaInteri($request, $response, $this->db);
     $this->dbEloquent;
     return $response->withJSON(Usuari::find($args['id'])->getEntitat());
 });
