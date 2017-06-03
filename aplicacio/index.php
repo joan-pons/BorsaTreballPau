@@ -112,7 +112,7 @@ $app->get('/ajuda/{idAjuda}', function ($request, $response, $args) {
 
 $app->get('/mailing', function ($request, $response, $args) {
     $this->dbEloquent;
-    $oferta = Oferta::find(4);
+    $oferta = Oferta::find(1);
     $nivells = $nivells = NivellIdioma::all();
 //      if ($this->mailer->send('/email/validarUsuari.html.twig', [], function($message) {
   //    if ($this->mailer->send('/email/validarEmpresa.html.twig',[], function($message) {
@@ -123,7 +123,7 @@ $app->get('/mailing', function ($request, $response, $args) {
      if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells' => $nivells], function($message) {
                 $message->from("no-reply@iespaucasesnoves.cat");
                 $message->to('joan.pons.tugores@gmail.com');
-                $message->subject('Oferta de treball rebutjada.');
+                $message->subject('Oferta de treball.');
             })) {
         return $response->withJSON(array('Ok'));
     } else {
@@ -611,7 +611,7 @@ $app->group('/professor', function() {
             $ofertes = array();
             foreach ($professor->estudis as $estudis) {
                 foreach ($estudis->ofertes as $oferta) {
-                    if ($oferta->dataPublicacio != null) {
+                    if ($oferta->dataPublicacio != null && $oferta->validada==0) {
                         $ofertes[$oferta->idOferta] = $oferta;
                     }
                 }
@@ -702,7 +702,7 @@ $app->group('/professor', function() {
             $ofertes = array();
             foreach ($professor->estudis as $estudis) {
                 foreach ($estudis->ofertes as $oferta) {
-                    if ($oferta->dataPublicacio != null) {
+                    if ($oferta->dataPublicacio != null and $oferta->validada==0) {
                         $ofertes[$oferta->idOferta] = $oferta;
                     }
                 }

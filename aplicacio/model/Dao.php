@@ -109,7 +109,7 @@ class Dao {
         foreach ($alumnes as $alumne) {
             array_push($alumnesDefinitiu, $alumne->idAlumne);
         }
-        return $alumnes;
+        return $alumnesDefinitiu;
     }
 
     public function comptarCandidats($oferta, \Slim\Container $container) {

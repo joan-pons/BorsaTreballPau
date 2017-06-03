@@ -265,6 +265,7 @@ class DaoProfessor extends Dao {
             $professor = Professor::find($data['idProfessor']);
             if ($professor != null && $oferta != null) {
                 $oferta->validada = true;
+                //$oferta->dataPublicacio=date("Y-m-d");
                 $oferta->professorValidada = $professor->idProfessor;
                 $alumnesDefinitiu=Dao::alumnesOferta($oferta,$container);
                 $oferta->alumnes()->sync($alumnesDefinitiu);
