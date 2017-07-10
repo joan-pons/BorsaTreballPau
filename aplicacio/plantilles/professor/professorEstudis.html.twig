@@ -81,7 +81,35 @@
                 });
                 $('#mdEspera').modal('show');
             });
-
+             $("#familia").on("change", function () {
+                $.ajax({
+                 method: 'GET',
+                  url: "/cicles/" + $('#familia').val()
+                 }).done(function (dades) {
+                     var opcions = '<option value="">Escull uns estudis</option>';
+                     var xifra='';
+                    for (var index in dades) {
+                        if(xifra!=dades[index].codi.charAt(3)){
+                            if(xifra!==''){
+                                opcions=opcions+'</optgroup>';
+                            }
+                            xifra=dades[index].codi.charAt(3);
+                            var indicador='';
+                            if(xifra==='1'){
+                                indicador='FP bàsica';
+                            }else if(xifra==='2'){
+                                indicador='Grau mitjà';
+                            }else{
+                                indicador='Grau superior';
+                            } 
+                            opcions=opcions+'<optgroup label="'+indicador+'">';
+                        }
+                        opcions=opcions+'</optgroup>';
+                        opcions = opcions + '<option value="' + dades[index].codi + '"> ' + dades[index].codi + ' - ' + dades[index].nom + '</option>';
+                    }
+                    $("#graus").html(opcions);
+                });
+            });   
         });
     </script>
 {% endblock %}

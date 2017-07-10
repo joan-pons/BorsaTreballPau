@@ -5,12 +5,25 @@
         <div class="col-md-8">
             <div class='row'>
                 <div class="form-group">
-                    <label for="sel1"></label>
+                    <label for="sel1">Família professional</label>
+
+                    <select class="form-control" id="familia" name="familia">
+                        <option value="">Escull una família professional</option>
+                        {% for familia in families %}
+                            <option value="{{ familia.id }}">{{ familia.nom }} ({{ familia.id }} )</option>
+                        {% endfor %}
+                    </select>
+
+                </div>
+            </div>
+            <div class='row'>
+                <div class="form-group">
+                    <label for="sel1">Cicles de la família</label>
                     <div class="input-group">
                         <select class="form-control" id="graus" name="graus">
                             <option value="">Escull uns estudis</option>
                             {% for grau in estudis %}
-                                <option value="{{ grau.codi }}">{{ grau.codi }} {{ grau.nom }}</option>
+                                <option value="{{ grau.codi }}">{{ grau.codi }} - {{ grau.nom }}</option>
                             {% endfor %}
                         </select>
                         <span class="input-group-btn"><button type="button" class="btn btn-default btn-success" id="bAfegir">Afegir</button></span>
@@ -145,7 +158,7 @@
                         data: estudisElegits
                     }).done(function (dades) {
                         $('#mrTitol').html('Actualització correcte');
-                        if (dades.quantitat>=0) {
+                        if (dades.quantitat >= 0) {
                             $('#mrText').html("<p>{{etiquetes.correcte}}</p><p>Amb aquestes condicions l'oferta s'enviaria a " + dades.quantitat + " alumnes.</p>");
                         } else {
                             $('#mrText').html("<p>{{etiquetes.correcte}}</p>");
@@ -191,7 +204,7 @@
                     data: estudisElegits
                 }).done(function (dades) {
                     $('#mrTitol').html('Eliminació correcta')
-                    if (dades.quantitat>=0) {
+                    if (dades.quantitat >= 0) {
                         $('#mrText').html("<p>Els estudis <em>" + estudisElegits.nomEstudis + "</em> s'han esborrat correctament.</p><p>Amb aquestes condicions l'oferta s'enviaria a " + dades.quantitat + " alumnes.</p>");
                     } else {
                         $('#mrText').html("<p>Els estudis <em>" + estudisElegits.nomEstudis + "</em> s'han esborrat correctament.</p>");
@@ -266,7 +279,7 @@
                     data: estudisElegits
                 }).done(function (dades) {
                     $('#mrTitol').html('Modificació correcta');
-                    if (dades.quantitat>=0) {
+                    if (dades.quantitat >= 0) {
                         $('#mrText').html("<p>Les dades dels estudis <em>" + estudisElegits.nomEstudis + "</em> s'han modificat correctament.</p><p>Amb aquestes condicions l'oferta s'enviaria a " + dades.quantitat + " alumnes.</p>");
                     } else {
                         $('#mrText').html("<p>Les dades dels estudis s'han modificat correctament.</p>");
@@ -295,6 +308,34 @@
             $('#mdEspera').modal('show');
         });
 
-
+             $("#familia").on("change", function () {
+                $.ajax({
+                 method: 'GET',
+                  url: "/cicles/" + $('#familia').val()
+                 }).done(function (dades) {
+                     var opcions = '<option value="">Escull uns estudis</option>';
+                     var xifra='';
+                    for (var index in dades) {
+                        if(xifra!=dades[index].codi.charAt(3)){
+                            if(xifra!==''){
+                                opcions=opcions+'</optgroup>';
+                            }
+                            xifra=dades[index].codi.charAt(3);
+                            var indicador='';
+                            if(xifra==='1'){
+                                indicador='FP bàsica';
+                            }else if(xifra==='2'){
+                                indicador='Grau mitjà';
+                            }else{
+                                indicador='Grau superior';
+                            } 
+                            opcions=opcions+'<optgroup label="'+indicador+'">';
+                        }
+                        opcions=opcions+'</optgroup>';
+                        opcions = opcions + '<option value="' + dades[index].codi + '"> ' + dades[index].codi + ' - ' + dades[index].nom + '</option>';
+                    }
+                    $("#graus").html(opcions);
+                });
+            }); 
     });
 </script>

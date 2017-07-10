@@ -12,6 +12,7 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 use Borsa\Usuari as Usuari;
 use Borsa\Ajuda as Ajuda;
+use Borsa\Familia as Familia;
 
 use Illuminate\Database\Capsule\Manager as DB;
 /**
@@ -133,4 +134,19 @@ class Dao {
         }
     }
     
+        public function ciclesFamilia(Request $request, Response $response, $args, \Slim\Container $container) {
+        try {
+            $container->dbEloquent;
+            $familia = Familia::find($args['idFamilia']);
+            if ($familia != null) {
+                    return $response->withJson($familia->cicles, 200);
+                
+            } else {
+                return $response->withJson(array("missatge" => "No es troba l'ajuda demanada."), 422);
+            }
+        } catch (\Illuminate\Database\QueryException $ex) {
+            
+            return $response->withJson(array("missatge" => "No es troba l'ajuda demanada."), 422);
+        }
+    }
 }

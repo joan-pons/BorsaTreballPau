@@ -26,8 +26,11 @@ class Estudis extends Model {
         return $this->belongsToMany('Borsa\Professor', 'Estudis_has_Responsables', 'Estudis_codi', 'professors_idProfessor');
     }
 
-      public function ofertes() {
+    public function ofertes() {
         return $this->belongsToMany('Borsa\Oferta', 'Ofertes_has_Estudis', 'Estudis_codi', 'Ofertes_idOferta')->withPivot(['any', 'nota']);
     }
 
+    public function familia(){
+        return $this->belongsTo('Borsa\Familia', 'id');
+    }
 }

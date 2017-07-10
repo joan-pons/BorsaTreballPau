@@ -15,8 +15,9 @@ use Borsa\NivellIdioma as NivellIdioma;
 use Borsa\Alumne as Alumne;
 use Borsa\EstatLaboral as EstatLaboral;
 use Borsa\Oferta as Oferta;
-
+use Borsa\Familia as Familia;
 use Illuminate\Database\Capsule\Manager as DB;
+
 require 'vendor/autoload.php';
 
 
@@ -109,18 +110,21 @@ $app->get('/login', function ($request, $response, $args) {
 $app->get('/ajuda/{idAjuda}', function ($request, $response, $args) {
     return Dao::ajuda($request, $response, $args, $this);
 });
+$app->get('/cicles/{idFamilia}', function ($request, $response, $args) {
+    return Dao::ciclesFamilia($request, $response, $args, $this);
+});
 
 $app->get('/mailing', function ($request, $response, $args) {
     $this->dbEloquent;
     $oferta = Oferta::find(1);
     $nivells = $nivells = NivellIdioma::all();
 //      if ($this->mailer->send('/email/validarUsuari.html.twig', [], function($message) {
-  //    if ($this->mailer->send('/email/validarEmpresa.html.twig',[], function($message) {
-  //    if ($this->mailer->send('/email/instruccionsValidat.html.twig',['usuari'=>'ptj@iespaucasesnoves.cat', 'contrasenya'=>'8acd34df'], function($message) {
-  //    if ($this->mailer->send('/email/validarOferta.html.twig',[], function($message) {
-                $motius = "L'oferta no és adequada per als estudis als que va dirigida";
-   // if ($this->mailer->send('/email/ofertaResultat.html.twig',['validada'=>false, 'oferta'=>$oferta, 'motius'=>$motius], function($message) {
-     if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells' => $nivells], function($message) {
+    //    if ($this->mailer->send('/email/validarEmpresa.html.twig',[], function($message) {
+    //    if ($this->mailer->send('/email/instruccionsValidat.html.twig',['usuari'=>'ptj@iespaucasesnoves.cat', 'contrasenya'=>'8acd34df'], function($message) {
+    //    if ($this->mailer->send('/email/validarOferta.html.twig',[], function($message) {
+    $motius = "L'oferta no és adequada per als estudis als que va dirigida";
+    // if ($this->mailer->send('/email/ofertaResultat.html.twig',['validada'=>false, 'oferta'=>$oferta, 'motius'=>$motius], function($message) {
+    if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells' => $nivells], function($message) {
                 $message->from("no-reply@iespaucasesnoves.cat");
                 $message->to('joan.pons.tugores@gmail.com');
                 $message->subject('Oferta de treball.');
@@ -303,7 +307,8 @@ $app->group('/empresa', function() {
             $empresa = $usuari->getEntitat();
             $etiquetes = array("subtitol" => "que han d'haver cursat els alumnes"/* per a l'oferta " . $oferta->idOferta . ' ' . $oferta->titol */, "labelLlista" => "que ha seleccionat", 'correcte' => "L'oferta filtrarà els alumnes per aquests estudis.");
             $estudis = Estudis::orderBy('codi', 'ASC')->get();
-            return $this->view->render($response, 'empresa/estudisOferta.html.twig', ['empresa' => $empresa, 'identificador' => $oferta->idOferta, 'entitat' => $oferta, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
+            $families = Familia::orderBy('nom', 'ASC')->get();
+            return $this->view->render($response, 'empresa/estudisOferta.html.twig', ['empresa' => $empresa, 'identificador' => $oferta->idOferta, 'entitat' => $oferta, "etiquetes" => $etiquetes, 'estudis' => $estudis, 'families' => $families]);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
@@ -328,7 +333,7 @@ $app->group('/empresa', function() {
         if ($usuari != null && $oferta != null) {
             $empresa = $usuari->getEntitat();
             $etiquetes = array("nom" => $empresa->nom, "labelLlista" => "demanats, nivell mínim");
-            $idiomes = Idioma::all();//orderBy('idioma', 'ASC')->get();
+            $idiomes = Idioma::all(); //orderBy('idioma', 'ASC')->get();
             $nivellsIdioma = NivellIdioma::orderBy('idNivellIdioma', 'ASC')->get();
             return $this->view->render($response, 'empresa/idiomes.html.twig', ['actor' => $oferta, 'identificador' => $oferta->idOferta, 'etiquetes' => $etiquetes, 'idiomes' => $idiomes, 'nivellsIdioma' => $nivellsIdioma]);
         } else {
@@ -404,7 +409,6 @@ $app->group('/empresa', function() {
     $this->put('/publicarOferta/{idOferta}', function ($request, $response, $args) {
         return DaoEmpresa::publicarOferta($request, $response, $args, $this);
     });
-
 })->add(function ($request, $response, $next) use ($c) {
     if (in_array(20, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
@@ -471,8 +475,9 @@ $app->group('/alumne', function() {
         if ($usuari != null) {
             $alumne = $usuari->getEntitat();
             $etiquetes = array("subtitol" => "pels que vols que les empreses et trobin", "labelLlista" => "que has acabat", 'correcte' => "A partir d'ara rebràs notificacions de les ofertes relacionades amb aquests estudis.");
+            $families = Familia::orderBy('nom', 'ASC')->get();
             $estudis = Estudis::orderBy('nom', 'ASC')->get();
-            return $this->view->render($response, 'alumne/alumneEstudis.html.twig', ['entitat' => $alumne, 'identificador' => $alumne->idAlumne, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
+            return $this->view->render($response, 'alumne/alumneEstudis.html.twig', ['entitat' => $alumne, 'identificador' => $alumne->idAlumne, "etiquetes" => $etiquetes, 'estudis' => $estudis, 'families' => $families]);
         } else {
             return $response->withJSON('Errada: ', 500);
         }
@@ -566,10 +571,10 @@ $app->group('/alumne', function() {
         $usuari = Usuari::find($_SESSION["idUsuari"]);
         if ($usuari != null) {
             $alumne = $usuari->getEntitat();
-            if($args['codiEstudis']!=null){
-            $empreses = DB::select('SELECT distinct em.* from Ofertes_has_Estudis oe inner join Ofertes on oe.Ofertes_idOferta=idOferta inner join Empreses em on em.idEmpresa=Ofertes.Empreses_idEmpresa where  em.activa=1 and Ofertes.validada=1 and oe.Estudis_codi=\''.$args['codiEstudis'].'\'');
+            if ($args['codiEstudis'] != null) {
+                $empreses = DB::select('SELECT distinct em.* from Ofertes_has_Estudis oe inner join Ofertes on oe.Ofertes_idOferta=idOferta inner join Empreses em on em.idEmpresa=Ofertes.Empreses_idEmpresa where  em.activa=1 and Ofertes.validada=1 and oe.Estudis_codi=\'' . $args['codiEstudis'] . '\'');
             }
-            return $this->view->render($response, 'alumne/empreses.html.twig', ['actor' => $alumne,'codiEstudis'=>$args['codiEstudis'], 'empreses'=>$empreses]);
+            return $this->view->render($response, 'alumne/empreses.html.twig', ['actor' => $alumne, 'codiEstudis' => $args['codiEstudis'], 'empreses' => $empreses]);
         } else {
             return $response->withJSON('Errada: ', 500);
         }
@@ -611,7 +616,7 @@ $app->group('/professor', function() {
             $ofertes = array();
             foreach ($professor->estudis as $estudis) {
                 foreach ($estudis->ofertes as $oferta) {
-                    if ($oferta->dataPublicacio != null && $oferta->validada==0) {
+                    if ($oferta->dataPublicacio != null && $oferta->validada == 0) {
                         $ofertes[$oferta->idOferta] = $oferta;
                     }
                 }
@@ -666,7 +671,9 @@ $app->group('/professor', function() {
             $professor = $usuari->getEntitat();
             $etiquetes = array("subtitol" => "dels que haurà de validar ofertes", "labelLlista" => "dels que és responsable");
             $estudis = Estudis::orderBy('Nom', 'ASC')->get();
-            return $this->view->render($response, 'professor/professorEstudis.html.twig', ['professor' => $professor, "etiquetes" => $etiquetes, 'estudis' => $estudis]);
+            $families = Familia::orderBy('nom', 'ASC')->get();
+
+            return $this->view->render($response, 'professor/professorEstudis.html.twig', ['professor' => $professor, "etiquetes" => $etiquetes, 'estudis' => $estudis, 'families'=>$families]);
         } else {
             return $response->withJSON('Errada: ' . $_SESSION);
         }
@@ -702,7 +709,7 @@ $app->group('/professor', function() {
             $ofertes = array();
             foreach ($professor->estudis as $estudis) {
                 foreach ($estudis->ofertes as $oferta) {
-                    if ($oferta->dataPublicacio != null and $oferta->validada==0) {
+                    if ($oferta->dataPublicacio != null and $oferta->validada == 0) {
                         $ofertes[$oferta->idOferta] = $oferta;
                     }
                 }
@@ -720,7 +727,6 @@ $app->group('/professor', function() {
     $this->delete('/publicarOferta/{idOferta}', function ($request, $response, $args) {
         return DaoProfessor::rebutjarOferta($request, $response, $args, $this);
     });
-
 })->add(function ($request, $response, $next) {
     if (in_array(10, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
