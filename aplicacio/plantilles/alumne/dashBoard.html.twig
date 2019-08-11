@@ -1,12 +1,10 @@
 {% extends "auxiliars/base.html.twig" %}
 
 {% block head %}
-    <title>Borsa de treball: {{alumne.nom}} {{ alumne.llinatges }}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Borsa de treball: {{alumne.nom}} {{ alumne.llinatges }}</title>
+    <link rel="shortcut icon" type="image/ico" href="../imatges/logo-cifp.ico"/>
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/borsa.css">
-    <link rel="shortcut icon" type="image/ico" href="../imatges/logoPau2.ico"/>
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script>
@@ -136,4 +134,5 @@
             {%endif%}
         </div><!--col-->
     </div><!--row-->
+
 {% endblock %}

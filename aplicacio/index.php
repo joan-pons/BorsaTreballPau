@@ -409,7 +409,7 @@ $app->group('/empresa', function() {
     $this->put('/publicarOferta/{idOferta}', function ($request, $response, $args) {
         return DaoEmpresa::publicarOferta($request, $response, $args, $this);
     });
-})->add(function ($request, $response, $next) use ($c) {
+})->add(function ($request, $response, $next) {
     if (in_array(20, $_SESSION['rols']) || in_array(40, $_SESSION['rols'])) {
         return $response = $next($request, $response);
     } else {

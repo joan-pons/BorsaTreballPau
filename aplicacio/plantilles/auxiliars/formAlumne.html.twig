@@ -8,23 +8,23 @@
                         <input type="hidden" class="form-control" id="idAlumne" name="idAlumne" value="{{alumne.idAlumne}}">
                         <div class="form-group required">
                             <label class='control-label' for="Nom">Nom:</label>
-                            <input type="text" required="required" class="form-control " id="nom" name="nom" value="{{alumne.nom}}">
+                            <input type="text" required="required" class="form-control " id="nom" name="nom" maxlength="45" value="{{alumne.nom}}">
                         </div>
                         <div class="form-group required">
                             <label class='control-label' for="Nom">Llinatges:</label>
-                            <input type="text" required="required" class="form-control " id="llinatges" name="llinatges" value="{{alumne.llinatges}}">
+                            <input type="text" required="required" class="form-control " id="llinatges" name="llinatges" maxlength="45" value="{{alumne.llinatges}}">
                         </div>
                         <div class="form-group required">
                             <label for="email" class='control-label'>Correu electrònic:</label>
-                            <input type="email" required="required" class="form-control" id="email" name="email" value="{{alumne.email}}">
+                            <input type="email" required="required" class="form-control" id="email" name="email" maxlength="75" value="{{alumne.email}}">
                         </div>
                         <div class="form-group">
                             <label for="Telefon">Teléfon:</label>
-                            <input type="text" class="form-control" id="telefon" name="telefon" value="{{alumne.telefon}}">
+                            <input type="text" class="form-control" id="telefon" name="telefon" maxlength="9" value="{{alumne.telefon}}">
                         </div>
                         <div class="form-group">
                             <label for="url" class='control-label'>url:</label>
-                            <input type="text" class="form-control" id="url" name="url" value="{{alumne.url}}">
+                            <input type="text" class="form-control" id="url" name="url" maxlength="150" value="{{alumne.url}}">
                         </div>
                         <div class="form-group">
                             <label for="Actiu">Estat a la borsa:</label>
@@ -38,19 +38,19 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="adreca">Adreca:</label>
-                            <input type="text" class="form-control" id="adreca" name="adreca" value="{{alumne.adreca}}">
+                            <input type="text" class="form-control" id="adreca" name="adreca" maxlength="100" value="{{alumne.adreca}}">
                         </div>
                         <div class="form-group">
                             <label for="codiPostal">Codi postal:</label>
-                            <input type="text" class="form-control" id="codiPostal" name="codiPostal" value="{{alumne.codiPostal}}">
+                            <input type="text" class="form-control" id="codiPostal" name="codiPostal" maxlength="5" value="{{alumne.codiPostal}}">
                         </div>
                         <div class="form-group">
                             <label for="localitat">Localitat:</label>
-                            <input type="text" class="form-control" id="localitat" name="localitat" value="{{alumne.localitat}}">
+                            <input type="text" class="form-control" id="localitat" name="localitat" maxlength="45" value="{{alumne.localitat}}">
                         </div>
                         <div class="form-group">
                             <label for="provincia">Provincia:</label>
-                            <input type="text" class="form-control" id="provincia" name="provincia" value="{{alumne.provincia}}">
+                            <input type="text" class="form-control" id="provincia" name="provincia" maxlength="45" value="{{alumne.provincia}}">
                         </div>
                     </div><!--col-->
                 </div><!--row -->

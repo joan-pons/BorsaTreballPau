@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewbox="0 0 6.598 7.5"
+   width="46.779999"
+   height="55.799999"
+   version="1.1"
+   id="svg144"
+   sodipodi:docname="logocifpink.svg"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)">
+  <metadata
+     id="metadata150">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs148" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="3840"
+     inkscape:window-height="2066"
+     id="namedview146"
+     showgrid="true"
+     inkscape:zoom="24.76"
+     inkscape:cx="14.878191"
+     inkscape:cy="27.899998"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g142">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4661"
+       originx="-9.6"
+       originy="-9.6000022" />
+  </sodipodi:namedview>
+  <g
+     transform="matrix(10,0,0,10,20.4,20.4)"
+     id="g142"
+     style="stroke:#ffffff;stroke-width:0.08">
+    <path
+       d="m -2,0 a 0.5,0.5 0 0 1 1,0 v 3 a 0.5,0.5 0 0 1 -1,0 z"
+       id="path134"
+       inkscape:connector-curvature="0"
+       style="fill:#32cd32" />
+    <circle
+       cx="0"
+       cy="0"
+       r="2"
+       id="circle136"
+       style="fill:#175e17" />
+    <circle
+       cx="0"
+       cy="0"
+       r="1"
+       id="circle138"
+       style="fill:#eeee" />
+    <polygon
+       points="-0.866,0.5 -0.866,-0.5 0,-1 0.866,-0.5 0.866,0.5 0,1 "
+       transform="translate(1.732)"
+       id="polygon140"
+       style="fill:#32cd32" />
+  </g>
+</svg>
