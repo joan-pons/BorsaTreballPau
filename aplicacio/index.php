@@ -77,7 +77,7 @@ $container['mailer'] = function ($container) {
     $mailer->SMTPAuth = true;                 // I set false for localhost
     $mailer->SMTPSecure = 'ssl';              // set blank for localhost
     $mailer->Port = 465;                           // 25 for local host
-    $mailer->Username = 'ptj@iespaucasesnoves.cat';    // I set sender email in my mailer call
+    $mailer->Username = 'ptj@paucasesnovescifp.cat';    // I set sender email in my mailer call
 
     require('mail/password.php');
 
@@ -125,7 +125,7 @@ $app->get('/mailing', function ($request, $response, $args) {
     $motius = "L'oferta no és adequada per als estudis als que va dirigida";
     // if ($this->mailer->send('/email/ofertaResultat.html.twig',['validada'=>false, 'oferta'=>$oferta, 'motius'=>$motius], function($message) {
     if ($this->mailer->send('/email/oferta.twig', ['oferta' => $oferta, 'nivells' => $nivells], function($message) {
-                $message->from("no-reply@iespaucasesnoves.cat");
+                $message->from("modemcolonia@paucasesnovescifp.cat");
                 $message->to('joan.pons.tugores@gmail.com');
                 $message->subject('Oferta de treball.');
             })) {
@@ -139,7 +139,6 @@ $app->get('/provaMailOferta/{idOferta}', function(Request $request, Response $re
     $this->dbEloquent;
     $oferta = Oferta::find($args['idOferta']);
     if (oferta != null) {
-
         return $this->view->render($response, 'email/oferta.twig', ['oferta' => $oferta]);
     } else {
         return $response->withJSON('Errada: ' . $_SESSION);
